@@ -2,7 +2,11 @@
   <div class="hello">
     <Login />
 
+    <!-- <TestNss />
+    <hr> -->
     <Test />
+
+
 
   </div>
 </template>
@@ -13,7 +17,8 @@ export default {
   components: {
     //  'BookmarksList': () => import('@/components/bookmarks/BookmarksList'),
     'Test': () => import('@/components/Test'),
-    'Login': () => import('@/components/solid/Login')
+    'Login': () => import('@/components/solid/Login'),
+    // 'TestNss': () => import('@/components/TestNss'),
   },
   props: {
     msg: String

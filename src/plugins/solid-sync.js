@@ -5,19 +5,19 @@ import {
   // isRawData,
   // getContentType,
   // saveFileInContainer,
-  // getContainedResourceUrlAll,
+  getContainedResourceUrlAll,
   // getStringNoLocaleAll,
   // //createContainerAt,
   // getSourceUrl,
-  // deleteFile,
+  deleteFile,
   // removeAll,
-  // //deleteContainer,
-  // addStringNoLocale,
-  // setThing,
-  // saveSolidDatasetAt,
-  // createSolidDataset,
-  // createThing,
-  // addUrl,
+  deleteContainer,
+  addStringNoLocale,
+  setThing,
+  saveSolidDatasetAt,
+  createSolidDataset,
+  createThing,
+  addUrl,
   // overwriteFile,
   getStringNoLocale,
   getThing,
@@ -28,7 +28,7 @@ import {
   // setStringNoLocale,
   //setDatetime
 } from "@inrupt/solid-client";
-import { FOAF, /*LDP,*/ VCARD,/*  RDF, AS  */} from "@inrupt/vocab-common-rdf";
+import { FOAF, /*LDP,*/ VCARD,/*  RDF,*/ AS  } from "@inrupt/vocab-common-rdf";
 import { WS, /*, VCARD */} from "@inrupt/vocab-solid-common";
 import * as sc from '@inrupt/solid-client-authn-browser'
 import router from '@/router'
@@ -42,129 +42,222 @@ const plugin = {
   install(Vue, opts = {}) {
     let store = opts.store
 
-    Vue.prototype.$openEar = async function(containerUrl){
+    Vue.prototype.$subscribe = async function(resourceURL){
+
+      this.$readContainer(resourceURL)
+      const gateway = "https://notification.pod.inrupt.com/";
+
       const websocket = new WebsocketNotification(
-        containerUrl,
-        { fetch: sc.fetch }
+        resourceURL,
+        { fetch: sc.fetch, gateway }
       );
-      console.log("trying to websocket ear on ",containerUrl)
-      websocket.on("message", console.log);
+      console.log("Subscription to", resourceURL)
+      websocket.on("connected", () =>
+      console.log("connected", websocket)
+      // setMessages((prev) => [
+      //   ...prev,
+      //   `Websocket connected; watching ${podRoot}`,
+      // ])
+    );
 
-      websocket.connect();
-      console.log("Ear opened")
-    },
-
-    Vue.prototype.$login= async function(issuer) {
-
-      try{
-        await sc.login({
-          oidcIssuer: issuer,
-          redirectUrl: window.location.href,
-          clientName: "Booklice",
-        });
-      } catch(e){
-        alert("$login "+e)
-      }
-    },
-
-    Vue.prototype.$logout = async function(params){
-      try{
-        let session = sc.getDefaultSession()
-        console.log(params)
-        await session.logout()
-        store.commit('solid/setSession',session)
-        store.commit('solid/setPod', {})
-        store.commit('booklice/setPath', "")
-      } catch(e){
-        alert("$logout "+e)
-      }
-    },
-
-    Vue.prototype.$checkSessions = async function( params){
-      console.log("params",params)
-      console.log("window.location.href", window.location.href)
-      let session = sc.getDefaultSession()
-      console.log("session",session)
-
-      //  let session = sc.getDefaultSession()
-      sc.onSessionRestore((url) => {
-        console.log("restore",url)
-        let query = url.split('?')[1]
-        console.log('query', query)
-        // const p = new URLSearchParams(url);
-        // //  if(p.length>0){
-        // console.log("params Params", p.values)
-        //}
-
-        //  alert ("url",url)
-        router.push({path: '?'+query})
-        store.commit('solid/setSession',session)
-        //  dispatch('getPodInfos', session)
-        this.$getPodInfosFromSession(session)
-      });
-
-
-      try{
-        await sc.handleIncomingRedirect({restorePreviousSession : params.restore, url: window.location.href})
-        .then((info) => {
-          console.log(info)
-        })
-        store.commit('solid/setSession',session)
-        //  dispatch('getPodInfos', session)
-        this.$getPodInfosFromSession(session)
-
-      } catch(e){
-        alert("$checkSessions " +e)
-      }
-    },
-
-    Vue.prototype.$getPodInfosFromSession = async function(session){
-      try{
-        let pod = {}
-        pod.logged = session.info.isLoggedIn
-        if (pod.logged) {
-          pod.webId = session.info.webId
-          pod = await this.$getPodInfos(pod)
-          store.commit('solid/setPod', pod)
-          if (pod.storage != null){
-            //  this.$setCurrentThingUrl(pod.storage)
-            //  store.commit('booklice/setPath', pod.storage+'public/bookmarks/')
-            //let publicTagFile = pod.storage+'public/tags.ttl'
-            //let privateTagFile = podStorage+'private/tags.ttl'
-            // let tags = await this.$getTags(publicTagFile)
-            // console.log("############################tags",tags)
-          }
-        }else{
-          store.commit('solid/setPod', null)
-          store.commit('solid/setThings', [])
-        }
-      } catch(e){
-        alert("$getPodInfosFromSession "+e)
-      }
-    },
-
-    Vue.prototype.$getPodInfos = async function(pod){
-      try{
-        const dataset = await getSolidDataset( pod.webId, { fetch: sc.fetch });
-        console.log("DATASET", dataset)
-        let profile = await getThing( dataset, pod.webId );
-        pod.name = await getStringNoLocale(profile, FOAF.name);
-        pod.friends = await getUrlAll(profile, FOAF.knows).map(webId => {return {webId: webId}})
-        pod.storage = await getUrl(profile, WS.storage);
-        pod.photo = await getUrl(profile, VCARD.hasPhoto);
-        // pod.publicTags = await this.$getTags(pod.storage+'public/tags.ttl')
-        // store.commit("vatch/addToNetwork", pod.publicTags)
-        //this.$subscribe(pod.storage)
-        console.log("getpodinfos",pod)
-      }catch(e)
-      {
-        console.log("erreur",e, pod)
-      }
-      return await pod
+    websocket.on("message", (message) =>
+    {
+      console.log('message', JSON.parse(message))
+      store.commit('gamesync/newMessage', message)
+      this.$readContainer(resourceURL)
     }
+    // setMessages((prev) => [...prev, formatMessage(message)])
+  );
+
+  websocket.on("closed", () =>
+  console.log("websocket closed")
+  //  setMessages((prev) => [...prev, "Websocket closed"])
+);
+
+websocket.on("error", (error) => {
+  /* eslint no-console: 0 */
+  console.error(error);
+  // setMessages((prev) => [
+  //   ...prev,
+  //   "Websocket error (see console for details)",
+  // ]);
+});
+
+// websocket.on("message", console.log);
+ websocket.on("*", console.log);
+// websocket.on("connect", console.log);
+// websocket.on("CREATE", console.log);
+
+websocket.connect();
+},
+
+Vue.prototype.$readContainer = async function(containerUrl){
 
 
+  const myDataset = await getSolidDataset( containerUrl, {fetch: sc.fetch});
+  console.log(myDataset)
+
+  let resources = await getContainedResourceUrlAll(myDataset,{fetch: sc.fetch} )
+  console.log("Resources", resources)
+  let container = {url: containerUrl, resources: resources}
+  store.commit('gamesync/setGameContainer', container)
+
+
+},
+
+Vue.prototype.$create = async function(path){
+  let date = new Date()
+  let name = Date.now();
+  let url = path+name+'.ttl'
+  console.log("creating", url)
+  let ds = await createSolidDataset()
+  let thing = await createThing({name: name})
+  console.log("create", thing)
+  // thing = addUrl(thing, RDF.type, AS.Note);
+  // thing = addStringNoLocale(thing, AS.name, n.title);
+  // thing = addStringNoLocale(thing, AS.content, n.text);
+  //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
+  thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );
+  thing = addStringNoLocale(thing, AS.published, date.toISOString());
+  let thingInDs = setThing(ds, thing);
+  let savedThing  = await saveSolidDatasetAt(path+name+'.ttl', thingInDs, { fetch: sc.fetch } );
+  return savedThing
+},
+
+Vue.prototype.$login= async function(issuer) {
+
+  try{
+    await sc.login({
+      oidcIssuer: issuer,
+      redirectUrl: window.location.href,
+      clientName: "GameSync",
+    });
+  } catch(e){
+    alert("$login "+e)
   }
+},
+
+Vue.prototype.$logout = async function(params){
+  try{
+    let session = sc.getDefaultSession()
+    console.log(params)
+    await session.logout()
+    store.commit('solid/setSession',session)
+    store.commit('solid/setPod', {})
+    //  store.commit('booklice/setPath', "")
+  } catch(e){
+    alert("$logout "+e)
+  }
+},
+
+Vue.prototype.$checkSessions = async function( params){
+  console.log("params",params)
+  console.log("window.location.href", window.location.href)
+  let session = sc.getDefaultSession()
+  console.log("session",session)
+
+  //  let session = sc.getDefaultSession()
+  sc.onSessionRestore((url) => {
+    console.log("restore",url)
+    let query = url.split('?')[1]
+    console.log('query', query)
+    // const p = new URLSearchParams(url);
+    // //  if(p.length>0){
+    // console.log("params Params", p.values)
+    //}
+
+    //  alert ("url",url)
+    router.push({path: '?'+query})
+    store.commit('solid/setSession',session)
+    //  dispatch('getPodInfos', session)
+    this.$getPodInfosFromSession(session)
+  });
+
+
+  try{
+    await sc.handleIncomingRedirect({restorePreviousSession : params.restore, url: window.location.href})
+    .then((info) => {
+      console.log(info)
+    })
+    store.commit('solid/setSession',session)
+    //  dispatch('getPodInfos', session)
+    this.$getPodInfosFromSession(session)
+
+  } catch(e){
+    alert("$checkSessions " +e)
+  }
+},
+
+Vue.prototype.$getPodInfosFromSession = async function(session){
+  try{
+    let pod = {}
+    pod.logged = session.info.isLoggedIn
+    if (pod.logged) {
+      pod.webId = session.info.webId
+      pod = await this.$getPodInfos(pod)
+      store.commit('solid/setPod', pod)
+      if (pod.storage != null){
+        //  this.$setCurrentThingUrl(pod.storage)
+        //  store.commit('booklice/setPath', pod.storage+'public/bookmarks/')
+        //let publicTagFile = pod.storage+'public/tags.ttl'
+        //let privateTagFile = podStorage+'private/tags.ttl'
+        // let tags = await this.$getTags(publicTagFile)
+        // console.log("############################tags",tags)
+      }
+    }else{
+      store.commit('solid/setPod', null)
+      store.commit('solid/setThings', [])
+    }
+  } catch(e){
+    alert("$getPodInfosFromSession "+e)
+  }
+},
+
+Vue.prototype.$getPodInfos = async function(pod){
+  try{
+    const dataset = await getSolidDataset( pod.webId, { fetch: sc.fetch });
+    console.log("DATASET", dataset)
+    let profile = await getThing( dataset, pod.webId );
+    pod.name = await getStringNoLocale(profile, FOAF.name);
+    pod.friends = await getUrlAll(profile, FOAF.knows).map(webId => {return {webId: webId}})
+    pod.storage = await getUrl(profile, WS.storage);
+    pod.photo = await getUrl(profile, VCARD.hasPhoto);
+    // pod.publicTags = await this.$getTags(pod.storage+'public/tags.ttl')
+    // store.commit("vatch/addToNetwork", pod.publicTags)
+    //this.$subscribe(pod.storage)
+    console.log("getpodinfos",pod)
+  }catch(e)
+  {
+    console.log("erreur",e, pod)
+  }
+  return await pod
+},
+Vue.prototype.$deleteOnPod = async function(url){
+  try{
+    if(url.endsWith('/')){
+      await deleteContainer(
+        url, { fetch: sc.fetch }
+      );
+    }
+    else{
+      await deleteFile(
+        url, { fetch: sc.fetch }
+      );
+    }
+    console.log(" deleted !",url);
+    //  let parent = url.slice(0, url.lastIndexOf('/'))+'/';
+    //  console.log("parent",parent)
+    //this.$setCurrentThingUrl(parent)
+  } catch(e){
+    alert(e)
+  }
+
+}
+
+
+
+
+}
 }
 // Auto-install
 if (typeof window !== 'undefined' && window.Vue) {
