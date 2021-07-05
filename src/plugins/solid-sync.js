@@ -313,12 +313,7 @@ Vue.prototype.$deleteOnPod = async function(url){
   } catch(e){
     alert(e)
   }
-
 }
-
-
-
-
 }
 }
 // Auto-install
