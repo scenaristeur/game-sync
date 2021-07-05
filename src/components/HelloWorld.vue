@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <Game />
     <Login />
 
     <!-- <TestNss />
@@ -18,6 +19,7 @@ export default {
     //  'BookmarksList': () => import('@/components/bookmarks/BookmarksList'),
     'Test': () => import('@/components/Test'),
     'Login': () => import('@/components/solid/Login'),
+    'Game': () => import('@/components/Game'),
     // 'TestNss': () => import('@/components/TestNss'),
   },
   props: {

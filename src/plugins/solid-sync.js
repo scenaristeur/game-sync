@@ -1,16 +1,17 @@
 import {
   getSolidDataset,
-  // getThingAll,
+  getThingAll,
   // getFile,
   // isRawData,
   // getContentType,
   // saveFileInContainer,
   getContainedResourceUrlAll,
-  // getStringNoLocaleAll,
+  getStringNoLocaleAll,
   // //createContainerAt,
   // getSourceUrl,
   deleteFile,
   // removeAll,
+  removeStringNoLocale,
   deleteContainer,
   addStringNoLocale,
   setThing,
@@ -41,16 +42,17 @@ import {
 const plugin = {
   install(Vue, opts = {}) {
     let store = opts.store
+    // let websocket = null
 
     Vue.prototype.$subscribe = async function(resourceURL){
 
-      this.$readContainer(resourceURL)
-      const gateway = "https://notification.pod.inrupt.com/";
 
-      const websocket = new WebsocketNotification(
+      const gateway = "https://notification.pod.inrupt.com/";
+      let  websocket = new WebsocketNotification(
         resourceURL,
         { fetch: sc.fetch, gateway }
-      );
+      )
+
       console.log("Subscription to", resourceURL)
       websocket.on("connected", () =>
       console.log("connected", websocket)
@@ -64,7 +66,11 @@ const plugin = {
     {
       console.log('message', JSON.parse(message))
       store.commit('gamesync/newMessage', message)
-      this.$readContainer(resourceURL)
+      if (resourceURL.endsWith('/')){
+        this.$readContainer(resourceURL)
+      }else{
+        this.$read(resourceURL)
+      }
     }
     // setMessages((prev) => [...prev, formatMessage(message)])
   );
@@ -84,11 +90,20 @@ websocket.on("error", (error) => {
 });
 
 // websocket.on("message", console.log);
- websocket.on("*", console.log);
+websocket.on("*", console.log);
 // websocket.on("connect", console.log);
 // websocket.on("CREATE", console.log);
 
-websocket.connect();
+try {
+  websocket.connect();
+}
+catch(e){
+  console.log(e)
+}
+if (resourceURL.endsWith('/')){
+  await this.$readContainer(resourceURL)
+}
+
 },
 
 Vue.prototype.$readContainer = async function(containerUrl){
@@ -101,11 +116,57 @@ Vue.prototype.$readContainer = async function(containerUrl){
   console.log("Resources", resources)
   let container = {url: containerUrl, resources: resources}
   store.commit('gamesync/setGameContainer', container)
-
+  for await (let r of resources){
+    this.$subscribe(r)
+  }
 
 },
 
+Vue.prototype.$read = async function(url){
+  console.log(url)
+  let ds =  await getSolidDataset(url, {fetch: sc.fetch})
+  console.log(ds)
+  let thing = await getThingAll(ds)[0]
+  console.log(thing)
+  getStringNoLocaleAll
+  let updates = await getStringNoLocaleAll(thing, AS.content);
+  let game = {url: url, updates : updates}
+  store.commit('gamesync/setGame', game)
+},
+
+Vue.prototype.$changeGame = async function(g, action){
+  let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
+  console.log(ds)
+  let date = new Date().toISOString()
+  //    let name = g.url.split("#")[1]
+  //  console.log("get thing", name)
+  let thing = await getThingAll(ds)[0]
+  console.log(thing)
+  //  thing = addStringNoLocale(thing, AS.updated, date);
+  thing = addStringNoLocale(thing, AS.content, action+"_"+date);
+  let thingInDs = setThing(ds, thing);
+  let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
+  console.log("File saved",savedThing);
+  // console.log(g)
+},
+
+Vue.prototype.$remove = async function (g, action){
+  let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
+  console.log(ds)
+  //let date = new Date().toISOString()
+  //    let name = g.url.split("#")[1]
+  //  console.log("get thing", name)
+  let thing = await getThingAll(ds)[0]
+  console.log(thing)
+  thing = removeStringNoLocale(thing, AS.content, action)
+  let thingInDs = setThing(ds, thing);
+  let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
+  console.log("File saved",savedThing);
+  this.$read(g.url)
+},
+
 Vue.prototype.$create = async function(path){
+  //  console.log("websocket",websocket)
   let date = new Date()
   let name = Date.now();
   let url = path+name+'.ttl'
@@ -122,6 +183,7 @@ Vue.prototype.$create = async function(path){
   let thingInDs = setThing(ds, thing);
   let savedThing  = await saveSolidDatasetAt(path+name+'.ttl', thingInDs, { fetch: sc.fetch } );
   return savedThing
+
 },
 
 Vue.prototype.$login= async function(issuer) {

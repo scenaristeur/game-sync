@@ -1,7 +1,8 @@
 
 const state = () => ({
   messages: [],
-  gameContainer: null
+  gameContainer: null,
+  game: null
 })
 
 const actions = {
@@ -15,6 +16,9 @@ const mutations = {
   },
   setGameContainer(state, c){
     state.gameContainer = c
+  },
+  setGame(state, g){
+    state.game = g
   }
 }
 

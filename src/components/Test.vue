@@ -53,9 +53,11 @@ export default {
     async create(){
       let resource = await this.$create(this.path)
       console.log("created",resource)
+      this.$readContainer(this.path)
     },
     read(res){
       console.log("read",res)
+      this.$read(res)
     },
     trash(res){
       console.log("trash", res)
