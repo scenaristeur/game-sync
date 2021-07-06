@@ -6,6 +6,7 @@
     </div>
     url = {{ url }}<br><br>
     <b-button variant="info" @click="create">New Game</b-button>
+      <b-button variant="info" @click="refresh">refresh list</b-button>
 
     res : {{resources.length}}
     <b-list-group class="item list-group-item d-flex justify-content-between p-1">
@@ -33,7 +34,7 @@
 
 
 
-  Messages : {{messages}}
+  <!-- Messages : {{messages}} -->
 </div>
 </template>
 
@@ -53,7 +54,7 @@ export default {
     async create(){
       let resource = await this.$create(this.path)
       console.log("created",resource)
-      this.$readContainer(this.path)
+  
     },
     read(res){
       console.log("read",res)
@@ -62,6 +63,9 @@ export default {
     trash(res){
       console.log("trash", res)
       this.$deleteOnPod(res)
+    },
+    refresh(){
+      this.$refresh(this.path)
     }
   },
   watch:{

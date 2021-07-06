@@ -11,7 +11,7 @@ const actions = {
 
 const mutations = {
   newMessage(state,m){
-    console.log(m)
+  //  console.log(m)
     state.messages.push(m)
   },
   setGameContainer(state, c){

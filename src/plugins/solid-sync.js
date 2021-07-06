@@ -42,66 +42,98 @@ import {
 const plugin = {
   install(Vue, opts = {}) {
     let store = opts.store
-    // let websocket = null
+    let ws = {}
+
+    Vue.prototype.$refresh = async function(containerUrl){
+      console.log(ws)
+
+      for await (let key of Object.keys(ws)){
+        console.log(`${key} : ${ws[key]}`);
+        await ws[key].disconnect()
+        delete ws[key]
+
+      }
+      console.log(ws)
+      this.$subscribe(containerUrl)
+      // Object.keys(ws).forEach(async function(key){
+      //   console.log(`${key} : ${ws[key]}`);
+      //   await ws[key].disconnect()
+      //   delete ws[key]
+      //     console.log(ws)
+      // });
+
+      //ws = {}
+    },
 
     Vue.prototype.$subscribe = async function(resourceURL){
 
+      if (ws[resourceURL] == undefined){
+        const gateway = "https://notification.pod.inrupt.com/";
+        let websocket = new WebsocketNotification(
+          resourceURL,
+          { fetch: sc.fetch, gateway }
+        )
 
-      const gateway = "https://notification.pod.inrupt.com/";
-      let  websocket = new WebsocketNotification(
-        resourceURL,
-        { fetch: sc.fetch, gateway }
-      )
+        console.log("Subscription to", resourceURL)
+        websocket.on("connected", () =>
+        {
+          //console.log("connected", websocket)
+          console.log(ws)
+            ws[resourceURL] = websocket
+        }
+        // setMessages((prev) => [
+        //   ...prev,
+        //   `Websocket connected; watching ${podRoot}`,
+        // ])
+      );
 
-      console.log("Subscription to", resourceURL)
-      websocket.on("connected", () =>
-      console.log("connected", websocket)
-      // setMessages((prev) => [
-      //   ...prev,
-      //   `Websocket connected; watching ${podRoot}`,
-      // ])
+      websocket.on("message", (message) =>
+      {
+        console.log('message', JSON.parse(message))
+        store.commit('gamesync/newMessage', message)
+        if (resourceURL.endsWith('/')){
+          this.$readContainer(resourceURL)
+        }else{
+          this.$read(resourceURL)
+        }
+      }
+      // setMessages((prev) => [...prev, formatMessage(message)])
     );
 
-    websocket.on("message", (message) =>
-    {
-      console.log('message', JSON.parse(message))
-      store.commit('gamesync/newMessage', message)
-      if (resourceURL.endsWith('/')){
-        this.$readContainer(resourceURL)
-      }else{
-        this.$read(resourceURL)
-      }
+    websocket.on("closed", () =>{
+      console.log("websocket closed",websocket.topic)
+
+      //console.log(ws)
     }
-    // setMessages((prev) => [...prev, formatMessage(message)])
+    //  setMessages((prev) => [...prev, "Websocket closed"])
   );
 
-  websocket.on("closed", () =>
-  console.log("websocket closed")
-  //  setMessages((prev) => [...prev, "Websocket closed"])
-);
+  websocket.on("error", (error) => {
+    /* eslint no-console: 0 */
+    console.error(error);
+    // setMessages((prev) => [
+    //   ...prev,
+    //   "Websocket error (see console for details)",
+    // ]);
+  });
 
-websocket.on("error", (error) => {
-  /* eslint no-console: 0 */
-  console.error(error);
-  // setMessages((prev) => [
-  //   ...prev,
-  //   "Websocket error (see console for details)",
-  // ]);
-});
+  // websocket.on("message", console.log);
+  //websocket.on("*", console.log);
+  // websocket.on("connect", console.log);
+  // websocket.on("CREATE", console.log);
 
-// websocket.on("message", console.log);
-websocket.on("*", console.log);
-// websocket.on("connect", console.log);
-// websocket.on("CREATE", console.log);
+  try {
+    await websocket.connect();
 
-try {
-  websocket.connect();
-}
-catch(e){
-  console.log(e)
-}
-if (resourceURL.endsWith('/')){
-  await this.$readContainer(resourceURL)
+  }
+  catch(e){
+    console.log(e)
+  }
+  if (resourceURL.endsWith('/')){
+    await this.$readContainer(resourceURL)
+  }
+
+
 }
 
 },
@@ -117,17 +149,17 @@ Vue.prototype.$readContainer = async function(containerUrl){
   let container = {url: containerUrl, resources: resources}
   store.commit('gamesync/setGameContainer', container)
   for await (let r of resources){
-    this.$subscribe(r)
+    await  this.$subscribe(r)
   }
 
 },
 
 Vue.prototype.$read = async function(url){
-  console.log(url)
+
   let ds =  await getSolidDataset(url, {fetch: sc.fetch})
-  console.log(ds)
+
   let thing = await getThingAll(ds)[0]
-  console.log(thing)
+
   getStringNoLocaleAll
   let updates = await getStringNoLocaleAll(thing, AS.content);
   let game = {url: url, updates : updates}
@@ -183,7 +215,6 @@ Vue.prototype.$create = async function(path){
   let thingInDs = setThing(ds, thing);
   let savedThing  = await saveSolidDatasetAt(path+name+'.ttl', thingInDs, { fetch: sc.fetch } );
   return savedThing
-
 },
 
 Vue.prototype.$login= async function(issuer) {
@@ -305,8 +336,10 @@ Vue.prototype.$deleteOnPod = async function(url){
       await deleteFile(
         url, { fetch: sc.fetch }
       );
+
     }
     console.log(" deleted !",url);
+    ws[url].disconnect()
     //  let parent = url.slice(0, url.lastIndexOf('/'))+'/';
     //  console.log("parent",parent)
     //this.$setCurrentThingUrl(parent)
