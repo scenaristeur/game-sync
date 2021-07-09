@@ -1,17 +1,18 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Node Solid Server</router-link> |
-      <router-link to="/syncess">Entreprise Solid Server</router-link> |
+      <router-link to="/">Sync</router-link> |
+      <!-- <router-link to="/syncess">Entreprise Solid Server</router-link> | -->
       <router-link to="/about">About</router-link>
     </div>
     <div>
-          a  <ResourcesList /> b
-      <Login />
-      <Game />
-
     </div>
     <router-view/>
+
+    <!-- <Login /> -->
+    <!-- <ResourcesList /> -->
+    <!-- <Game /> -->
+
   </div>
 </template>
 
@@ -19,9 +20,9 @@
 export default {
   name: 'App',
   components: {
-    'Login': () => import('@/components/solid/Login'),
-    'Game': () => import('@/components/Game'),
-    'ResourcesList': () => import('@/components/ResourcesList'),
+    // 'Login': () => import('@/components/solid/Login'),
+    // 'Game': () => import('@/components/Game'),
+  //  'ResourcesList': () => import('@/components/ResourcesList'),
   },
 }
 </script>
