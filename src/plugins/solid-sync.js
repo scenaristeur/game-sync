@@ -52,7 +52,7 @@ const plugin = {
       let thing = await createThing({name: name})
       console.log("create", thing)
       // thing = addUrl(thing, RDF.type, AS.Note);
-      // thing = addStringNoLocale(thing, AS.name, n.title);
+      thing = addStringNoLocale(thing, AS.name, name);
       // thing = addStringNoLocale(thing, AS.content, n.text);
       //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
       thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );
@@ -125,16 +125,11 @@ const plugin = {
       let containerUrl = path.url
       const myDataset = await getSolidDataset( containerUrl, {fetch: sc.fetch});
       console.log(myDataset)
-
       let resources = await getContainedResourceUrlAll(myDataset,{fetch: sc.fetch} )
       console.log("Resources", resources)
       let container = {url: containerUrl, resources: resources}
       store.commit('gamesync/setGameContainer', container)
-      // for await (let r of resources){
-      //   await  this.$subscribe({url: r, subscribe: true})
-      // }
       return container
-
     },
 
     Vue.prototype.$readResource = async function(chose){
@@ -144,8 +139,7 @@ const plugin = {
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})
 
       let thing = await getThingAll(ds)[0]
-
-      let updates = await getStringNoLocaleAll(thing, AS.content);
+          let updates = await getStringNoLocaleAll(thing, AS.content);
       let game = {url: url, updates : updates}
       console.log("Game",game)
       store.commit('gamesync/setGame', game)
@@ -264,7 +258,7 @@ const plugin = {
           }
         }else{
           store.commit('solid/setPod', null)
-        //  store.commit('solid/setThings', [])
+          //  store.commit('solid/setThings', [])
         }
       } catch(e){
         alert("$getPodInfosFromSession "+e)
