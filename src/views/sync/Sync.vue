@@ -1,10 +1,14 @@
 <template>
   <div>
-    Sync
-    <UrlChoose />
-    <GraphCreate />
+
+
+    <NetworkView />
+
     <GraphList />
-    <GraphPlay />
+    <GraphCreate />
+    <UrlChoose />
+  <GraphPlay />
+
   </div>
 </template>
 
@@ -16,6 +20,7 @@ export default {
     'GraphCreate': () => import('@/components/sync/GraphCreate'),
     'GraphList': () => import('@/components/sync/GraphList'),
     'GraphPlay': () => import('@/components/sync/GraphPlay'),
+    'NetworkView': () => import('@/components/sync/NetworkView'),
   },
 }
 </script>

@@ -39,6 +39,7 @@ export default {
       let chose = {url: this.url, name: this.name}
       console.log(chose)
       this.$create(chose)
+      this.name =  Date.now();
     }
   },
   watch:{

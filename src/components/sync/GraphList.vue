@@ -38,9 +38,10 @@ export default {
   },
   methods:{
     read(res){
-        let thing = {url: res, subscribe: true}
+      let thing = {url: res, subscribe: true}
       console.log("read",thing)
       this.$readResource(thing)
+      this.$store.commit('gamesync/setNetworkUrl', {url: res})
     },
     trash(res){
       console.log("trash", res)

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="game != null">
-      GraphPlay :
+      GraphUpdates :
 
       <a :href="game.url" target="_blank">{{game.url}}</a>
 

@@ -3,7 +3,8 @@ const state = () => ({
   url : "",
   // messages: [],
   gameContainer: null,
-   game: null
+  game: null,
+  networkUrl: null
 })
 
 const actions = {
@@ -20,6 +21,10 @@ const mutations = {
     console.log("url", url)
     state.url = url
   },
+  setNetworkUrl(state, url){
+    state.networkUrl = url
+  },
+
   // newMessage(state,m){
   // //  console.log(m)
   //   state.messages.push(m)

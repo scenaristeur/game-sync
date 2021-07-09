@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "10ce2dd0e4208d824316",
+    "revision": "795949ea94d172c6852e",
     "url": "/game-sync/css/app.5c9713c3.css"
   },
   {
@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/css/chunk-vendors.85f48eb3.css"
   },
   {
-    "revision": "f2e64b604a392f6e9f86db6c89532d00",
+    "revision": "08de1ff10fd9b515c149de7a3600c659",
     "url": "/game-sync/index.html"
   },
   {
@@ -20,24 +20,28 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/about.00930094.js"
   },
   {
-    "revision": "10ce2dd0e4208d824316",
-    "url": "/game-sync/js/app.33f65083.js"
+    "revision": "795949ea94d172c6852e",
+    "url": "/game-sync/js/app.008af9c9.js"
   },
   {
     "revision": "d7e24ec24188951c88bf",
     "url": "/game-sync/js/chunk-2d0afa76.378fae53.js"
   },
   {
-    "revision": "35557821abacf088b05e",
-    "url": "/game-sync/js/chunk-2d0d2bbc.1e4c8ba8.js"
+    "revision": "af44630e64c526530d5f",
+    "url": "/game-sync/js/chunk-2d0cc08f.23dab181.js"
   },
   {
-    "revision": "b0d1483cd17f7a6ddc3d",
-    "url": "/game-sync/js/chunk-2d0e5731.a5b6aec8.js"
+    "revision": "6dcd3ae5eacb6d0cbc21",
+    "url": "/game-sync/js/chunk-2d0d2bbc.c4eaa33b.js"
   },
   {
-    "revision": "1d0515f4ddf7f57c10f1",
-    "url": "/game-sync/js/chunk-2d21a387.b7b33a11.js"
+    "revision": "4afa2008aaecd0e60109",
+    "url": "/game-sync/js/chunk-2d0e5731.de5260d6.js"
+  },
+  {
+    "revision": "f05792cdb28ac3eb88db",
+    "url": "/game-sync/js/chunk-2d21a387.66346b77.js"
   },
   {
     "revision": "7b5f12dafe0763c8723a",
@@ -56,8 +60,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-vendors.d5198954.js"
   },
   {
-    "revision": "011c9db0886b50fe43e5",
-    "url": "/game-sync/js/sync.adae20ca.js"
+    "revision": "449005f68bf2ea3533cb",
+    "url": "/game-sync/js/sync.20e8d698.js"
   },
   {
     "revision": "fff587ace385cbb84a96dc0b256db379",
