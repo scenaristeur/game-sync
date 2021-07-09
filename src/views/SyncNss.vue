@@ -12,25 +12,32 @@
 
 <script>
 export default {
-  name: 'Test',
+  name: 'SyncNss',
   data(){
     return {
-     path : 'https://game-sync.solidcommunity.net/public/test/',
-    //  path: "https://pod.inrupt.com/spoggy/public/game/",
+      server : "nss",
+      path : 'https://game-sync.solidcommunity.net/public/test/',
+      //  path: "https://pod.inrupt.com/spoggy/public/game/",
       url: "",
       webId: null
     }
   },
+  created(){
+    this.$subscribe(this.path, this.server)
+    console.log("sub")
+  },
   methods:{
-    create(){
-      let name = Date.now();
-      this.url = this.path+name+'.ttl'
+    async create(){
+      // let name = Date.now();
+      // this.url = this.path+name+'.ttl'
+      let resource = await this.$create(this.path)
+      console.log("created",resource)
     }
   },
   watch:{
     session(){
       if (this.session != null){
-        this.$openEarNss(this.path)
+        this.$subscribe(this.path, this.server)
         this.webId = this.session.info.webId
       }
     }

@@ -43,6 +43,60 @@ const plugin = {
   install(Vue, opts = {}) {
     let store = opts.store
     let ws = {}
+    var socket = null
+    var server = null
+
+    Vue.prototype.$subscribe = async function(resourceURL, svr = 'nss'){
+      server = svr
+      if (resourceURL.endsWith('/')){
+        await this.$readContainer(resourceURL)
+      }
+      switch (server) {
+        case 'ess':
+        this.$subscribeEss(resourceURL, server)
+        break;
+        default:
+        this.$subscribeNss(resourceURL, server)
+      }
+
+    }
+
+
+
+    Vue.prototype.$subscribeNss = async function(url){
+      console.log("subsub")
+      let app = this
+      if (socket == null){
+        var wss = "wss://"+url.split('/')[2];
+        //let socket = new WebSocket(websocket, ['solid.0.1.0']);
+        socket = new WebSocket(wss, ['solid-0.1']);
+      }
+
+      //  var socket = new WebSocket('wss://solidweb.org');
+
+      console.log(socket)
+      socket.onopen = function() {
+        console.log("socket open")
+        this.send('sub '+url);
+        //console.log("socket sub to "+app.log)
+      };
+      socket.onmessage = function(msg) {
+        console.log("message",msg)
+        if (msg.data && msg.data.slice(0, 3) === 'pub') {
+          //  console.log(msg)
+          console.log(msg.data)
+          app.$update(url)
+          // resource updated, refetch resource
+        }
+      };
+    },
+
+    Vue.prototype.$update = async function(url){
+      console.log("update de",url )
+      if (url.endsWith('/')){
+        await this.$readContainer(url)
+      }
+    },
 
     Vue.prototype.$refresh = async function(containerUrl){
       console.log(ws)
@@ -65,7 +119,7 @@ const plugin = {
       //ws = {}
     },
 
-    Vue.prototype.$subscribe = async function(resourceURL){
+    Vue.prototype.$subscribeEss = async function(resourceURL){
 
       if (ws[resourceURL] == undefined){
         const gateway = "https://notification.pod.inrupt.com/";
@@ -79,7 +133,7 @@ const plugin = {
         {
           //console.log("connected", websocket)
           console.log(ws)
-            ws[resourceURL] = websocket
+          ws[resourceURL] = websocket
         }
         // setMessages((prev) => [
         //   ...prev,
@@ -129,13 +183,8 @@ const plugin = {
   catch(e){
     console.log(e)
   }
-  if (resourceURL.endsWith('/')){
-    await this.$readContainer(resourceURL)
-  }
-
 
 }
-
 },
 
 Vue.prototype.$readContainer = async function(containerUrl){

@@ -3,8 +3,8 @@
     <Game />
     <Login />
 
-    <!-- <TestNss />
-    <hr> -->
+    <TestNss />
+    <hr>
     <Test />
 
 
@@ -20,7 +20,7 @@ export default {
     'Test': () => import('@/components/Test'),
     'Login': () => import('@/components/solid/Login'),
     'Game': () => import('@/components/Game'),
-    // 'TestNss': () => import('@/components/TestNss'),
+    'TestNss': () => import('@/components/TestNss'),
   },
   props: {
     msg: String

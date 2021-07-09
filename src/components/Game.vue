@@ -3,7 +3,7 @@
     <div v-if="game != null">
       Game :
 
-      {{game.url}}<br>
+      {{game.url}} <b-button @click="resetGame">Reset Game</b-button><br> 
       updates : {{game.updates}}
       <b-button variant="info" @click="changeGame('up')">Up</b-button>
       <b-button variant="info" @click="changeGame('down')">Down</b-button>
@@ -53,6 +53,9 @@ export default {
     trash(action){
       console.log(action)
       this.$remove(this.game, action)
+    },
+    resetGame(){
+      this.game = null
     }
   },
   watch:{
@@ -66,7 +69,7 @@ export default {
   computed:{
     game:{
       get () { return this.$store.state.gamesync.game },
-      set (/*value*/) { /*this.updateTodo(value)*/ }
+      set (value) { this.$store.commit('gamesync/setGame', value) }
     },
   }
 }

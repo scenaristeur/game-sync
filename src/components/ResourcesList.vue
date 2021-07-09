@@ -1,12 +1,7 @@
 <template>
   <div>
-    Test Entreprise Solid Server<br>
-    <div v-if="webId != null" >
-      webId = {{ webId }}<br>
-    </div>
-    url = {{ url }}<br><br>
-    <b-button variant="info" @click="create">New Game</b-button>
-      <b-button variant="info" @click="refresh">refresh list</b-button>
+    resources: <br>
+
 
     res : {{resources.length}}
     <b-list-group class="item list-group-item d-flex justify-content-between p-1">
@@ -34,28 +29,20 @@
 
 
 
-  <!-- Messages : {{messages}} -->
+
+
 </div>
 </template>
 
 <script>
 export default {
-  name: 'Test',
+  name: 'ResourcesList',
   data(){
     return {
-      //  path : 'https://game-sync.solidcommunity.net/public/test/',
-      path: "https://pod.inrupt.com/spoggy/public/game/",
-      url: "",
-      webId: null,
       resources : []
     }
   },
   methods:{
-    async create(){
-      let resource = await this.$create(this.path)
-      console.log("created",resource)
-  
-    },
     read(res){
       console.log("read",res)
       this.$read(res)
@@ -64,17 +51,8 @@ export default {
       console.log("trash", res)
       this.$deleteOnPod(res)
     },
-    refresh(){
-      this.$refresh(this.path)
-    }
   },
   watch:{
-    session(){
-      if (this.session != null){
-        this.$subscribe(this.path)
-        this.webId = this.session.info.webId
-      }
-    },
     gameContainer(){
       console.log(this.gameContainer)
       if (this.gameContainer != null && this.gameContainer.resources != undefined){
@@ -83,20 +61,11 @@ export default {
       }
     }
   },
-  computed:{
-    session:{
-      get () { return this.$store.state.solid.session != null && this.$store.state.solid.session },
-      set (/*value*/) { /*this.updateTodo(value)*/ }
-    },
-    messages:{
-      get () { return this.$store.state.gamesync.messages },
-      set (/*value*/) { /*this.updateTodo(value)*/ }
-    },
+  computed: {
     gameContainer:{
       get () { return this.$store.state.gamesync.gameContainer },
       set (/*value*/) { /*this.updateTodo(value)*/ }
     },
-
   }
 }
 </script>
