@@ -12,7 +12,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-
+    <small><i>0.0.1-login</i></small>
   </div>
 </template>
 
@@ -22,7 +22,7 @@ export default {
   components: {
     // 'Login': () => import('@/components/solid/Login'),
     // 'Game': () => import('@/components/Game'),
-  //  'ResourcesList': () => import('@/components/ResourcesList'),
+    //  'ResourcesList': () => import('@/components/ResourcesList'),
   },
 }
 </script>

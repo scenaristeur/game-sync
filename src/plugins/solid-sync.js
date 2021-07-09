@@ -220,6 +220,32 @@ const plugin = {
       //this.$read(g)
     },
 
+    Vue.prototype.$login= async function(issuer) {
+
+      try{
+        await sc.login({
+          oidcIssuer: issuer,
+          redirectUrl: window.location.href,
+          clientName: "GameSync",
+        });
+      } catch(e){
+        alert("$login "+e)
+      }
+    },
+
+    Vue.prototype.$logout = async function(params){
+      try{
+        let session = sc.getDefaultSession()
+        console.log(params)
+        await session.logout()
+        store.commit('solid/setSession',session)
+        store.commit('solid/setPod', {})
+        //  store.commit('booklice/setPath', "")
+      } catch(e){
+        alert("$logout "+e)
+      }
+    },
+
     Vue.prototype.$getPodInfosFromSession = async function(session){
       try{
         let pod = {}
