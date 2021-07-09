@@ -6,6 +6,9 @@ import store from './store'
 import SolidSync from './plugins/solid-sync';
 Vue.use(SolidSync, {store: store});
 
+import { Network } from "vue-vis-network";
+Vue.component('network', Network);
+
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
