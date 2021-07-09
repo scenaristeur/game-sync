@@ -264,7 +264,7 @@ const plugin = {
           }
         }else{
           store.commit('solid/setPod', null)
-          store.commit('solid/setThings', [])
+        //  store.commit('solid/setThings', [])
         }
       } catch(e){
         alert("$getPodInfosFromSession "+e)

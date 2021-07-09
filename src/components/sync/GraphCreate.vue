@@ -1,14 +1,17 @@
 <template>
   <div>
     URL : {{ url }}
-    WebId : {{ webId }}
+
+    <Login />
     <div v-if="webId == null">
       <b-alert show variant="warning">
         You must Login to create a new Graph
       </b-alert>
-      <Login />
+
     </div>
+
     <div v-else>
+      WebId : {{ webId }}
       <b-form-input v-model="name" placeholder="choose a name"></b-form-input>
       <b-button @click="create">Create a graph</b-button>
     </div>
