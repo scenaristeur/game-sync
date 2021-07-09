@@ -209,7 +209,6 @@ Vue.prototype.$read = async function(url){
 
   let thing = await getThingAll(ds)[0]
 
-  getStringNoLocaleAll
   let updates = await getStringNoLocaleAll(thing, AS.content);
   let game = {url: url, updates : updates}
   store.commit('gamesync/setGame', game)

@@ -3,7 +3,7 @@ const state = () => ({
   url : "",
   // messages: [],
   gameContainer: null,
-  // game: null
+   game: null
 })
 
 const actions = {
@@ -27,9 +27,9 @@ const mutations = {
   setGameContainer(state, c){
     state.gameContainer = c
   },
-  // setGame(state, g){
-  //   state.game = g
-  // }
+  setGame(state, g){
+    state.game = g
+  }
 }
 
 export default {

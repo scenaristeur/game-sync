@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form-input v-model="temp_url" placeholder="chhose a url"></b-form-input>
+    <b-form-input v-model="temp_url" placeholder="choose a url"></b-form-input>
     <b-button @click="changedUrl">Explore</b-button>
   </div>
 </template>
