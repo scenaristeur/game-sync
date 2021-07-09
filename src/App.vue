@@ -12,7 +12,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.1-login</i></small>
+    <small><i>0.0.2-addnodes</i></small>
   </div>
 </template>
 
