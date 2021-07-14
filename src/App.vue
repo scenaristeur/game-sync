@@ -12,7 +12,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.2-addnodes</i></small>
+    <small><i>0.0.3-toolbar & commandInput</i></small>
   </div>
 </template>
 

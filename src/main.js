@@ -5,6 +5,8 @@ import router from './router'
 import store from './store'
 import SolidSync from './plugins/solid-sync';
 Vue.use(SolidSync, {store: store});
+import NetworkPlugin from './plugins/network';
+Vue.use(NetworkPlugin, {store: store});
 
 import { Network } from "vue-vis-network";
 Vue.component('network', Network);
