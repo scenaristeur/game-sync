@@ -1,19 +1,27 @@
 <template>
   <div>
 
+
+
+
     <b-row>
       <b-col>
-        <NetworkView />
+
+        <GraphCreate />
+
+
       </b-col>
       <b-col>
-        <!-- <Toolbar /> -->
-        <CommandInput />
+        <GraphList />
       </b-col>
+
     </b-row>
 
-    <GraphList />
-    <GraphCreate />
+    <CommandInput />
+    <NetworkView />
+
     <UrlChoose />
+    <!-- <Toolbar /> -->
     <GraphPlay />
 
   </div>

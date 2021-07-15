@@ -3,9 +3,7 @@
 
 
     <div class="wrapper" v-if="networkUrl != null">
-      NetworkView {{ networkUrl.url}}<br>
-
-      <network
+        <network
       id="network"
       class="network"
       ref="network"
@@ -20,6 +18,7 @@
 
 
       ></network>
+        url : {{ networkUrl.url}}<br>
 
         <!-- updates : {{ updates }} -->
       <!-- @select-node="selectNodeEvent"
@@ -331,7 +330,6 @@ height: 70px;
 } */
 .network{
   min-height:55vh;/* 95vh;*/
-  width: 50vw;
   border: 1px solid black;
   background: linear-gradient(to bottom, rgba(215, 215, 255), rgba(250, 250, 170));
   padding: 10px;
