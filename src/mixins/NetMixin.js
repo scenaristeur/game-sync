@@ -273,17 +273,23 @@ export default {
       },
       onInputObjectChange(data){
         console.log("onCommand",data)
-        let nodeSubject, nodeObject, edge
+        let nodeSubject, nodeObject, edge, actionS, actionO, actionE
         switch (data.type) {
           case 'triplet':
           nodeSubject = this.nodeFromLabel(data.value.subject)
           this.saveNode(nodeSubject)
           nodeObject = this.nodeFromLabel(data.value.object)
           this.saveNode(nodeObject)
+          actionS = {action: "addNode", node: nodeSubject}
+          this.$changeGame(this.game, actionS)
+          actionO = {action: "addNode", node: nodeObject}
+          this.$changeGame(this.game, actionO)
           console.log(nodeSubject.id, nodeObject.id)
           edge = this.edgeFromLabel({from: nodeSubject.id, to: nodeObject.id, label: data.value.predicate})
           console.log(edge)
           this.saveEdge(edge)
+          actionE = {action: "addEdge", edge: edge}
+          this.$changeGame(this.game, actionE)
           break;
           case 'url':
           console.log(data)

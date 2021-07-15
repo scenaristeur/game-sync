@@ -11,7 +11,7 @@
 <script>
 export default {
   name: "NetworkPopups",
-  props: ['network'],
+  props: ['network', 'game'],
   components: {
     'NodeModal': () => import('@/components/network/NodeModal'),
     'EdgeModal': () => import('@/components/network/EdgeModal'),
@@ -38,12 +38,28 @@ export default {
   methods: {
     saveNode(n) {
       var index = this.network.nodes.findIndex(x => x.id==n.id);
-      index === -1 ? this.n.nodes.push(n) : Object.assign(this.network.nodes[index], n)
+      if(index === -1){
+        this.n.nodes.push(n)
+        let action = {action: "addNode", node: n}
+        this.$changeGame(this.game, action)
+      }else{
+        Object.assign(this.network.nodes[index], n)
+        let action = {action: "updateNode", node: n}
+        this.$changeGame(this.game, action)
+      }
     },
     saveEdge(e){
       console.log(e)
       var index = this.network.edges.findIndex(x => x.id==e.id || (x.from == e.from && x.to == e.to && x.label == e.label));
-      index === -1 ? this.network.edges.push(e) : Object.assign(this.network.edges[index], e)
+      if(index === -1){
+        this.network.edges.push(e)
+        let action = {action: "addEdge", edge: e}
+        this.$changeGame(this.game, action)
+      }else{
+        Object.assign(this.network.edges[index], e)
+        let action = {action: "updateEdge", edge: e}
+        this.$changeGame(this.game, action)
+      }
     },
   },
   watch:{

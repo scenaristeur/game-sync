@@ -33,7 +33,15 @@ import { FOAF, /*LDP,*/ VCARD,/*  RDF,*/ AS  } from "@inrupt/vocab-common-rdf";
 import { WS } from "@inrupt/vocab-solid-common";
 import * as sc from '@inrupt/solid-client-authn-browser'
 
+/* TODO
+CRUD container
+CRUD resource
+CRUD level
+CRUD acl
+CRUD node
+CRUD edge
 
+*/
 
 const plugin = {
   install(Vue, opts = {}) {
@@ -43,6 +51,13 @@ const plugin = {
 
     Vue.prototype.$create = async function(chose){
       //  console.log("websocket",websocket)
+      //       {
+      //   "@context": "https://www.w3.org/ns/activitystreams",
+      //   "summary": "Martin created an image",
+      //   "type": "Create",
+      //   "actor": "http://www.test.example/martin",
+      //   "object": "http://example.org/foo.jpg"
+      // }
       let date = new Date()
       let name = chose.name || Date.now();
       let path = chose.url
@@ -139,7 +154,7 @@ const plugin = {
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})
 
       let thing = await getThingAll(ds)[0]
-          let updates = await getStringNoLocaleAll(thing, AS.content);
+      let updates = await getStringNoLocaleAll(thing, AS.content);
       let game = {url: url, updates : updates}
       console.log("Game",game)
       store.commit('gamesync/setGame', game)
@@ -184,6 +199,7 @@ const plugin = {
     },
 
     Vue.prototype.$changeGame = async function(g, action){
+      //premiers tests
       let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
       console.log(ds)
       let date = new Date().toISOString()
@@ -192,10 +208,41 @@ const plugin = {
       let thing = await getThingAll(ds)[0]
       console.log(thing)
       //  thing = addStringNoLocale(thing, AS.updated, date);
-      thing = addStringNoLocale(thing, AS.content, action+"_"+date);
+      action.date = date
+      thing = addStringNoLocale(thing, AS.content, JSON.stringify(action));
       let thingInDs = setThing(ds, thing);
       let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
       console.log("File saved",savedThing);
+
+      // {
+      //   "@context": "https://www.w3.org/ns/activitystreams",
+      //   "summary": "Martin added an article to his blog",
+      //   "type": "Add",
+      //   "published": "2015-02-10T15:04:55Z",
+      //   "actor": {
+      //    "type": "Person",
+      //    "id": "http://www.test.example/martin",
+      //    "name": "Martin Smith",
+      //    "url": "http://example.org/martin",
+      //    "image": {
+      //      "type": "Link",
+      //      "href": "http://example.org/martin/image.jpg",
+      //      "mediaType": "image/jpeg"
+      //    }
+      //   },
+      //   "object" : {
+      //    "id": "http://www.test.example/blog/abc123/xyz",
+      //    "type": "Article",
+      //    "url": "http://example.org/blog/2011/02/entry",
+      //    "name": "Why I love Activity Streams"
+      //   },
+      //   "target" : {
+      //    "id": "http://example.org/blog/",
+      //    "type": "OrderedCollection",
+      //    "name": "Martin's Blog"
+      //   }
+      // }
+
       // console.log(g)
     },
 

@@ -4,7 +4,7 @@
 
     <div class="wrapper" v-if="networkUrl != null">
       NetworkView {{ networkUrl.url}}<br>
-      updates : {{ updates }}
+
       <network
       id="network"
       class="network"
@@ -20,6 +20,8 @@
 
 
       ></network>
+
+        <!-- updates : {{ updates }} -->
       <!-- @select-node="selectNodeEvent"
 
       @nodes-add="addNodeEvent"
@@ -93,7 +95,7 @@
 </div> -->
 <!-- <NetworkPopups :network="network" /> -->
 </div>
-<NetworkPopups :network="network" />
+<NetworkPopups :network="network" :game="game" />
 </div>
 </template>
 
@@ -104,12 +106,12 @@ import NetworkEvent from '@/mixins/NetworkEventMixin'
 
 export default {
   name: "NetworkView",
-    mixins: [NetworkEvent, NetMixin],
+  mixins: [NetworkEvent, NetMixin],
   components: {
-  //  Network,
-  'NetworkPopups': () => import('@/components/network/NetworkPopups'),
-  // 'network': () => import('vue-vis-network')
-},
+    //  Network,
+    'NetworkPopups': () => import('@/components/network/NetworkPopups'),
+    // 'network': () => import('vue-vis-network')
+  },
   data(){
     return{
       updates: [],
@@ -214,7 +216,8 @@ export default {
       node.color == undefined ? node.color =  {  background: '#D2E5FF', border: '#2B7CE9'} : ""
       node.shape == undefined ? node.shape = 'ellipse': ""
       //  this.$bvModal.show("node-popup")
-      this.$store.commit('ipgs/setAction', {action: 'editNode', node: node})
+      let action = {action: 'editNode', node: node}
+      this.$store.commit('ipgs/setAction', action)
       callback()
     },
     addEdge(edge, callback){
@@ -232,7 +235,9 @@ export default {
       let bugEdge = edge
       bugEdge.from = edge.from.id != undefined ? edge.from.id : edge.from
       bugEdge.to  = edge.to.id != undefined ? edge.to.id : edge.to
-      this.$store.commit('ipgs/setAction', {action: 'editEdge', edge: bugEdge})
+      let action = {action: 'editEdge', edge: bugEdge}
+      this.$store.commit('ipgs/setAction', action)
+
       //  this.$bvModal.show("edge-popup")
       callback()
     },
@@ -243,15 +248,59 @@ export default {
     },
     addEdgeEvent(e){
       console.log("addEdge",e)
+    },
+    processUpdates(){
+      this.updates.forEach((u) => {
+        console.log(u)
+        let indexN, indexE, n, e
+        switch (u.action) {
+          case "addNode":
+          case "updateNode":
+          n = u.node
+          delete n.x
+          delete n.y
+          indexN = this.network.nodes.findIndex(x => x.id==n.id);
+          indexN === -1 ? this.network.nodes.push(n) : Object.assign(this.network.nodes[indexN], n)
+          break;
+
+
+          case "addEdge":
+          case "updateEdge":
+          e = u.edge
+          indexE = this.network.edges.findIndex(x => x.id==e.id);
+          indexE === -1 ? this.network.edges.push(e) : Object.assign(this.network.edges[indexE], e)
+          break;
+          default:
+          console.log("todo",u)
+
+        }
+      });
+
     }
+    // process(u){
+    //   console.log("UUU",u)
+    //   try{
+    //     let u2 = JSON.parse(u)
+    //     console.log("uu",u2)
+    //   }catch(e){
+    //     console.log("err",e)
+    //     console.log("u string",u)
+    //   }
+    // }
   },
   watch:{
     game(){
       console.log("game", this.game)
       if (this.game != null && this.game.url == this.networkUrl.url){
         console.log("Game Update", this.game)
-        this.updates = this.game.updates
-        this.network.nodes = this.updates.map(u => {return {label: u}})
+        this.updates = this.game.updates.map(u => {return JSON.parse(u)})
+        this.processUpdates()
+        // this.updates = this.game.updates
+        // this.network.nodes = this.updates.map(u => {return {label: u}})
+        // this.game.updates.forEach((u) => {
+        //   this.process(u)
+        // });
+
       }
     }
   },

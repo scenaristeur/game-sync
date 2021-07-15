@@ -12,9 +12,9 @@
       <b-button variant="info" @click="changeGame('down')">Down</b-button>
       <b-button variant="info" @click="changeGame('left')">Left</b-button>
       <b-button variant="info" @click="changeGame('right')">Right</b-button>
-<hr>
+<!-- <hr>
       updates : {{game.updates}}
-<hr>
+<hr> -->
       <b-list-group class="item list-group-item d-flex justify-content-between p-1">
         <b-list-group-item variant="light"
         class="item list-group-item d-flex justify-content-between"
@@ -53,7 +53,8 @@ export default {
   methods:{
     changeGame(action){
       //this.game.updates.push(action)
-      this.$changeGame(this.game, action)
+      let a = {action: action}
+      this.$changeGame(this.game, a)
     },
     trash(action){
       console.log(action)
