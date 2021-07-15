@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "90504d11ccfe71d96c79",
+    "revision": "330f0f3bff409df23cb7",
     "url": "/game-sync/css/app.5c9713c3.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/css/chunk-4060d866.5dccdab4.css"
   },
   {
-    "revision": "2b4951851dd9078032f2",
-    "url": "/game-sync/css/chunk-5a18d654.1631024f.css"
+    "revision": "ad6303106080b6751c68",
+    "url": "/game-sync/css/chunk-5a18d654.80a32084.css"
   },
   {
     "revision": "c48ab21e4bd524c7775f",
@@ -80,7 +80,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/img/zoomExtends.5f78e86f.png"
   },
   {
-    "revision": "6186c8610c31bfe04ae56334e3780436",
+    "revision": "8fdb26410f4e446d2d3f98d6bacc442d",
     "url": "/game-sync/index.html"
   },
   {
@@ -88,8 +88,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/about.bec5a6f3.js"
   },
   {
-    "revision": "90504d11ccfe71d96c79",
-    "url": "/game-sync/js/app.98faabdc.js"
+    "revision": "330f0f3bff409df23cb7",
+    "url": "/game-sync/js/app.eac0a61d.js"
   },
   {
     "revision": "eac9c5a3b59845d6479d",
@@ -148,8 +148,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-4060d866.9b4a43b8.js"
   },
   {
-    "revision": "2b4951851dd9078032f2",
-    "url": "/game-sync/js/chunk-5a18d654.6d324646.js"
+    "revision": "ad6303106080b6751c68",
+    "url": "/game-sync/js/chunk-5a18d654.57032761.js"
   },
   {
     "revision": "c48ab21e4bd524c7775f",
@@ -168,8 +168,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-vendors.e452f5b4.js"
   },
   {
-    "revision": "5bc52620fd9979ecf318",
-    "url": "/game-sync/js/sync.965d530b.js"
+    "revision": "c1ab36ec6f1baafc8250",
+    "url": "/game-sync/js/sync.457e37e9.js"
   },
   {
     "revision": "fff587ace385cbb84a96dc0b256db379",
