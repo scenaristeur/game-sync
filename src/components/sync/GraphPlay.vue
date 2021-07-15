@@ -15,10 +15,12 @@
 <!-- <hr>
       updates : {{game.updates}}
 <hr> -->
+<b-container fluid>
       <b-list-group class="item list-group-item d-flex justify-content-between p-1">
         <b-list-group-item variant="light"
-        class="item list-group-item d-flex justify-content-between"
+        class="item list-group-item d-flex"
         v-for="(up,i) in updates" :key="i"  button>
+        <!--  justify-content-between-->
         <div class="input-group" style="display:table; width:100%;">
           <p class="p-0 m-0 flex-grow-1">{{ up }}</p>
           <!-- <b-button v-b-modal.share-modal>share</b-button> -->
@@ -37,6 +39,7 @@
 
       </b-list-group-item>
     </b-list-group>
+  </b-container>
   </div>
 </div>
 
