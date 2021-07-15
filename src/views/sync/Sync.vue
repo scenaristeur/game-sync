@@ -6,7 +6,7 @@
         <NetworkView />
       </b-col>
       <b-col>
-        <Toolbar />
+        <!-- <Toolbar /> -->
         <CommandInput />
       </b-col>
     </b-row>
@@ -28,7 +28,7 @@ export default {
     'GraphList': () => import('@/components/sync/GraphList'),
     'GraphPlay': () => import('@/components/sync/GraphPlay'),
     'NetworkView': () => import('@/components/sync/NetworkView'),
-    'Toolbar': () => import('@/components/sync/Toolbar'),
+    // 'Toolbar': () => import('@/components/sync/Toolbar'),
     'CommandInput': () => import('@/components/layout/CommandInput')
   },
 }

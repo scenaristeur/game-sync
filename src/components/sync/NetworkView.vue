@@ -14,6 +14,9 @@
       :options="network.options"
       @nodes-add="addNodeEvent"
       @edges-add="addEdgeEvent"
+      @select-node="selectNodeEvent"
+
+      @click="networkClickEvent"
 
 
       ></network>
@@ -97,10 +100,11 @@
 <script>
 import "vue-vis-network/node_modules/vis-network/dist/vis-network.css";
 import NetMixin from '@/mixins/NetMixin'
+import NetworkEvent from '@/mixins/NetworkEventMixin'
 
 export default {
   name: "NetworkView",
-    mixins: [/*NetworkEvent,*/ NetMixin],
+    mixins: [NetworkEvent, NetMixin],
   components: {
   //  Network,
   'NetworkPopups': () => import('@/components/network/NetworkPopups'),
