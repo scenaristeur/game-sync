@@ -19,6 +19,8 @@ import {
   createSolidDataset,
   createThing,
   addUrl,
+  addDecimal,
+  addInteger,
   // overwriteFile,
   getStringNoLocale,
   getThing,
@@ -29,9 +31,28 @@ import {
   // setStringNoLocale,
   //setDatetime
 } from "@inrupt/solid-client";
-import { FOAF, /*LDP,*/ VCARD,/*  RDF,*/ AS  } from "@inrupt/vocab-common-rdf";
+import { FOAF, /*LDP,*/ VCARD, RDF, AS  } from "@inrupt/vocab-common-rdf";
 import { WS } from "@inrupt/vocab-solid-common";
 import * as sc from '@inrupt/solid-client-authn-browser'
+
+
+const IPGS = {
+  id: "https://scenaristeur.github.io/ipgs#id",
+  label: "https://scenaristeur.github.io/ipgs#label",
+  Node: "https://scenaristeur.github.io/ipgs#Node",
+  Edge: "https://scenaristeur.github.io/ipgs#Edge",
+  shape: "https://scenaristeur.github.io/ipgs#shape",
+  backgroundColor: "https://scenaristeur.github.io/ipgs#backgroundColor",
+  borderColor: "https://scenaristeur.github.io/ipgs#borderColor",
+  cid: "https://scenaristeur.github.io/ipgs#cid",
+  x: "https://scenaristeur.github.io/ipgs#x",
+  y: "https://scenaristeur.github.io/ipgs#y",
+  z: "https://scenaristeur.github.io/ipgs#z",
+  properties: "https://scenaristeur.github.io/ipgs#properties",
+  updates: "https://scenaristeur.github.io/ipgs#updates",
+  from: "https://scenaristeur.github.io/ipgs#from",
+  to: "https://scenaristeur.github.io/ipgs#to"
+}
 
 /* TODO
 CRUD container
@@ -198,6 +219,89 @@ const plugin = {
       }
     },
 
+    Vue.prototype.$addNode = async function(g,action){
+      console.log("todo add node",g,action)
+      let node = action.node
+      let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
+      console.log(ds)
+      let thing = await createThing({name: node.id})
+      console.log("create", thing)
+      action.actor = store.state.solid.pod.webId
+      // activitystreams
+      thing = addUrl(thing, RDF.type, IPGS.Node);
+      node.label != undefined ? thing = addStringNoLocale(thing, AS.name, node.label): ""
+
+      // ipgs /visjs
+      thing = addStringNoLocale(thing, IPGS.id, node.id);
+      node.label != undefined ? thing = addStringNoLocale(thing, IPGS.label, node.label): ""
+
+      node.shape != undefined ? thing = addStringNoLocale(thing, IPGS.shape, node.shape) : ""
+      node.x != undefined ? thing = addDecimal(thing, IPGS.x, node.x): ""
+      node.y != undefined ? thing = addDecimal(thing, IPGS.y, node.y): ""
+      node.z != undefined ? thing = addDecimal(thing, IPGS.z, node.z): ""
+      node.color != undefined && node.color.background != undefined ? thing = addStringNoLocale(thing, IPGS.backgroundColor, node.color.background): ""
+      node.color != undefined && node.color.border != undefined ? thing = addStringNoLocale(thing, IPGS.borderColor, node.color.border): ""
+      node.cid != undefined ? thing = addInteger(thing, IPGS.cid, node.cid): ""
+      node.properties != undefined ? thing = addStringNoLocale(thing, IPGS.properties, node.properties) : ""
+      thing = addStringNoLocale(thing, IPGS.updates, JSON.stringify(action))
+
+      // thing = addStringNoLocale(thing, AS.content, n.text);
+      //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
+      //  thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );
+      let thingInDs = setThing(ds, thing);
+      let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
+      return savedThing
+
+    },
+    Vue.prototype.$updateNode = async function(g,action){
+      console.log("todo update node",g,action)
+    },
+    Vue.prototype.$deleteNode = async function(g,action){
+      console.log("todo delete node",g,action)
+    },
+    Vue.prototype.$addEdge = async function(g,action){
+      console.log("todo add Edge",g,action)
+    },
+    Vue.prototype.$updateEdge = async function(g,action){
+      console.log("todo update edge",g,action)
+    },
+    Vue.prototype.$deleteEdge = async function(g,action){
+      console.log("todo delete edge",g,action)
+    },
+
+
+
+    Vue.prototype.$updateGame = async function(g, action){
+      console.log(g,action)
+      switch (action.action) {
+        case "addNode":
+        await this.$addNode(g,action)
+        break;
+        case "updateNode":
+        await this.$updateNode(g,action)
+        break;
+        case "deleteNode":
+        await this.$deleteNode(g,action)
+        break;
+        case "addEdge":
+        await this.$addEdge(g,action)
+        break;
+        case "updateEdge":
+        await this.$updateEdge(g,action)
+        break;
+        case "deleteEdge":
+        await this.$deleteEdge(g,action)
+        break;
+        default:
+        console.log("action inconnue",g,action)
+      }
+
+
+    },
+
+
+
+
     Vue.prototype.$changeGame = async function(g, action){
       //premiers tests
       let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
@@ -213,7 +317,7 @@ const plugin = {
       let thingInDs = setThing(ds, thing);
       let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
       console.log("File saved",savedThing);
-
+      await this.$updateGame(g,action)
       // {
       //   "@context": "https://www.w3.org/ns/activitystreams",
       //   "summary": "Martin added an article to his blog",

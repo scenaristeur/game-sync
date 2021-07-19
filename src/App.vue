@@ -12,7 +12,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.4-synchroCommand</i></small>
+    <small><i>0.0.5- $addNode</i></small>
   </div>
 </template>
 
