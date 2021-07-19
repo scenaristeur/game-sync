@@ -1,6 +1,6 @@
 import {
   getSolidDataset,
-  getThingAll,
+//  getThingAll,
   // getFile,
   // isRawData,
   // getContentType,
@@ -175,8 +175,9 @@ const plugin = {
       let url = chose.url
 
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})
-
-      let thing = await getThingAll(ds)[0]
+      let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
+      console.log(mainThing)
+      let thing = await getThing(ds,url+"#"+mainThing) //await getThingAll(ds)[0]
       let updates = await getStringNoLocaleAll(thing, AS.content);
       let game = {url: url, updates : updates}
       console.log("Game",game)
@@ -290,14 +291,74 @@ const plugin = {
       return savedThing
 
     },
-    Vue.prototype.$deleteNode = async function(g,action){
-      console.log("todo delete node",g,action)
-    },
+
     Vue.prototype.$addEdge = async function(g,action){
-      console.log("todo add Edge",g,action)
+      // console.log("todo add Edge",g,action)
+      let edge = action.edge
+      let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
+      // let thingFrom = edge.from.startsWith("#") ? await getThing( ds, g.url+edge.from ) : edge.from
+      // let thingTo = edge.to.startsWith("#") ? await getThing( ds, g.url+edge.to ) : edge.to
+      let thingFrom =  await getThing( ds, g.url+edge.from )
+      let thingTo = await getThing( ds, g.url+edge.to )
+      let thingEdge = await createThing({name: edge.id})
+      //  console.log("create", thing)
+
+      // activitystreams
+      thingEdge = setUrl(thingEdge, RDF.type, IPGS.Edge);
+      edge.label != undefined ? thingEdge = setStringNoLocale(thingEdge, AS.name, edge.label): ""
+      // ipgs /visjs
+      thingEdge = setStringNoLocale(thingEdge, IPGS.id, edge.id);
+      edge.label != undefined ? thingEdge = setStringNoLocale(thingEdge, IPGS.label, edge.label): ""
+      edge.from != undefined ? thingEdge = setUrl(thingEdge, IPGS.from, thingFrom): ""
+      edge.to != undefined ? thingEdge = setUrl(thingEdge, IPGS.to, thingTo): ""
+
+
+      edge.properties != undefined ? thingEdge = setStringNoLocale(thingEdge, IPGS.properties, edge.properties) : ""
+      thingEdge = addStringNoLocale(thingEdge, IPGS.updates, JSON.stringify(action))
+
+      let thingInDs = setThing(ds, thingEdge);
+      let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
+      console.log("Edge ADDED ", savedThing)
+
+      return savedThing
+
     },
     Vue.prototype.$updateEdge = async function(g,action){
-      console.log("todo update edge",g,action)
+      console.log("todo add Edge",g,action)
+      let edge = action.edge
+      let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
+      // let thingFrom = edge.from.startsWith("#") ? await getThing( ds, g.url+edge.from ) : edge.from
+      // let thingTo = edge.to.startsWith("#") ? await getThing( ds, g.url+edge.to ) : edge.to
+      let thingFrom =  await getThing( ds, g.url+edge.from )
+    //  console.log(thingFrom)
+      let thingTo = await getThing( ds, g.url+edge.to )
+      //console.log(thingTo)
+      let thingEdge = await getThing(ds, g.url+"#"+edge.id)
+      //console.log(thingEdge)
+      //  console.log("create", thing)
+
+      // activitystreams
+      thingEdge = setUrl(thingEdge, RDF.type, IPGS.Edge);
+      edge.label != undefined ? thingEdge = setStringNoLocale(thingEdge, AS.name, edge.label): ""
+      // ipgs /visjs
+      thingEdge = setStringNoLocale(thingEdge, IPGS.id, edge.id);
+      edge.label != undefined ? thingEdge = setStringNoLocale(thingEdge, IPGS.label, edge.label): ""
+      edge.from != undefined ? thingEdge = setUrl(thingEdge, IPGS.from, thingFrom): ""
+      edge.to != undefined ? thingEdge = setUrl(thingEdge, IPGS.to, thingTo): ""
+
+
+      edge.properties != undefined ? thingEdge = setStringNoLocale(thingEdge, IPGS.properties, edge.properties) : ""
+      thingEdge = addStringNoLocale(thingEdge, IPGS.updates, JSON.stringify(action))
+
+      let thingInDs = setThing(ds, thingEdge);
+      let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
+      console.log("Edge Updated ", savedThing)
+
+      return savedThing
+
+    },
+    Vue.prototype.$deleteNode = async function(g,action){
+      console.log("todo delete node",g,action)
     },
     Vue.prototype.$deleteEdge = async function(g,action){
       console.log("todo delete edge",g,action)
@@ -344,7 +405,11 @@ const plugin = {
       let date = new Date().toISOString()
       //    let name = g.url.split("#")[1]
       //  console.log("get thing", name)
-      let thing = await getThingAll(ds)[0]
+      //let thing = await getThingAll(ds)[0]
+      let mainThing = g.url.substring(g.url.lastIndexOf('/') + 1).split('.ttl')[0]
+      console.log(mainThing)
+      let thing = await getThing(ds,g.url+"#"+mainThing) //await getThingAll(ds)[0]
+
       console.log(thing)
       //  thing = addStringNoLocale(thing, AS.updated, date);
       action.date = date
@@ -391,7 +456,11 @@ const plugin = {
       //let date = new Date().toISOString()
       //    let name = g.url.split("#")[1]
       //  console.log("get thing", name)
-      let thing = await getThingAll(ds)[0]
+      //let thing = await getThingAll(ds)[0]
+      let mainThing = g.url.substring(g.url.lastIndexOf('/') + 1).split('.ttl')[0]
+      console.log(mainThing)
+      let thing = await getThing(ds,g.url+"#"+mainThing) //await getThingAll(ds)[0]
+
       console.log(thing)
       thing = removeStringNoLocale(thing, AS.content, action)
       let thingInDs = setThing(ds, thing);
