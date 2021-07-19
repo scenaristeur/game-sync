@@ -3,7 +3,7 @@
 
 
     <div class="wrapper" v-if="networkUrl != null">
-        <network
+      <network
       id="network"
       class="network"
       ref="network"
@@ -18,9 +18,9 @@
 
 
       ></network>
-        url : {{ networkUrl.url}}<br>
+      url : {{ networkUrl.url}}<br>
 
-        <!-- updates : {{ updates }} -->
+      <!-- updates : {{ updates }} -->
       <!-- @select-node="selectNodeEvent"
 
       @nodes-add="addNodeEvent"
@@ -159,7 +159,7 @@ export default {
           interaction: {
             navigationButtons: true,
             tooltipDelay: 200,
-            hideEdgesOnDrag: true,
+          //  hideEdgesOnDrag: true,
           },
           manipulation: true,
           nodes: {
@@ -289,6 +289,13 @@ export default {
   },
   watch:{
     game(){
+      console.log("game", this.game)
+      if (this.game != null && this.game.url == this.networkUrl.url){
+        console.log("Game Update", this.game)
+        this.network = this.game.network
+      }
+    },
+    gameV1(){
       console.log("game", this.game)
       if (this.game != null && this.game.url == this.networkUrl.url){
         console.log("Game Update", this.game)

@@ -12,7 +12,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.5- $updateEdge</i></small>
+    <small><i>0.0.5- $gameNetwork</i></small>
   </div>
 </template>
 

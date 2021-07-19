@@ -1,6 +1,6 @@
 import {
   getSolidDataset,
-//  getThingAll,
+  getThingAll,
   // getFile,
   // isRawData,
   // getContentType,
@@ -31,6 +31,8 @@ import {
   setStringNoLocale,
   setDecimal,
   setInteger,
+//  getDecimal,
+  getInteger
   //setDatetime
 } from "@inrupt/solid-client";
 import { FOAF, /*LDP,*/ VCARD, RDF, AS  } from "@inrupt/vocab-common-rdf";
@@ -39,6 +41,7 @@ import * as sc from '@inrupt/solid-client-authn-browser'
 
 
 const IPGS = {
+  base: "https://scenaristeur.github.io/ipgs#",
   id: "https://scenaristeur.github.io/ipgs#id",
   label: "https://scenaristeur.github.io/ipgs#label",
   Node: "https://scenaristeur.github.io/ipgs#Node",
@@ -179,7 +182,54 @@ const plugin = {
       console.log(mainThing)
       let thing = await getThing(ds,url+"#"+mainThing) //await getThingAll(ds)[0]
       let updates = await getStringNoLocaleAll(thing, AS.content);
-      let game = {url: url, updates : updates}
+      let thingsTemp = await getThingAll(ds)
+      let network = {nodes: [], edges: []}
+      for await (const t of thingsTemp){
+        console.log(t.url, t)
+        let id = await getStringNoLocale(t, IPGS.id);
+        let type = await getUrl(t, RDF.type);
+        let label = await getStringNoLocale(t, IPGS.label);
+        console.log(type)
+        let oneThing = {id: id, url: t.url, type: type, label: label}
+        if(type != null && type == IPGS.Node){
+          oneThing.color = {}
+          oneThing.type = type.replace(IPGS.base, '')
+          oneThing.shape = await getStringNoLocale(t, IPGS.shape);
+          //suppression pour reorganisation auto
+          // oneThing.x = await getDecimal(t, IPGS.x)
+          // oneThing.y = await getDecimal(t, IPGS.y)
+          // oneThing.z = await getDecimal(t, IPGS.z)
+          oneThing.cid = await getInteger(t, IPGS.cid)
+          oneThing.color.background = await getStringNoLocale(t, IPGS.backgroundColor)
+          oneThing.color.border = await getStringNoLocale(t, IPGS.borderColor)
+          oneThing.properties = await getStringNoLocale(t, IPGS.properties)
+          let updates = await getStringNoLocale(t, IPGS.updates)
+          oneThing.updates = JSON.parse(`${updates}`)
+          network.nodes.push(oneThing)
+        }else if (type != null && type == IPGS.Edge){
+          oneThing.type = type.replace(IPGS.base, '')
+          let fromTemp = await getUrl(t, IPGS.from);
+          let toTemp = await getUrl(t, IPGS.to);
+          if (fromTemp.startsWith(url)){
+            oneThing.from = fromTemp.replace(url,'')
+          }else{
+            oneThing.from = fromTemp
+          }
+          if (toTemp.startsWith(url)){
+            oneThing.to = toTemp.replace(url,'')
+          }else{
+            oneThing.to = toTemp
+          }
+          network.edges.push(oneThing)
+        }else{
+          console.log("type unknown", type)
+        }
+      }
+
+      console.log('network',network)
+
+
+      let game = {url: url, updates : updates, network: network}
       console.log("Game",game)
       store.commit('gamesync/setGame', game)
     },
@@ -330,7 +380,7 @@ const plugin = {
       // let thingFrom = edge.from.startsWith("#") ? await getThing( ds, g.url+edge.from ) : edge.from
       // let thingTo = edge.to.startsWith("#") ? await getThing( ds, g.url+edge.to ) : edge.to
       let thingFrom =  await getThing( ds, g.url+edge.from )
-    //  console.log(thingFrom)
+      //  console.log(thingFrom)
       let thingTo = await getThing( ds, g.url+edge.to )
       //console.log(thingTo)
       let thingEdge = await getThing(ds, g.url+"#"+edge.id)
@@ -368,7 +418,7 @@ const plugin = {
 
     Vue.prototype.$updateGame = async function(g, action){
       console.log(g,action)
-      action.actor = store.state.solid.pod.webId
+      action.actor = store.state.solid.pod != null ? store.state.solid.pod.webId : "unknown"
       switch (action.action) {
         case "addNode":
         await this.$addNode(g,action)
