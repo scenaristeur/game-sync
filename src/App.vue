@@ -12,7 +12,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.5- $addNode</i></small>
+    <small><i>0.0.5- $updateNode</i></small>
   </div>
 </template>
 

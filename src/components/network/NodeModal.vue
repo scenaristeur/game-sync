@@ -31,7 +31,7 @@
 
 <!-- Element to collapse -->
 <b-collapse id="collapse-node-vis">
-  <b-card>
+
     <b-input-group>
       <label for="backgroundcolorpicker" class="mt-3">Background: </label>
       <v-swatches id="backgroundcolorpicker" v-model="v.color.background" value="#D2E5FF"  show-fallback
@@ -43,9 +43,7 @@
   </v-swatches>
   <b-button @click="defaultColor" size="sm" variant="warning" class="ml-auto" >reset colors</b-button>
 </b-input-group>
-</b-card>
 
-<b-card>
   <b-input-group size="sm" prepend="shape">
     <b-form-select v-model="v.shape" :options="shapes" size="sm" class="mt-3"></b-form-select>
     <a href="https://visjs.github.io/vis-network/docs/network/nodes.html" target="_blank"><b-icon icon="question" aria-hidden="true" ></b-icon></a>
@@ -60,25 +58,17 @@
 <input v-model="icon_color" label="icon color" type="color" />
 </div> -->
 </b-input-group>
-</b-card>
 
-
-<b-card>
+<!-- <b-card>
   <b-input-group size="sm" prepend="Id ( ??? Are you sure ???  !!! changing id will break links !!! )">
     <b-form-input v-model="v.id"></b-form-input>
   </b-input-group>
-</b-card>
+</b-card> -->
 
-<b-card>
   <b-input-group size="sm" prepend="Cluster id">
     <b-form-input type="number" min="1" v-model="v.cid"></b-form-input>
     <a href="https://visjs.github.io/vis-network/docs/network/#methodClustering" target="_blank"><b-icon icon="question" aria-hidden="true" ></b-icon></a>
   </b-input-group>
-
-</b-card>
-
-
-
 
 </b-collapse>
 

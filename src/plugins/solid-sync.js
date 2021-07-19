@@ -19,16 +19,18 @@ import {
   createSolidDataset,
   createThing,
   addUrl,
-  addDecimal,
-  addInteger,
+
   // overwriteFile,
   getStringNoLocale,
   getThing,
   getUrlAll,
   getUrl,
   // //  addDatetime,
-  // setUrl,
-  // setStringNoLocale,
+
+  setUrl,
+  setStringNoLocale,
+  setDecimal,
+  setInteger,
   //setDatetime
 } from "@inrupt/solid-client";
 import { FOAF, /*LDP,*/ VCARD, RDF, AS  } from "@inrupt/vocab-common-rdf";
@@ -220,29 +222,29 @@ const plugin = {
     },
 
     Vue.prototype.$addNode = async function(g,action){
-      console.log("todo add node",g,action)
+      //  console.log("todo add node",g,action)
       let node = action.node
       let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
-      console.log(ds)
+      //  console.log(ds)
       let thing = await createThing({name: node.id})
-      console.log("create", thing)
-      action.actor = store.state.solid.pod.webId
+      //  console.log("create", thing)
+
       // activitystreams
-      thing = addUrl(thing, RDF.type, IPGS.Node);
-      node.label != undefined ? thing = addStringNoLocale(thing, AS.name, node.label): ""
+      thing = setUrl(thing, RDF.type, IPGS.Node);
+      node.label != undefined ? thing = setStringNoLocale(thing, AS.name, node.label): ""
 
       // ipgs /visjs
-      thing = addStringNoLocale(thing, IPGS.id, node.id);
-      node.label != undefined ? thing = addStringNoLocale(thing, IPGS.label, node.label): ""
+      thing = setStringNoLocale(thing, IPGS.id, node.id);
+      node.label != undefined ? thing = setStringNoLocale(thing, IPGS.label, node.label): ""
 
-      node.shape != undefined ? thing = addStringNoLocale(thing, IPGS.shape, node.shape) : ""
-      node.x != undefined ? thing = addDecimal(thing, IPGS.x, node.x): ""
-      node.y != undefined ? thing = addDecimal(thing, IPGS.y, node.y): ""
-      node.z != undefined ? thing = addDecimal(thing, IPGS.z, node.z): ""
-      node.color != undefined && node.color.background != undefined ? thing = addStringNoLocale(thing, IPGS.backgroundColor, node.color.background): ""
-      node.color != undefined && node.color.border != undefined ? thing = addStringNoLocale(thing, IPGS.borderColor, node.color.border): ""
-      node.cid != undefined ? thing = addInteger(thing, IPGS.cid, node.cid): ""
-      node.properties != undefined ? thing = addStringNoLocale(thing, IPGS.properties, node.properties) : ""
+      node.shape != undefined ? thing = setStringNoLocale(thing, IPGS.shape, node.shape) : ""
+      node.x != undefined ? thing = setDecimal(thing, IPGS.x, node.x): ""
+      node.y != undefined ? thing = setDecimal(thing, IPGS.y, node.y): ""
+      node.z != undefined ? thing = setDecimal(thing, IPGS.z, node.z): ""
+      node.color != undefined && node.color.background != undefined ? thing = setStringNoLocale(thing, IPGS.backgroundColor, node.color.background): ""
+      node.color != undefined && node.color.border != undefined ? thing = setStringNoLocale(thing, IPGS.borderColor, node.color.border): ""
+      node.cid != undefined ? thing = setInteger(thing, IPGS.cid, node.cid): ""
+      node.properties != undefined ? thing = setStringNoLocale(thing, IPGS.properties, node.properties) : ""
       thing = addStringNoLocale(thing, IPGS.updates, JSON.stringify(action))
 
       // thing = addStringNoLocale(thing, AS.content, n.text);
@@ -250,11 +252,43 @@ const plugin = {
       //  thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );
       let thingInDs = setThing(ds, thing);
       let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
+      console.log("NODE ADDED ", savedThing)
+
       return savedThing
 
     },
     Vue.prototype.$updateNode = async function(g,action){
       console.log("todo update node",g,action)
+      let node = action.node
+      let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
+      console.log(ds)
+      let thing = await getThing( ds, g.url+node.id );
+      thing = setUrl(thing, RDF.type, IPGS.Node);
+      node.label != undefined ? thing = setStringNoLocale(thing, AS.name, node.label): ""
+
+      // ipgs /visjs
+      thing = setStringNoLocale(thing, IPGS.id, node.id);
+      node.label != undefined ? thing = setStringNoLocale(thing, IPGS.label, node.label): ""
+
+      node.shape != undefined ? thing = setStringNoLocale(thing, IPGS.shape, node.shape) : ""
+      node.x != undefined ? thing = setDecimal(thing, IPGS.x, node.x): ""
+      node.y != undefined ? thing = setDecimal(thing, IPGS.y, node.y): ""
+      node.z != undefined ? thing = setDecimal(thing, IPGS.z, node.z): ""
+      node.color != undefined && node.color.background != undefined ? thing = setStringNoLocale(thing, IPGS.backgroundColor, node.color.background): ""
+      node.color != undefined && node.color.border != undefined ? thing = setStringNoLocale(thing, IPGS.borderColor, node.color.border): ""
+      node.cid != undefined ? thing = setInteger(thing, IPGS.cid, node.cid): ""
+      node.properties != undefined ? thing = setStringNoLocale(thing, IPGS.properties, node.properties) : ""
+      thing = addStringNoLocale(thing, IPGS.updates, JSON.stringify(action))
+
+      // thing = addStringNoLocale(thing, AS.content, n.text);
+      //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
+      //  thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );
+      let thingInDs = setThing(ds, thing);
+      let savedThing  = await saveSolidDatasetAt(g.url, thingInDs, { fetch: sc.fetch } );
+      console.log("NODE UPDATED ", savedThing)
+
+      return savedThing
+
     },
     Vue.prototype.$deleteNode = async function(g,action){
       console.log("todo delete node",g,action)
@@ -273,6 +307,7 @@ const plugin = {
 
     Vue.prototype.$updateGame = async function(g, action){
       console.log(g,action)
+      action.actor = store.state.solid.pod.webId
       switch (action.action) {
         case "addNode":
         await this.$addNode(g,action)
