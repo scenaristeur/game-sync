@@ -407,12 +407,18 @@ const plugin = {
       return savedThing
 
     },
-    Vue.prototype.$deleteNode = async function(g,action){
-      console.log("todo delete node",g,action)
+    Vue.prototype.$removeObjects = async function(g,action){
+      console.log("todo remove",g,action)
+      let nodes = action.objects.nodes
+      let edges = action.objects.edges
+      console.log(nodes, edges)
     },
-    Vue.prototype.$deleteEdge = async function(g,action){
-      console.log("todo delete edge",g,action)
-    },
+    // Vue.prototype.$deleteNode = async function(g,action){
+    //   console.log("todo delete node",g,action)
+    // },
+    // Vue.prototype.$deleteEdge = async function(g,action){
+    //   console.log("todo delete edge",g,action)
+    // },
 
 
 
@@ -426,18 +432,21 @@ const plugin = {
         case "updateNode":
         await this.$updateNode(g,action)
         break;
-        case "deleteNode":
-        await this.$deleteNode(g,action)
-        break;
-        case "addEdge":
+              case "addEdge":
         await this.$addEdge(g,action)
         break;
         case "updateEdge":
         await this.$updateEdge(g,action)
         break;
-        case "deleteEdge":
-        await this.$deleteEdge(g,action)
+        case "removeObjects":
+        await this.$removeObjects(g,action)
         break;
+        // case "deleteNode":
+        // await this.$deleteNode(g,action)
+        // break;
+        // case "deleteEdge":
+        // await this.$deleteEdge(g,action)
+        // break;
         default:
         console.log("action inconnue",g,action)
       }

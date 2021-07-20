@@ -5,6 +5,10 @@
     <ImportModal />
     <!-- <ExportModal /> -->
     <PropertiesPopup />
+
+    <b-modal id="delete-popup" title="Are you sur you want to delete this objects ?" @ok="remove">
+      {{ JSON.stringify(objectsToRemove) }}
+    </b-modal>
   </div>
 </template>
 
@@ -23,7 +27,8 @@ export default {
     return {
       node: {label: "", color: {  background: '#D2E5FF', border: '#2B7CE9'}, shape: 'ellipse', props: []},
       edge: {},
-      n: null
+      n: null,
+      objectsToRemove: {}
     }
   },
   created(){
@@ -61,6 +66,11 @@ export default {
         this.$changeGame(this.game, action)
       }
     },
+    remove(){
+      console.log("removing", this.objectsToRemove)
+      let action = {action: "removeObjects", objects: this.objectsToRemove}
+  this.$changeGame(this.game, action)
+    }
   },
   watch:{
     action(){
@@ -74,6 +84,14 @@ export default {
         this.edge = this.network.edges.find(x => x.id==this.action.edge.id) || this.action.edge
         console.log("props",this.edge.props)
         this.$bvModal.show("edge-popup")
+        break;
+        case 'deleteNode':
+        this.objectsToRemove = this.action.objects
+        this.$bvModal.show("delete-popup")
+        break;
+        case 'deleteEdge':
+        this.objectsToRemove = this.action.objects
+        this.$bvModal.show("delete-popup")
         break;
         case 'import':
         this.$store.commit('ipgs/setNetwork', this.network)

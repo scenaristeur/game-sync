@@ -159,7 +159,7 @@ export default {
           interaction: {
             navigationButtons: true,
             tooltipDelay: 200,
-          //  hideEdgesOnDrag: true,
+            //  hideEdgesOnDrag: true,
           },
           manipulation: true,
           nodes: {
@@ -201,7 +201,23 @@ export default {
       addNode: async (node, callback) => { node.label = "" ; app.editNode(node, callback) },
       editNode: async (node, callback) => { app.editNode(node, callback) },
       addEdge: async (edge, callback) => { app.addEdge(edge, callback) },
-      editEdge: { editWithoutDrag: async (edge, callback) => {app.editWithoutDrag(edge, callback)} }
+      editEdge: { editWithoutDrag: async (edge, callback) => {app.editWithoutDrag(edge, callback)} },
+      deleteNode: async (objects, callback) => { app.deleteNode(objects, callback) },
+      deleteEdge: async (objects, callback) => { app.deleteEdge(objects, callback) },
+      controlNodeStyle: {
+        shape:'dot',
+        size:6,
+        color: {
+          background: '#ff0000',
+          border: '#3c3c3c',
+          highlight: {
+            background: '#07f968',
+            border: '#3c3c3c'
+          }
+        },
+        borderWidth: 2,
+        borderWidthSelected: 2
+      }
 
       //  editEdge: async (edge, callback) => { app.editWithoutDrag(edge, callback) },
       //  editEdge: {}
@@ -240,8 +256,16 @@ export default {
       //  this.$bvModal.show("edge-popup")
       callback()
     },
-
-
+    deleteNode(objects, callback){
+      let action = {action: 'deleteNode', objects: objects}
+      this.$store.commit('ipgs/setAction', action)
+      callback()
+    },
+    deleteEdge(objects, callback){
+      let action = {action: 'deleteEdge', objects: objects}
+      this.$store.commit('ipgs/setAction', action)
+      callback()
+    },
     addNodeEvent(n){
       console.log("addNode",n)
     },
