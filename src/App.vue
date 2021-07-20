@@ -12,7 +12,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.7- share</i></small>
+    <small><i>0.0.7- share - hide play</i></small>
   </div>
 </template>
 

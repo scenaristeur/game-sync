@@ -3,6 +3,9 @@
 
 
     <div class="wrapper" v-if="networkUrl != null">
+
+          <CommandInput />
+
       <network
       id="network"
       class="network"
@@ -109,6 +112,8 @@ export default {
   components: {
     //  Network,
     'NetworkPopups': () => import('@/components/network/NetworkPopups'),
+    'CommandInput': () => import('@/components/layout/CommandInput')
+
     // 'network': () => import('vue-vis-network')
   },
   data(){

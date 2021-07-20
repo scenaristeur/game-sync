@@ -1,6 +1,6 @@
 <template>
   <div>
-    URL : {{ url }}
+    <!-- URL : {{ url }} -->
 
     <Login />
     <div v-if="webId == null">
