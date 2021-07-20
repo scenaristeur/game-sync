@@ -10,6 +10,7 @@ import {
   // //createContainerAt,
   // getSourceUrl,
   deleteFile,
+  removeThing,
   // removeAll,
   removeStringNoLocale,
   deleteContainer,
@@ -31,7 +32,7 @@ import {
   setStringNoLocale,
   setDecimal,
   setInteger,
-//  getDecimal,
+  //  getDecimal,
   getInteger
   //setDatetime
 } from "@inrupt/solid-client";
@@ -409,9 +410,30 @@ const plugin = {
     },
     Vue.prototype.$removeObjects = async function(g,action){
       console.log("todo remove",g,action)
-      let nodes = action.objects.nodes
-      let edges = action.objects.edges
-      console.log(nodes, edges)
+      let objects = action.objects.nodes.concat(action.objects.edges)
+      console.log(objects)
+      let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
+
+
+      for await(let o of objects){
+        // default o starts with number or nothing particular an uuid for example (edge)
+        let url = g.url+"#"+o
+        // o starts with http (remote resource²)
+        o.startsWith('http') ? url = o : ""
+        // o starts with # (node)
+        o.startsWith('#') ? url = g.url+o : ""
+
+        let t = await getThing(ds, url)
+        console.log("removing",t)
+        ds = await removeThing(ds, url)
+
+      }
+      let savedDataset  = await saveSolidDatasetAt(g.url, ds, { fetch: sc.fetch } );
+      console.log("saved dataset ", savedDataset)
+
+      return savedDataset
+
+
     },
     // Vue.prototype.$deleteNode = async function(g,action){
     //   console.log("todo delete node",g,action)
@@ -432,7 +454,7 @@ const plugin = {
         case "updateNode":
         await this.$updateNode(g,action)
         break;
-              case "addEdge":
+        case "addEdge":
         await this.$addEdge(g,action)
         break;
         case "updateEdge":
