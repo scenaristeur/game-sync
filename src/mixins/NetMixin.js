@@ -140,7 +140,7 @@ export default {
     */
     onRemoveNodes(e){
       this.network.nodes = this.network.nodes.filter(x => !e.properties.items.includes(x.id))
-      this.sendUpdate(e)
+    //  this.sendUpdate(e)
     },
     /**
     * Catch @edges-remove event of vue-vis-network and update network.edges
@@ -148,33 +148,33 @@ export default {
     */
     onRemoveEdges(p){
       this.network.edges = this.network.edges.filter(x => !p.properties.items.includes(x.id))
-      this.sendUpdate(p)
+    //  this.sendUpdate(p)
     },
-    async sendUpdate(p){
-      console.log(p)
-      console.log(this.url)
-      console.log(this.network)
-      console.log("le json", this.json)
-
-
-      if(this.json != undefined && this.json["@context"] != "https://data.virtual-assembly.org/context.json"){
-        console.log("TODO must send only if different ")
-        let identiques = this.arraysEqual(this.json.nodes, this.network.nodes) && this.arraysEqual(this.json.edges, this.network.edges)
-        console.log("identiques",identiques)
-        if (identiques == false && this.url != undefined){
-          this.json.nodes = this.network.nodes
-          this.json.edges = this.network.edges
-          this.json.modified = new Date()
-          console.log(this.json)
-
-          // await fc.createFile( this.json.url, JSON.stringify(this.json), "application/ld+json" ).then(
-          //   f => {
-          //     console.log(f)
-          //   });
-          }
-        }
-
-      },
+    // async sendUpdate(p){
+    //   console.log(p)
+    //   console.log(this.url)
+    //   console.log(this.network)
+    //   console.log("le json", this.json)
+    //
+    //
+    //   if(this.json != undefined && this.json["@context"] != "https://data.virtual-assembly.org/context.json"){
+    //     console.log("TODO must send only if different ")
+    //     let identiques = this.arraysEqual(this.json.nodes, this.network.nodes) && this.arraysEqual(this.json.edges, this.network.edges)
+    //     console.log("identiques",identiques)
+    //     if (identiques == false && this.url != undefined){
+    //       this.json.nodes = this.network.nodes
+    //       this.json.edges = this.network.edges
+    //       this.json.modified = new Date()
+    //       console.log(this.json)
+    //
+    //       // await fc.createFile( this.json.url, JSON.stringify(this.json), "application/ld+json" ).then(
+    //       //   f => {
+    //       //     console.log(f)
+    //       //   });
+    //       }
+    //     }
+    //
+    //   },
 
       // async load1(url){
       //   console.log("load",url)
@@ -271,7 +271,7 @@ export default {
         tmpLink.click();
         document.body.removeChild( tmpLink );
       },
-      onInputObjectChange(data){
+      async onInputObjectChange(data){
         console.log("onCommand",data)
         let nodeSubject, nodeObject, edge, actionS, actionO, actionE
         switch (data.type) {
@@ -281,15 +281,15 @@ export default {
           nodeObject = this.nodeFromLabel(data.value.object)
           this.saveNode(nodeObject)
           actionS = {action: "addNode", node: nodeSubject}
-          this.$changeGame(this.game, actionS)
+          await this.$changeGame(this.game, actionS)
           actionO = {action: "addNode", node: nodeObject}
-          this.$changeGame(this.game, actionO)
+          await this.$changeGame(this.game, actionO)
           console.log(nodeSubject.id, nodeObject.id)
           edge = this.edgeFromLabel({from: nodeSubject.id, to: nodeObject.id, label: data.value.predicate})
           console.log(edge)
           this.saveEdge(edge)
           actionE = {action: "addEdge", edge: edge}
-          this.$changeGame(this.game, actionE)
+          await this.$changeGame(this.game, actionE)
           break;
           case 'url':
           console.log(data)
@@ -301,14 +301,14 @@ export default {
       saveNode(n){
         var index = this.network.nodes.findIndex(x => x.id==n.id);
         index === -1 ? this.network.nodes.push(n) : Object.assign(this.network.nodes[index], n)
-        this.sendUpdate(n)
+      //  this.sendUpdate(n)
       },
       saveEdge(e){
         console.log(e)
         var index = this.network.edges.findIndex(x => x.id==e.id);
         index === -1 ? this.network.edges.push(e) : Object.assign(this.network.edges[index], e)
         console.log(this.network)
-        this.sendUpdate(e)
+      //  this.sendUpdate(e)
       },
     },
     computed: {

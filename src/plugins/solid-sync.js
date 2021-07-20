@@ -344,13 +344,15 @@ const plugin = {
     },
 
     Vue.prototype.$addEdge = async function(g,action){
-      // console.log("todo add Edge",g,action)
+      console.log("adding Edge",g,action)
       let edge = action.edge
       let ds =  await getSolidDataset(g.url, {fetch: sc.fetch})
       // let thingFrom = edge.from.startsWith("#") ? await getThing( ds, g.url+edge.from ) : edge.from
       // let thingTo = edge.to.startsWith("#") ? await getThing( ds, g.url+edge.to ) : edge.to
-      let thingFrom =  await getThing( ds, g.url+edge.from )
+      let thingFrom = await getThing( ds, g.url+edge.from )
       let thingTo = await getThing( ds, g.url+edge.to )
+      thingFrom == null ? await createThing( ds, g.url+edge.from ) : ""
+      thingTo == null ? await createThing( ds, g.url+edge.to ) : ""
       let thingEdge = await createThing({name: edge.id})
       //  console.log("create", thing)
 
