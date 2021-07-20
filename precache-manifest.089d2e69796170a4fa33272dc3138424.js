@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a9b87c15646a2a817800",
+    "revision": "92f3434caa0a7d83fc5c",
     "url": "/game-sync/css/app.5c9713c3.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/css/chunk-7b5b442e.4ac5b8f9.css"
   },
   {
-    "revision": "569268eacff5373a6146",
-    "url": "/game-sync/css/chunk-d5e7101c.fe402393.css"
+    "revision": "6d61a5c3865bafa349bb",
+    "url": "/game-sync/css/chunk-d5e7101c.d53663ae.css"
   },
   {
     "revision": "0fffc9953bcb3c8faede",
@@ -80,7 +80,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/img/zoomExtends.5f78e86f.png"
   },
   {
-    "revision": "bc5b78d13c6c1b89b20a2890fc1dbfe4",
+    "revision": "2d990deb55dfa12a66b1a76cdc52f9ee",
     "url": "/game-sync/index.html"
   },
   {
@@ -88,8 +88,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/about.bec5a6f3.js"
   },
   {
-    "revision": "a9b87c15646a2a817800",
-    "url": "/game-sync/js/app.dd448cf8.js"
+    "revision": "92f3434caa0a7d83fc5c",
+    "url": "/game-sync/js/app.03a8be32.js"
   },
   {
     "revision": "eac9c5a3b59845d6479d",
@@ -120,8 +120,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-2d0e5731.cf59622d.js"
   },
   {
-    "revision": "d4e7f57ee3e7ec93f10b",
-    "url": "/game-sync/js/chunk-2d215ca0.5d1f246b.js"
+    "revision": "9ee88759177fce4b85f2",
+    "url": "/game-sync/js/chunk-2d215ca0.0e36034f.js"
   },
   {
     "revision": "af453d362d7abda3f9c6",
@@ -152,8 +152,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-7b5b442e.f5ad93b6.js"
   },
   {
-    "revision": "569268eacff5373a6146",
-    "url": "/game-sync/js/chunk-d5e7101c.7ae9270b.js"
+    "revision": "6d61a5c3865bafa349bb",
+    "url": "/game-sync/js/chunk-d5e7101c.4d193250.js"
   },
   {
     "revision": "0fffc9953bcb3c8faede",
