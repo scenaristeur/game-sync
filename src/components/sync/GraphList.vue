@@ -8,9 +8,13 @@
         class="item list-group-item d-flex justify-content-between"
         v-for="fi in resources" :key="fi" @click="read(fi)" button>
         <div class="input-group" style="display:table; width:100%;">
-          <p class="p-0 m-0 flex-grow-1"><b-icon-file-text></b-icon-file-text> {{ fi }}</p>
+          <p class="p-0 m-0 flex-grow-1"><b-icon-file-text>
+          </b-icon-file-text>
+          <Resource :url="fi" />
+          <!-- {{ fi }} -->
+        </p>
           <!-- <b-button v-b-modal.share-modal>share</b-button> -->
-
+          <Permissions :url="fi" />
           <span style="display: table-cell; width: 40px;">
             <!-- <button class="btn btn-default" type="button"><span>ᐅ</span>  Go!</button> -->
             <!-- class="unstyled-button" -->
@@ -24,7 +28,7 @@
 
           </span>
         </div>
-
+<small>{{fi}}</small>
       </b-dropdown-item>
 
       <!-- <b-dropdown-item>First Action</b-dropdown-item>
@@ -38,23 +42,23 @@
 
 
   <!-- <b-list-group class="item list-group-item d-flex justify-content-between p-1">
-    <b-list-group-item variant="light"
-    class="item list-group-item d-flex justify-content-between"
-    v-for="fi in resources" :key="fi" @click="read(fi)" button>
-    <div class="input-group" style="display:table; width:100%;">
-      <p class="p-0 m-0 flex-grow-1"><b-icon-file-text></b-icon-file-text> {{ fi }}</p>
+  <b-list-group-item variant="light"
+  class="item list-group-item d-flex justify-content-between"
+  v-for="fi in resources" :key="fi" @click="read(fi)" button>
+  <div class="input-group" style="display:table; width:100%;">
+  <p class="p-0 m-0 flex-grow-1"><b-icon-file-text></b-icon-file-text> {{ fi }}</p>
 
-      <span style="display: table-cell; width: 40px;">
+  <span style="display: table-cell; width: 40px;">
 
 
-        <b-button size="sm" variant="outline-danger"  @click.stop="trash(fi)">
-          <b-icon-trash @click.stop="trash(fi)" variant="danger" ></b-icon-trash>
-        </b-button>
+  <b-button size="sm" variant="outline-danger"  @click.stop="trash(fi)">
+  <b-icon-trash @click.stop="trash(fi)" variant="danger" ></b-icon-trash>
+</b-button>
 
-      </span>
-    </div>
+</span>
+</div>
 
-  </b-list-group-item>
+</b-list-group-item>
 </b-list-group> -->
 
 
@@ -66,6 +70,8 @@ export default {
   name: "GraphList",
   components: {
     'Share': () => import('@/components/layout/Share'),
+    'Permissions': () => import('@/components/layout/Permissions'),
+    'Resource': () => import('@/components/layout/Resource'),
   },
   data(){
     return{
@@ -87,8 +93,6 @@ export default {
     itemShared(url){
       return {url: url}
     },
-
-
     read(res){
       let thing = {url: res, subscribe: true}
       console.log("read",thing)

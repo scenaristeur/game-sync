@@ -319,7 +319,7 @@ export default {
   watch:{
     game(){
       console.log("game", this.game)
-      if (this.game != null && this.game.url == this.networkUrl.url){
+      if (this.networkUrl != null && this.game != null && this.game.url == this.networkUrl.url){
         console.log("Game Update", this.game)
         this.network = this.game.network
       }

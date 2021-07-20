@@ -1,6 +1,11 @@
 import {
   getSolidDataset,
   getThingAll,
+  //getPublicAccess,
+  //  getAgentAccess,
+  getSolidDatasetWithAcl,
+  getPublicAccess,
+  getAgentAccess,
   // getFile,
   // isRawData,
   // getContentType,
@@ -74,7 +79,7 @@ const plugin = {
   install(Vue, opts = {}) {
     let store = opts.store
     let sockets = []
-    console.log(store)
+    //    console.log(store)
 
     Vue.prototype.$create = async function(chose){
       //  console.log("websocket",websocket)
@@ -446,7 +451,77 @@ const plugin = {
     //   console.log("todo delete edge",g,action)
     // },
 
+    Vue.prototype.$getPermissions = async function(url){
+      let agent = store.state.solid.pod.webId
+      console.log("url",url, agent)
 
+      let permissions = {url: url}
+
+      const myDatasetWithAcl = await getSolidDatasetWithAcl(url, {fetch: sc.fetch});
+      const publicAccess = getPublicAccess(myDatasetWithAcl);
+      console.log("publicAccess", publicAccess)
+      permissions.publicAccess = publicAccess
+      //const webId = "https://example.com/profile#webid";
+      const myDatasetWithAclAgent = await getSolidDatasetWithAcl(url, {fetch: sc.fetch});
+      console.log("ds", myDatasetWithAclAgent)
+      const agentAccess = getAgentAccess(myDatasetWithAclAgent, agent, {fetch: sc.fetch});
+      console.log("agentAccess", agent, agentAccess )
+      permissions.agent = agent
+      permissions.agentAccess = agentAccess
+      // getPublicAccess(
+      //   url,   // Resource
+      //   { fetch: fetch }                  // fetch function from authenticated session
+      // ).then(access => {
+      //   if (access === null) {
+      //     console.log("Could not load access details for this Resource.");
+      //   } else {
+      //     console.log("Returned Access:: ", JSON.stringify(access));
+      //     console.log("Everyone", (access.read ? 'CAN' : 'CANNOT'), "read the Resource.");
+      //     console.log("Everyone", (access.append ? 'CAN' : 'CANNOT'), "add data to the Resource.");
+      //     console.log("Everyone", (access.write ? 'CAN' : 'CANNOT'), "change data in the Resource.");
+      //     console.log("Everyone", (access.controlRead ? 'CAN' : 'CANNOT'), "see access to the Resource.");
+      //     console.log("Everyone", (access.controlWrite ? 'CAN' : 'CANNOT'), "change access to the Resource.");
+      //   }
+      // })
+      //
+      //
+      // getAgentAccess(
+      //   url,       // resource
+      //   agent,  // agent
+      //   { fetch: fetch }                      // fetch function from authenticated session
+      // ).then(access => {
+      //   this.$logAccessInfo(agent, access, url);
+      // });
+
+
+      //
+      // let permissions = {
+      //   url: url,
+      //   public: null,
+      //   actor: null,
+      // }
+      // //    permissions.public = await getPublicAccess(url)
+      // if (store.state.solid.pod != null){
+      //   permissions.actor = getAgentAccess(url, store.state.solid.pod.webId)
+      //   permissions.webId = store.state.solid.pod.webId
+      // }
+      //
+      // console.log("permissions", permissions)
+      return permissions
+    },
+
+    Vue.prototype.$getResourceInfos = async function(url){
+      let infos = {}
+      const ds = await getSolidDataset(url, {fetch: sc.fetch});
+      let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
+      console.log(mainThing)
+      let thing = await getThing(ds,url+"#"+mainThing) //await getThingAll(ds)[0]
+
+      console.log(thing)
+      infos.name =  getStringNoLocale(thing, AS.name, name);
+      console.log("infos",infos)
+      return infos
+    },
 
     Vue.prototype.$updateGame = async function(g, action){
       console.log(g,action)
@@ -646,7 +721,22 @@ const plugin = {
         alert(e)
       }
     }
+
+    Vue.prototype.logAccessInfo = function(agent, access, resource){
+      if (access === null) {
+        console.log("Could not load access details for this Resource.");
+      } else {
+        console.log(`${agent}'s Access:: `, JSON.stringify(access));
+        console.log("...", agent, (access.read ? 'CAN' : 'CANNOT'), "read the Resource", resource);
+        console.log("...", agent, (access.append ? 'CAN' : 'CANNOT'), "add data to the Resource", resource);
+        console.log("...", agent, (access.write ? 'CAN' : 'CANNOT'), "change data in the Resource", resource);
+        console.log("...", agent, (access.controlRead ? 'CAN' : 'CANNOT'), "see access to the Resource", resource);
+        console.log("...", agent, (access.controlWrite ? 'CAN' : 'CANNOT'), "change access to the Resource", resource);
+      }
+    }
   }
+
+
 }
 
 // Auto-install
