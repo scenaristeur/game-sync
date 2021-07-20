@@ -36,7 +36,7 @@ import {
   getInteger
   //setDatetime
 } from "@inrupt/solid-client";
-import { FOAF, /*LDP,*/ VCARD, RDF, AS  } from "@inrupt/vocab-common-rdf";
+import { FOAF, /*LDP,*/ VCARD, RDF, AS, RDFS  } from "@inrupt/vocab-common-rdf";
 import { WS } from "@inrupt/vocab-solid-common";
 import * as sc from '@inrupt/solid-client-authn-browser'
 
@@ -89,12 +89,14 @@ const plugin = {
       let name = chose.name || Date.now();
       let path = chose.url
       let url = path+name+'.ttl'
+      let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+url
       console.log("creating", url)
       let ds = await createSolidDataset()
       let thing = await createThing({name: name})
       console.log("create", thing)
       // thing = addUrl(thing, RDF.type, AS.Note);
       thing = addStringNoLocale(thing, AS.name, name);
+      thing = addStringNoLocale(thing, RDFS.comment, comment);
       // thing = addStringNoLocale(thing, AS.content, n.text);
       //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
       thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );

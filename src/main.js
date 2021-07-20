@@ -11,6 +11,9 @@ Vue.use(NetworkPlugin, {store: store});
 import { Network } from "vue-vis-network";
 Vue.component('network', Network);
 
+import VueSocialSharing from 'vue-social-sharing'
+Vue.use(VueSocialSharing);
+
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)

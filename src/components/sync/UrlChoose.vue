@@ -11,7 +11,8 @@ export default {
   data(){
     return{
       temp_url: "",
-      default: "https://game-sync.solidcommunity.net/public/test/"
+      default: "https://spoggy.solidweb.org/public/test/",
+      //      default: "https://game-sync.solidcommunity.net/public/test/"
     }
   },
   created(){

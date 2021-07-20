@@ -12,7 +12,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.6- $with command</i></small>
+    <small><i>0.0.7- share</i></small>
   </div>
 </template>
 
