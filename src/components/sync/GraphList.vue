@@ -14,7 +14,7 @@
           <!-- {{ fi }} -->
         </p>
           <!-- <b-button v-b-modal.share-modal>share</b-button> -->
-          <Permissions :url="fi" />
+          <!-- <Permissions :url="fi" /> -->
           <span style="display: table-cell; width: 40px;">
             <!-- <button class="btn btn-default" type="button"><span>ᐅ</span>  Go!</button> -->
             <!-- class="unstyled-button" -->
@@ -70,7 +70,7 @@ export default {
   name: "GraphList",
   components: {
     'Share': () => import('@/components/layout/Share'),
-    'Permissions': () => import('@/components/layout/Permissions'),
+    //'Permissions': () => import('@/components/layout/Permissions'),
     'Resource': () => import('@/components/layout/Resource'),
   },
   data(){

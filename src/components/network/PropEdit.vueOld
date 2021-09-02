@@ -1,0 +1,49 @@
+<template>
+  <b-modal id="prop-popup"
+  title="Prop Update"
+  hide-backdrop content-class="shadow"
+  @ok="updateProp" >
+  prop: val {{p.prop}}, {{p.val}}
+
+
+
+</b-modal>
+</template>
+
+<script>
+export default {
+  name: "PropEdit",
+  props: ['propToEdit'],
+  data(){
+    return {
+      p: {prop:"", val: ""}
+    }
+  },
+  created(){
+    this.init()
+  },
+
+  methods: {
+    init(){
+      console.log("init", this.propToEdit)
+      if(this.propToEdit != undefined){
+        this.p = this.propToEdit
+        console.log(this.p)
+      }
+  },
+  updateProp(){
+    this.$emit('ok', this.p)
+    this.$bvModal.hide("prop-popup")
+  },
+},
+watch:{
+  propToEdit(){
+    this.init()
+  }
+}
+}
+</script>
+
+<style>
+
+</style>
