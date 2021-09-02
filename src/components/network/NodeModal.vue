@@ -21,7 +21,7 @@
 
 <div class="input-group" style="display:table; width:100%;">
   <b-button v-b-toggle="'collapse-node-vis'" class="m-1" variant="dark" size="sm">Vis</b-button>
-  <b-button v-b-toggle="'collapse-node-props'" class="m-1" variant="dark" size="sm">Props</b-button>
+  <b-button v-b-toggle="'collapse-node-props'" class="m-1" variant="dark" size="sm">Properties</b-button>
 
   <span style="display: table-cell; width: 190px;">
     <b-button @click="newGraphFromNode" class="m-1" variant="light" size="sm">New Graph from this node</b-button>
@@ -74,7 +74,7 @@
 
 
 <b-collapse id="collapse-node-props">
-  <Properties :properties="v.props" @propsUpdated="onPropsUpdate"/>
+  <Properties :properties="v.properties" @propsUpdated="onPropsUpdate"/>
 </b-collapse>
 
 </b-modal>
@@ -140,15 +140,15 @@ export default {
     // },
     node(){
       this.v = this.node
-      this.v.props == undefined ? this.v.props = [] : ""
+      //this.v.properties == undefined ? this.v.properties = [] : ""
       console.info("Node",this.v)
       //  this.v.color == undefined ? this.v.color = {background: "#D2E5FF", border: "#2B7CE9"} : ""
       //  this.v.node_type == undefined ? this.v.node_type = 'default' : ""
     }
   },
   methods: {
-    onPropsUpdate(props){
-      this.v.props = props
+    onPropsUpdate(properties){
+      this.v.properties = properties
     },
     addNodeModal(){
       // if (this.v.shape == 'icon'){

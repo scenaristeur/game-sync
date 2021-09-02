@@ -199,6 +199,15 @@ const plugin = {
         let label = await getStringNoLocale(t, IPGS.label);
         console.log(type)
         let oneThing = {id: id, url: t.url, type: type, label: label}
+        let properties = await getStringNoLocale(t, IPGS.properties)
+        console.log("props", properties, typeof properties)
+        if (typeof `${properties}` == "string"){
+          try{
+            oneThing.properties = JSON.parse(`${properties}`)
+          }catch(e){
+            console.info(e,`${properties}`)
+          }
+        }
         if(type != null && type == IPGS.Node){
           oneThing.color = {}
           oneThing.type = type.replace(IPGS.base, '')
@@ -210,7 +219,7 @@ const plugin = {
           oneThing.cid = await getInteger(t, IPGS.cid)
           oneThing.color.background = await getStringNoLocale(t, IPGS.backgroundColor)
           oneThing.color.border = await getStringNoLocale(t, IPGS.borderColor)
-          oneThing.properties = await getStringNoLocale(t, IPGS.properties)
+
           let updates = await getStringNoLocale(t, IPGS.updates)
           oneThing.updates = JSON.parse(`${updates}`)
           network.nodes.push(oneThing)
@@ -303,7 +312,7 @@ const plugin = {
       node.color != undefined && node.color.background != undefined ? thing = setStringNoLocale(thing, IPGS.backgroundColor, node.color.background): ""
       node.color != undefined && node.color.border != undefined ? thing = setStringNoLocale(thing, IPGS.borderColor, node.color.border): ""
       node.cid != undefined ? thing = setInteger(thing, IPGS.cid, node.cid): ""
-      node.properties != undefined ? thing = setStringNoLocale(thing, IPGS.properties, node.properties) : ""
+      node.properties != undefined ? thing = setStringNoLocale(thing, IPGS.properties, JSON.stringify(node.properties)) : ""
       thing = addStringNoLocale(thing, IPGS.updates, JSON.stringify(action))
 
       // thing = addStringNoLocale(thing, AS.content, n.text);
@@ -336,7 +345,7 @@ const plugin = {
       node.color != undefined && node.color.background != undefined ? thing = setStringNoLocale(thing, IPGS.backgroundColor, node.color.background): ""
       node.color != undefined && node.color.border != undefined ? thing = setStringNoLocale(thing, IPGS.borderColor, node.color.border): ""
       node.cid != undefined ? thing = setInteger(thing, IPGS.cid, node.cid): ""
-      node.properties != undefined ? thing = setStringNoLocale(thing, IPGS.properties, node.properties) : ""
+      node.properties != undefined ? thing = setStringNoLocale(thing, IPGS.properties, JSON.stringify(node.properties)) : ""
       thing = addStringNoLocale(thing, IPGS.updates, JSON.stringify(action))
 
       // thing = addStringNoLocale(thing, AS.content, n.text);
@@ -373,7 +382,7 @@ const plugin = {
       edge.to != undefined ? thingEdge = setUrl(thingEdge, IPGS.to, thingTo): ""
 
 
-      edge.properties != undefined ? thingEdge = setStringNoLocale(thingEdge, IPGS.properties, edge.properties) : ""
+      edge.properties != undefined ? thingEdge = setStringNoLocale(thingEdge, IPGS.properties, JSON.stringify(edge.properties)) : ""
       thingEdge = addStringNoLocale(thingEdge, IPGS.updates, JSON.stringify(action))
 
       let thingInDs = setThing(ds, thingEdge);
@@ -407,7 +416,7 @@ const plugin = {
       edge.to != undefined ? thingEdge = setUrl(thingEdge, IPGS.to, thingTo): ""
 
 
-      edge.properties != undefined ? thingEdge = setStringNoLocale(thingEdge, IPGS.properties, edge.properties) : ""
+      edge.properties != undefined ? thingEdge = setStringNoLocale(thingEdge, IPGS.properties, JSON.stringify(edge.properties)) : ""
       thingEdge = addStringNoLocale(thingEdge, IPGS.updates, JSON.stringify(action))
 
       let thingInDs = setThing(ds, thingEdge);

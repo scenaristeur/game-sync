@@ -12,11 +12,11 @@
       </b-button>
     </b-card>
 
-    <b-card v-if="props!=undefined" >
-      Props : {{ props.length }}
+    <b-card v-if="propsArray!=undefined" >
+      Props : {{ propsArray.length }}
       <div style="height=40px;overflow-y: scroll;">
         <b-list-group >
-          <b-list-group-item v-for="(p,k) in props" :key="k" variant="light">
+          <b-list-group-item v-for="(p,k) in propsArray" :key="k" variant="light">
             {{p.prop}} :
             {{p.val}}
 
@@ -35,12 +35,12 @@ export default {
   props: ['properties'],
   data(){
     return {
-      props: [],
+      propsArray: [],
       newProp: {prop:"", val:""},
     }
   },
   created(){
-    this.props = this.properties
+    this.propsArray = this.properties || []
   },
   methods: {
     addProp(){
@@ -54,9 +54,9 @@ export default {
           prop : this.newProp.prop,
           val: this.newProp.val
         }
-        this.props.push(p)
-        console.log(this.props)
-        this.$emit('propsUpdated', this.props)
+        this.propsArray.push(p)
+        console.log(this.propsArray)
+        this.$emit('propsUpdated', this.propsArray)
         this.newProp.prop = ""
         this.newProp.val = ""
         this.$refs.inputProp.focus();
@@ -67,8 +67,8 @@ export default {
   },
   watch:{
     properties(){
-      this.props = this.properties
-      console.log(this.props)
+      this.propsArray = this.properties || []
+      console.log(this.propsArray)
     }
   }
 }
