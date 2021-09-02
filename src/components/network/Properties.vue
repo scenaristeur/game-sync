@@ -29,16 +29,9 @@
               <!-- <b-button v-b-modal.share-modal>share</b-button> -->
               <!-- <Permissions :url="fi" /> -->
               <span style="display: table-cell; width: 40px;">
-                <!-- <button class="btn btn-default" type="button"><span>ᐅ</span>  Go!</button> -->
-                <!-- class="unstyled-button" -->
-                <!-- <Share :item="fi" /> -->
-
                 <b-button size="sm" variant="outline-danger"  @click.stop="trash(k)">
                   <b-icon-trash @click.stop="trash(k)" variant="danger" ></b-icon-trash>
                 </b-button>
-
-                <!-- <Share :item="itemShared(fi)" style="float:left"/> -->
-
               </span>
             </div>
 
@@ -51,7 +44,6 @@
     <b-modal id="delete-prop-popup" title="Are you sur you want to delete this prop ?" @ok="remove">
       {{ JSON.stringify(objectsToRemove) }}
     </b-modal>
-    <!-- <PropEdit :propToEdit="propToEdit" @ok="updateProp" /> -->
   </div>
 </template>
 
@@ -59,9 +51,6 @@
 export default {
   name: 'Properties',
   props: ['properties'],
-  // components: {
-  //   'PropEdit': () => import('@/components/network/PropEdit'),
-  // },
   data(){
     return {
       mode : "Add",
@@ -75,16 +64,12 @@ export default {
   },
   methods: {
     trash(key){
-      console.log("trash", key)
       this.key = key
       this.objectsToRemove = this.propsArray[key]
       this.$bvModal.show("delete-prop-popup")
     },
     remove(){
       this.propsArray = this.propsArray.splice(this.key, 1);
-    },
-    updateProp(propToUpdate){
-      console.log(propToUpdate, this.key)
     },
     editProp(p,k){
       this.newProp.prop = p.prop
@@ -94,8 +79,6 @@ export default {
       this.$refs.inputProp.focus();
     },
     addProp(){
-      console.log(this.newProp)
-
       // this.v.props[this.newProp.prop] == undefined ? this.v.props[this.newProp.prop] = [] : ""
       // !this.v.props[this.newProp.prop].includes(this.newProp.val) ? this.v.props[this.newProp.prop].push(this.newProp.val) : alert ("Already in Node props :"+ this.newProp.prop+ " / "+this.newProp.val)
       // console.log(this.v)
@@ -109,8 +92,6 @@ export default {
         }else{
           this.propsArray.push(p)
         }
-
-        console.log(this.propsArray)
         this.$emit('propsUpdated', this.propsArray)
         this.newProp.prop = ""
         this.newProp.val = ""
@@ -124,12 +105,7 @@ export default {
   watch:{
     properties(){
       this.propsArray = this.properties || []
-      console.log(this.propsArray)
     }
   }
 }
 </script>
-
-<style>
-
-</style>
