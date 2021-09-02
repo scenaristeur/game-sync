@@ -193,14 +193,14 @@ const plugin = {
       let thingsTemp = await getThingAll(ds)
       let network = {nodes: [], edges: []}
       for await (const t of thingsTemp){
-        console.log(t.url, t)
+        //console.log(t.url, t)
         let id = await getStringNoLocale(t, IPGS.id);
         let type = await getUrl(t, RDF.type);
         let label = await getStringNoLocale(t, IPGS.label);
-        console.log(type)
+        //console.log(type)
         let oneThing = {id: id, url: t.url, type: type, label: label}
         let properties = await getStringNoLocale(t, IPGS.properties)
-        console.log("props", properties, typeof properties)
+      //  console.log("props", properties, typeof properties)
         if (typeof `${properties}` == "string"){
           try{
             oneThing.properties = JSON.parse(`${properties}`)
@@ -243,7 +243,7 @@ const plugin = {
         }
       }
 
-      console.log('network',network)
+    //  console.log('network',network)
 
 
       let game = {url: url, updates : updates, network: network}
