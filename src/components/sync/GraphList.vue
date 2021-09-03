@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="resources.length > 0">
-      <b-dropdown id="dropdown-1" dropleft text="GraphList" class="m-md-2" variant="light">
+      <b-dropdown id="dropdown-1" dropleft text="Open a game" class="m-md-2" variant="light">
 
 
         <b-dropdown-item

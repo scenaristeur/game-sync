@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="game != null">
-      GraphUpdates :
+      
 
-      <a :href="game.url" target="_blank">{{game.url}}</a>
+      <a :href="game.url" target="_blank">Game url</a>
 
 
       <!-- <b-button @click="resetGame">Reset Game</b-button><br> -->

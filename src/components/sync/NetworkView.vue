@@ -21,7 +21,8 @@
 
 
       ></network>
-      url : {{ networkUrl.url}}<br>
+      <!-- url : {{ networkUrl.url}}<br>
+        <a :href="game.url" target="_blank">Game url</a> -->
 
       <!-- updates : {{ updates }} -->
       <!-- @select-node="selectNodeEvent"
