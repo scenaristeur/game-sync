@@ -5,7 +5,23 @@
   <b-navbar-brand to="/">Sync</b-navbar-brand>
   <Login />
   <!-- <router-link to="/syncess">Entreprise Solid Server</router-link> | -->
-
+  <!-- <div>
+<b-button-toolbar key-nav aria-label="Toolbar with button groups">
+<b-button-group class="mx-1">
+  <b-button>&laquo;</b-button>
+  <b-button>&lsaquo;</b-button>
+</b-button-group>
+<b-button-group class="mx-1">
+  <b-button>Edit</b-button>
+  <b-button>Undo</b-button>
+  <b-button>Redo</b-button>
+</b-button-group>
+<b-button-group class="mx-1">
+  <b-button>&rsaquo;</b-button>
+  <b-button>&raquo;</b-button>
+</b-button-group>
+</b-button-toolbar>
+</div> -->
 
   <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -14,6 +30,9 @@
         <b-nav-item to="/about">About</b-nav-item>
       <b-nav-item href="#">Link</b-nav-item>
       <b-nav-item href="#" disabled>Disabled</b-nav-item>
+
+
+
     </b-navbar-nav>
 
     <!-- Right aligned nav items -->
@@ -29,6 +48,8 @@
         <b-dropdown-item href="#">RU</b-dropdown-item>
         <b-dropdown-item href="#">FA</b-dropdown-item>
       </b-nav-item-dropdown>
+
+
 
       <b-nav-item-dropdown right>
         <!-- Using 'button-content' slot -->

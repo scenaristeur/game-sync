@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8fd99bd41a28ef936bdb",
+    "revision": "39ad618b2560aef1d37b",
     "url": "/game-sync/css/app.5c9713c3.css"
   },
   {
@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/css/chunk-4060d866.5dccdab4.css"
   },
   {
-    "revision": "18c7145f22c51d2115c0",
+    "revision": "de75291219898736d397",
     "url": "/game-sync/css/chunk-7b5b442e.4ac5b8f9.css"
   },
   {
@@ -80,7 +80,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/img/zoomExtends.5f78e86f.png"
   },
   {
-    "revision": "351c0b5a727756790b6cee97ac11fe07",
+    "revision": "77b1657d5dd368b58bedd3dac25f2fa0",
     "url": "/game-sync/index.html"
   },
   {
@@ -88,8 +88,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/about.18ae8fba.js"
   },
   {
-    "revision": "8fd99bd41a28ef936bdb",
-    "url": "/game-sync/js/app.b1f09990.js"
+    "revision": "39ad618b2560aef1d37b",
+    "url": "/game-sync/js/app.fe119a39.js"
   },
   {
     "revision": "d9c0e07080d1f25e5b64",
@@ -124,8 +124,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-2d0e5731.ff7eeec7.js"
   },
   {
-    "revision": "1e184fb96c849375c7d5",
-    "url": "/game-sync/js/chunk-2d207f75.fa7e8bf6.js"
+    "revision": "5f9b4f9557f4615abeda",
+    "url": "/game-sync/js/chunk-2d207f75.2f62b00e.js"
   },
   {
     "revision": "a7d0bcebeddf5f082f9b",
@@ -156,8 +156,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-66475232.4d639d7f.js"
   },
   {
-    "revision": "18c7145f22c51d2115c0",
-    "url": "/game-sync/js/chunk-7b5b442e.e0303e69.js"
+    "revision": "de75291219898736d397",
+    "url": "/game-sync/js/chunk-7b5b442e.af827688.js"
   },
   {
     "revision": "4263450656d37dfc3d1b",
