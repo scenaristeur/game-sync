@@ -41,7 +41,7 @@ import {
   getInteger
   //setDatetime
 } from "@inrupt/solid-client";
-import { FOAF, /*LDP,*/ VCARD, RDF, AS, RDFS  } from "@inrupt/vocab-common-rdf";
+import { FOAF, /*LDP,*/ VCARD, RDF, AS, RDFS, OWL  } from "@inrupt/vocab-common-rdf";
 import { WS } from "@inrupt/vocab-solid-common";
 import * as sc from '@inrupt/solid-client-authn-browser'
 
@@ -93,6 +93,7 @@ const plugin = {
       let date = new Date()
       let name = chose.name || Date.now();
       let path = chose.url
+      let parent = chose.parent
       let url = path+name+'.ttl'
       let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+url
       console.log("creating", url)
@@ -106,9 +107,34 @@ const plugin = {
       //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
       thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );
       thing = addStringNoLocale(thing, AS.published, date.toISOString());
+      if (parent != undefined){
+        thing = addUrl(thing, OWL.sameAs, parent );
+        console.log("update de parent avec rdfs:seeAlso, https://www.w3.org/wiki/UsingSeeAlso", parent)
+        chose.seeAlso = path+name+'.ttl'
+        this.$addSeeAlso(chose)
+      }
       let thingInDs = setThing(ds, thing);
       let savedThing  = await saveSolidDatasetAt(path+name+'.ttl', thingInDs, { fetch: sc.fetch } );
+
+      //  console.log(savedThing)
+
+
+
       return savedThing
+    },
+
+    Vue.prototype.$addSeeAlso = async function(chose){
+      let datasetUrl = chose.parent.split("#")[0]
+      let ds =  await getSolidDataset(datasetUrl, {fetch: sc.fetch})
+      console.log(ds)
+      let thing = await getThing( ds, chose.parent );
+      thing = setUrl(thing, RDFS.seeAlso, chose.seeAlso);
+      let thingInDs = setThing(ds, thing);
+      let savedThing  = await saveSolidDatasetAt(datasetUrl, thingInDs, { fetch: sc.fetch } );
+      console.log("NODE UPDATED ", savedThing)
+
+      return savedThing
+
     },
 
     Vue.prototype.$explore = async function(path){
@@ -200,7 +226,7 @@ const plugin = {
         //console.log(type)
         let oneThing = {id: id, url: t.url, type: type, label: label}
         let properties = await getStringNoLocale(t, IPGS.properties)
-      //  console.log("props", properties, typeof properties)
+        //  console.log("props", properties, typeof properties)
         if (typeof `${properties}` == "string"){
           try{
             oneThing.properties = JSON.parse(`${properties}`)
@@ -243,7 +269,7 @@ const plugin = {
         }
       }
 
-    //  console.log('network',network)
+      //  console.log('network',network)
 
 
       let game = {url: url, updates : updates, network: network}

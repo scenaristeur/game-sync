@@ -172,6 +172,9 @@ export default {
     },
     newGraphFromNode(){
       console.log(this.v.id)
+      console.log(this.v)
+      console.log("url",this.url)
+      console.log("creation du fichier graphe, et lien depuis le noeud vers ce fichier graph")
       if (this.$route.query.url != undefined ){
         this.url = this.$route.query.url
         console.log("url", this.url)
@@ -180,11 +183,13 @@ export default {
         let g = {url: nodeFullUri, node: this.v}
         this.$store.commit('ipgs/setNewGraph', g)
 
-
-
       }else{
         console.log("url undefined", this.url)
       }
+
+      let chose = {url: this.url, name: this.v.label, parent: this.v.url}
+      console.log(chose)
+      this.$create(chose)
 
 
     }
@@ -192,6 +197,12 @@ export default {
     //   this.v.id = this.calculatedId
     // }
   },
+  computed: {
+    url:{
+      get () { return this.$store.state.gamesync.url },
+      set (/*value*/) { /*this.updateTodo(value)*/ }
+    },
+  }
   // computed:{
   //   // calculatedId(){
   //   //   return "#"+this.v.label.trim().split(' ').join('_') || this.v.id
