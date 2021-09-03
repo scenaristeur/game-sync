@@ -118,7 +118,10 @@ const plugin = {
 
       //  console.log(savedThing)
 
-
+      let newthing = {url: path+name+'.ttl', subscribe: true}
+      console.log("read",newthing)
+      this.$readResource(newthing)
+      this.$store.commit('gamesync/setNetworkUrl', {url: path+name+'.ttl'})
 
       return savedThing
     },
@@ -226,6 +229,8 @@ const plugin = {
         //console.log(type)
         let oneThing = {id: id, url: t.url, type: type, label: label}
         let properties = await getStringNoLocale(t, IPGS.properties)
+        oneThing.sameAs = await getUrlAll(t, OWL.sameAs)
+        oneThing.seeAlso = await getUrlAll(t, RDFS.seeAlso)
         //  console.log("props", properties, typeof properties)
         if (typeof `${properties}` == "string"){
           try{

@@ -28,7 +28,25 @@
   </span>
 </div>
 
-
+<div v-if="v.sameAs != undefined && v.sameAs.length> 0">
+  <hr>
+same as :
+{{v.sameAs}}
+<b-button v-for="sa in v.sameAs" :key="sa"
+ variant="outline-primary" size="sm" @click="read(sa)">
+  {{sa}}
+</b-button>
+</div>
+<div v-if="v.seeAlso!= undefined && v.seeAlso.length > 0">
+<hr>
+see also {{v.seeAlso}}
+<b-button v-for="so in v.seeAlso" :key="so"
+  variant="outline-primary"
+   size="sm"
+    @click="read(so)">
+  {{so}}
+</b-button>
+</div>
 <!-- Element to collapse -->
 <b-collapse id="collapse-node-vis">
 
@@ -192,7 +210,13 @@ export default {
       this.$create(chose)
 
 
-    }
+    },
+    read(res){
+      let thing = {url: res, subscribe: true}
+      console.log("read",thing)
+      this.$readResource(thing)
+      this.$store.commit('gamesync/setNetworkUrl', {url: res})
+    },
     // updateId(){
     //   this.v.id = this.calculatedId
     // }
