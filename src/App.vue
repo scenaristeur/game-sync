@@ -1,18 +1,12 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Sync</router-link> |
-      <!-- <router-link to="/syncess">Entreprise Solid Server</router-link> | -->
-      <router-link to="/about">About</router-link>
-    </div>
-    <div>
-    </div>
+    <Navbar />
     <router-view/>
 
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.8- properties</i></small>
+    <small><i>0.0.9 - navbar</i></small>
   </div>
 </template>
 
@@ -20,7 +14,7 @@
 export default {
   name: 'App',
   components: {
-    // 'Login': () => import('@/components/solid/Login'),
+     'Navbar': () => import('@/components/layout/Navbar'),
     // 'Game': () => import('@/components/Game'),
     //  'ResourcesList': () => import('@/components/ResourcesList'),
   },

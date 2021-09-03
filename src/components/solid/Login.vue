@@ -3,7 +3,16 @@
 
     <div v-if="!isLoggedIn" class="d-flex align-items-center">
       <b-form-group>
-        <b-form-select v-model="issuer" :options="issuers" @change="login"></b-form-select>
+
+        <b-dropdown id="dropdown-login" text="Login" class="m-md-2" size="sm" variant="success">
+          <b-dropdown-item v-for="issuer in issuers" :key="issuer" @click="login(issuer.value)">{{issuer.text}}</b-dropdown-item>
+          <!-- <b-dropdown-divider></b-dropdown-divider>
+          <b-dropdown-item active>Active action</b-dropdown-item>
+          <b-dropdown-item disabled>Disabled action</b-dropdown-item> -->
+        </b-dropdown>
+
+
+        <!-- <b-form-select v-model="issuer" :options="issuers" @change="login"></b-form-select> -->
 
         <div v-if="issuer == 'other'">
           <b-form-group
@@ -23,13 +32,13 @@
         <b-button size="sm" variant="info">Login / connexion</b-button>
       </div>
       <!-- <b-button  @click="login" :disabled="issuer == null" variant="success" size="sm">Login</b-button> -->
-      <b-form-checkbox
+      <!-- <b-form-checkbox
       id="checkbox-1"
       v-model="restore"
       name="checkbox-1"
       >
       restore session
-    </b-form-checkbox>
+    </b-form-checkbox> -->
   </b-form-group>
 </div>
 
@@ -47,12 +56,13 @@ export default {
   data() {
     return {
       issuers: [
-        { value: null, text: 'Login / Connexion', disabled: true},
+        //  { value: null, text: 'Login / Connexion', disabled: true},
         { value: "https://broker.pod.inrupt.com", text: 'Broker Pod Inrupt (Entreprise Solid Server)' },
         { value: "https://inrupt.net", text: 'Inrupt.net' },
         { value: "https://dev.inrupt.net", text: 'dev.inrupt.net' },
         { value: "https://solidcommunity.net", text: 'SolidCommunity.net' },
         { value: "https://solidweb.org", text: 'Solidweb.org' },
+        { value: "https://trinpod.us/", text: 'Trinpod.us'},
         { value: "other", text: 'Autre / Other' },
 
       ],
@@ -75,7 +85,8 @@ export default {
         this.login()
       }
     },
-    login(){
+    login(issuer){
+      this.issuer = issuer
       if (this.issuer != null && this.issuer != "other"){
         console.log(this.issuer)
         this.$login(this.issuer)

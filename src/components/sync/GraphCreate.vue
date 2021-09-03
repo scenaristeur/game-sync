@@ -2,7 +2,7 @@
   <div>
     <!-- URL : {{ url }} -->
 
-    <Login />
+
     <div v-if="webId == null">
       <b-alert show variant="warning">
         You must Login to create a new Graph
@@ -21,9 +21,7 @@
 <script>
 export default {
   name: "GraphCreate",
-  components: {
-    'Login': () => import('@/components/solid/Login'),
-  },
+
   data(){
     return{
       name: "",
