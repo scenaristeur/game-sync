@@ -1,21 +1,37 @@
 <template>
   <b-container>
     <vue-tags-input
-    v-if="cardActive"
+    v-if="showWikimedia"
     v-model="tag"
     :tags="tags"
     :autocomplete-items="autocompleteItems"
     @tags-changed="update"
     />
-    <b-button @click="cardActive = !cardActive">Wikimedia</b-button><b-button>Pod</b-button><b-button @click="google">Google</b-button>
-    <b-input-group prepend="id" class="mt-3">
-      <b-form-input v-model="itemIdentifiant" placeholder="url / identifiant"></b-form-input>
-      <b-input-group-append>
-        <b-button variant="outline-dark">Cancel</b-button>
-        <b-button variant="success" @click="add">Add</b-button>
-      </b-input-group-append>
-    </b-input-group>
-  </b-container>
+    <b-button @click="showWikimedia = !showWikimedia"
+    :variant="showWikimedia == true? 'primary' : 'outline-primary'" >
+    Wikimedia
+  </b-button>
+  <b-button @click="showPod = !showPod"
+  :variant="showPod == true? 'primary' : 'outline-primary'">
+  Pod
+</b-button>
+<b-button @click="showSemapps = !showSemapps" disabled
+:variant="showSemapps == true? 'primary' : 'outline-primary'">
+Semapps
+</b-button>
+<!-- <b-button @click="google" disabled
+:variant="showGoogle == true? 'primary' : 'outline-primary'"
+>
+Google
+</b-button> -->
+<b-input-group prepend="id" class="mt-3">
+  <b-form-input v-model="itemIdentifiant" placeholder="url / identifiant"></b-form-input>
+  <b-input-group-append>
+    <b-button variant="outline-dark">Cancel</b-button>
+    <b-button variant="success" @click="add">Add</b-button>
+  </b-input-group-append>
+</b-input-group>
+</b-container>
 </template>
 
 <script>
@@ -35,7 +51,10 @@ export default {
       tags: [],
       autocompleteItems: [],
       debounce: null,
-      cardActive: false,
+      showWikimedia: false,
+      showPod: false,
+      showSemapps: false,
+      showGoogle: false,
     }
   },
   created() {
@@ -50,7 +69,16 @@ export default {
       this.autocompleteItems = [];
       this.tags = newTags;
     },
-    async getItems(query) {
+
+    async getItems(query){
+      this.getWikidataItems(query)
+      this.getSolidtems(query)
+      this.getSemappsItems(query)
+      //this.getGoogleItems(query)
+    },
+
+
+    async getWikidataItems(query) {
       //  this.conceptUri = ""
       if(query.length>0){
         this.loading = true
@@ -63,7 +91,7 @@ export default {
           // this.items = suggestions.search
           // console.log(this.items)
           this.autocompleteItems = suggestions.search.map(a => {
-            return { text: a.match.text+" ("+a.description+")", url: a.concepturi };
+            return { text: "wikidata: "+a.match.text+" ("+a.description+")", url: a.concepturi };
           });
         }catch(e){
           alert(e)
@@ -79,11 +107,17 @@ export default {
     //     //document.getElementById("content").innerHTML += "<br>" + item.htmlTitle;
     //   }
     // },
-    async google(){
-      let hndlr = this.hndlr
-      console.log(hndlr)
+    async getSolidtems(query){
+      console.log("todo ", query)
+    },
+    async getSemappsItems(query){
+      console.log("todo https://data.virtual-assembly.org/", query)
+    },
+    async getGoogleItems(query){
+      // let hndlr = this.hndlr
+      // console.log(hndlr)
 
-      let url = "https://www.googleapis.com/customsearch/v1?key=PUT_YOUR_KEY&cx=017576662512468239146:omuauf_lfve&q="+this.itemIdentifiant
+      let url = "https://www.googleapis.com/customsearch/v1?key=PUT_YOUR_KEY&cx=017576662512468239146:omuauf_lfve&q="+query
       //  GET https://www.googleapis.com/customsearch/v1?key=INSERT_YOUR_API_KEY&cx=017576662512468239146:omuauf_lfve&q=lectures
 
       let results = await fetch(url)
@@ -98,13 +132,24 @@ export default {
 
       console.log("results",results)
 
-    }
+    },
+    // getVariant(param){
+    //   console.log("variant param",param)
+    //   return param == true ? "secondary-outline" : "secondary"
+    // }
   },
   watch:{
     'tag': _.debounce(function(item) { this.getItems(item) }, 500),
     tags(){
       console.log(this.tags)
-      this.note.tags = this.tags//.map(t => t.text.trim())
+      this.tags.forEach((t) => {
+        var index = this.items.findIndex(x => x.url==t.url);
+        index === -1 ? this.items.push(t) : ""
+
+      });
+
+      console.log(this.items)
+      //  this.note.tags = this.tags//.map(t => t.text.trim())
     },
   }
 }

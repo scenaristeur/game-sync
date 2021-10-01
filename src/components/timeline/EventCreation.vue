@@ -1,12 +1,11 @@
 <template>
   <div>
     Event creation
-    <fieldset>
-      <legend>When ?</legend>
-      <b-button @click="now">Now</b-button>
+      <!-- <b-button @click="now">Now</b-button> -->
       <DatePicker class="inline-block h-full" v-model="date">
         <template v-slot="{ inputValue, togglePopover }">
           <div class="flex items-center">
+            When ?
             <button
             class="p-2 bg-blue-100 border border-blue-200 hover:bg-blue-200 text-blue-600 rounded-l focus:bg-blue-500 focus:text-white focus:border-blue-500 focus:outline-none"
             @click="togglePopover()"
@@ -28,20 +27,11 @@
         type="datetime-local"
         />
       </div>
+      recursion: todo
     </template>
   </DatePicker>
 
   <!-- <Calendar /> -->
-
-
-</fieldset>
-
-<fieldset>
-  <legend>Recursion ?</legend>
-  every :
-
-
-</fieldset>
 
 <fieldset>
   <legend>Actors</legend>
@@ -64,6 +54,7 @@
 
 </fieldset>
 
+<b-button variant="primary" @click="send">Send</b-button>
 </div>
 </template>
 
@@ -96,6 +87,9 @@ export default {
   methods:{
     now(){
       this.event.date = new Date()
+    },
+    send(){
+      console.log(this.event)
     }
   }
 }
