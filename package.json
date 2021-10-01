@@ -23,6 +23,7 @@
     "moment": "^2.29.1",
     "register-service-worker": "^1.7.1",
     "sweetalert": "^2.1.2",
+    "v-calendar": "^2.3.2",
     "vis": "^4.21.0-EOL",
     "vis-network": "^9.0.4",
     "vis-timeline": "^7.4.9",

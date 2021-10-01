@@ -29,6 +29,7 @@
     <b-navbar-nav>
         <b-nav-item to="/about">About</b-nav-item>
         <b-nav-item to="/test">Test timeline</b-nav-item>
+        <b-nav-item to="/event">Event</b-nav-item>
       <!-- <b-nav-item href="#">Link</b-nav-item>
       <b-nav-item href="#" disabled>Disabled</b-nav-item> -->
 
