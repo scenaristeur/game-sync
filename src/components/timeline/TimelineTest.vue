@@ -2,55 +2,19 @@
   <div>
     Timeline
 
-    {{ items }}<br>
-    {{ groups }}<br>
-    {{ options}}
     <div id="demo">demo</div>
 
     <div id="visualization" ref="visualization"></div>
     <div id="log">log</div>
-    <!--
-    :events="['drop', 'changed']"
-    @drop="myDropCallback"
-    @changed="myChangedCallback"
-  -->
-</div>
+  </div>
 </template>
 
 <script>
 import { DataSet, Timeline } from "vis-timeline/standalone/umd/vis-timeline-graph2d.min.js";
 import "vis-timeline/styles/vis-timeline-graph2d.css";
-//import swal from 'sweetalert';
-
 
 export default {
   name: "TimelineTest",
-  components: {
-    //Timeline
-    //'Todo': () => import('@/components/Todo'),
-    //  'Timeline': () => import('vis-timeline/standalone'),
-  },
-  // data1() {
-  //   return {
-  //     groups: new DataSet([
-  //       {
-  //         id: 0,
-  //         content: "Group 1"
-  //       }
-  //     ]),
-  //     items: new DataSet([
-  //       {
-  //         id: 0,
-  //         group: 0,
-  //         start: new Date(),
-  //         content: "Item 1"
-  //       }
-  //     ]),
-  //     options: {
-  //       editable: true
-  //     }
-  //   };
-  // },
   data() {
     return {
       groups: [
@@ -61,53 +25,22 @@ export default {
       ],
       items: new DataSet([
         {id: 1, content: 'item 1', start: '2014-04-20'},
-   {id: 2, content: 'item 2', start: '2014-04-14'},
-   {id: 3, content: 'item 3', start: '2014-04-18'},
-   {id: 4, content: 'item 4', start: '2014-04-16', end: '2014-04-19'},
-   {id: 5, content: 'item 5', start: '2014-04-25'},
-   {id: 6, content: 'item 6', start: '2014-04-27', type: 'point'}
-         // {id: 1, content: 'item 1', start: new Date(2021, 9, 20)},
-         // {id: 2, content: 'item 2', start: new Date()},
-        // {id: 2, content: 'item 2', start: new Date(2021, 9, 14)},
-        // {id: 3, content: 'item 3', start: new Date(2021, 9, 18)},
-        // {id: 4, content: 'item 4', start: new Date(2021, 9, 16), end: new Date(2021, 9, 19)},
-        // {id: 5, content: 'item 5', start: new Date(2021, 9, 25)},
-        // {id: 6, content: 'item 6', start: new Date(2021, 9, 27)}
-        // { id: 1, content: "item 1", start: "2021-09-27" },
-        // { id: 2, content: "item 2", start: "2021-09-28" },
-        // { id: 3, content: "item 3", start: "2021-09-26" },
-        // { id: 4, content: "item 4", start: "2021-09-16", end: "2021-09-19" },
-        // { id: 5, content: "item 5", start: "2021-09-30" },
-        // { id: 6, content: "item 6", start: "2021-09-29", type: "point" }
+        {id: 2, content: 'item 2', start: '2014-04-14'},
+        {id: 3, content: 'item 3', start: '2014-04-18'},
+        {id: 4, content: 'item 4', start: '2014-04-16', end: '2014-04-19'},
+        {id: 5, content: 'item 5', start: '2014-04-25'},
+        {id: 6, content: 'item 6', start: '2014-04-27', type: 'point'}
       ]),
-      // [
-      //   {
-      //     id: 0,
-      //     group: 0,
-      //     start: new Date(),
-      //     content: "Item 1"
-      //   }
-      // ],
       options: {
         editable: true
       }
     };
   },
   mounted(){
-  //  var min = new Date(2021, 9, 15); // 1 april
-  //  var max = new Date(2021, 10, 30, 23, 59, 59);
+    //  var min = new Date(2021, 9, 15); // 1 april
+    //  var max = new Date(2021, 10, 30, 23, 59, 59);
     // DOM element where the Timeline will be attached
     const container = document.getElementById("visualization");
-
-    // Create a DataSet (allows two way data-binding)
-    // const items = new DataSet([
-    //   { id: 1, content: "item 1", start: "2014-04-20" },
-    //   { id: 2, content: "item 2", start: "2014-04-14" },
-    //   { id: 3, content: "item 3", start: "2014-04-18" },
-    //   { id: 4, content: "item 4", start: "2021-09-16", end: "2021-09-19" },
-    //   { id: 5, content: "item 5", start: "2021-09-30" },
-    //   { id: 6, content: "item 6", start: "2014-04-27", type: "point" }
-    // ]);
 
     // Configuration for the Timeline
     const options = {
@@ -143,7 +76,7 @@ export default {
         // if (item.start < min) item.start = min;
         // if (item.start > max) item.start = max;
         // if (item.end   > max) item.end   = max;
-console.log(item)
+        console.log(item)
         callback(item); // send back the (possibly) changed item
       },
 
