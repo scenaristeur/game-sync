@@ -182,10 +182,18 @@ export default {
     init(){
       this.range.start = new Date(this.detail.customData.start)
       this.range.end = new Date(this.detail.customData.end)
-      // this.event.title = this.detail.customData.title
-      // this.event.color = this.detail.customData.color
-      // this.event.certainty = this.detail.customData.certainty
-      this.event = this.detail.customData
+      this.event.title = this.detail.customData.title
+      this.event.color = this.detail.customData.color
+      this.event.certainty = this.detail.customData.certainty
+      this.event.actors = this.detail.customData.actors || []
+      this.event.actions = this.detail.customData.actions || []
+      this.event.objects = this.detail.customData.objects || []
+      this.event.contexts = this.detail.customData.contexts || []
+      // this.event = this.detail.customData
+      // this.event.actors == undefined ? this.event.actors = [] : ""
+      // this.event.actions == undefined ? this.event.actions = [] : ""
+      // this.event.objects == undefined ? this.event.objects = [] : ""
+      // this.event.contexts == undefined ? this.event.contexts = [] : ""
     },
     now(){
       this.range.start = new Date()
