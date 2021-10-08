@@ -2,7 +2,7 @@
   <div class="about">
     <h1>This is an test page</h1>
 
-    <EventCreation />
+
     <hr>
     <CalendarTop />
     <SimpleTimeline />
@@ -19,7 +19,7 @@ export default {
     'SimpleTimeline': () => import('@/components/timeline/SimpleTimeline'),
     'CalendarTop': () => import('@/components/timeline/CalendarTop'),
     'TimelineTest': () => import('@/components/timeline/TimelineTest'),
-    'EventCreation': () => import('@/components/timeline/EventCreation'),
+
   },
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    Event creation
+    {{ JSON.stringify(detail)}}
     <!-- <b-button @click="now">Now</b-button> -->
     <b-input-group size="sm" prepend="Title" >
       <b-form-input v-model="event.title"></b-form-input>
@@ -114,6 +114,7 @@ import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
 export default {
   name: "EventCreation",
+  props:['detail'],
   components: {
     //  Calendar,
     DatePicker,
@@ -151,9 +152,14 @@ export default {
     }
   },
   created(){
-    this.now()
+    this.init()
   },
   methods:{
+    init(){
+      this.range.start = new Date(this.detail.customData.start)
+      this.range.end = new Date(this.detail.customData.end)
+      this.event.title = this.detail.customData.title
+    },
     now(){
       this.range.start = new Date()
       this.range.end = new Date()
@@ -166,10 +172,7 @@ export default {
       console.log(this.event, this.publishTo)
       let event = {
         key: "url",
-        customData: {
-          title: this.event.title,
-          //  class: 'bg-blue-500 text-white',
-        },
+        customData: this.event,
         dates:{
           start: this.event.start,
           end: this.event.end

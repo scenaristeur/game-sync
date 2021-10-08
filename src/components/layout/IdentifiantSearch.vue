@@ -17,7 +17,7 @@ v-model="tag"
 @tags-changed="update"
 />
 
-<b-input-group  v-if="mode == 'libre'" prepend="url or id">
+<b-input-group  v-if="mode == 'libre'" >
   <b-form-input v-model="itemIdentifiant" placeholder="url / identifiant"></b-form-input>
   <b-input-group-append>
     <b-button variant="outline-dark">Cancel</b-button>

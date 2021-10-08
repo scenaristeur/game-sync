@@ -1,16 +1,14 @@
 <template>
   <div class="text-center section">
-    {{attributes}}
+
     <h2 class="h2">Custom Calendars</h2>
     <p class="text-lg font-medium text-gray-600 mb-6">
       Roll your own calendars using scoped slots
     </p>
 
-    <v-calendar
-    :attributes="attributes1"
-    >
 
-  </v-calendar>
+
+
 
   <v-calendar
   class="custom-calendar max-w-full"
@@ -21,30 +19,56 @@
   >
   <template v-slot:day-content="{ day, attributes }">
     <div class="flex flex-col h-full z-10 overflow-hidden">
-      <span class="day-label text-sm text-gray-900">{{ day.day }}</span>
+      <span class="day-label text-sm text-gray-900" >{{ day.day }}</span>
+      <b-button @click="create(day)" variant="outline-primary" size="sm">+</b-button>
       <div class="flex-grow overflow-y-auto overflow-x-auto">
         <p
         v-for="attr in attributes"
         :key="attr.key"
-        class="text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
+        class="brd text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
         :class="attr.customData.class"
         @click="showDetail(attr)"
+
         >
+        <!-- @mouseover="showDetail(attr)" -->
         {{ attr.customData.title }}
       </p>
     </div>
   </div>
 </template>
 </v-calendar>
+
+<v-calendar
+:attributes="attributes1" />
+
+<b-modal v-if="detail != null" id="detail" size="xl" :title="detail.customData.title">
+
+  <!-- date : {{detail.dates[0].isDate}} or range : {{detail.dates[0].isRange}} or iscomplex : {{ detail.dates[0].isComplex}} -->
+  <hr>
+  start: {{detail.customData.start.toLocaleDateString() }}
+  <span v-if="detail.customData.start != undefined">{{ detail.customData.start.toLocaleTimeString()}}</span> <br>
+  end: {{ detail.customData.end.toLocaleDateString() }}
+  <span v-if="detail.customData.end != undefined">{{detail.customData.end.toLocaleTimeString()}}</span><br><br>
+  <EventCreation :detail="detail" />
+  <p class="my-4">{{JSON.stringify(detail)}}</p>
+  <!-- {{JSON.stringify(detail.dates[0],undefined,2)}} -->
+</b-modal>
+
+    {{attributes}}
 </div>
 </template>
 
 <script>
 export default {
+  name: "CalendarTop",
+  components:{
+    'EventCreation': () => import('@/components/timeline/EventCreation'),
+  },
   data() {
     const month = new Date().getMonth();
     const year = new Date().getFullYear();
     return {
+      detail: {customData: {start:new Date(), end: new Date()}},
       masks: {
         weekdays: 'WWW',
       },
@@ -200,13 +224,31 @@ export default {
     };
   },
   methods: {
+    create(day){
+      let attr = {dates: day.date, customData: {title: "New Event"+Date.now(), start: day.range.start, end: day.range.end}}
+      //  this.$store.commit('events/addEvent', attr)
+      this.detail = attr
+      this.$bvModal.show("detail")
+    },
     showDetail(e){
       console.log(e)
-    }
+      this.detail = e
+      this.$bvModal.show("detail")
+    },
+    // dateFormat(d){
+    //   return d.toLocaleDateString() //d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate()
+    // },
+    // dateTimeFormat(d){
+    //   return d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate() + " " +
+    //   d.getHours() + ":" + d.getMinutes();
+    // },
+    // timeFormat(d){
+    //   return d.toTimeString() //d.getHours() + ":" + d.getMinutes();
+    // }
   },
   watch:{
     events(){
-      this.attributes = []
+      //  this.attributes = []
       this.events.forEach((e) => {
         console.log(e)
         this.attributes.push(e)
@@ -225,14 +267,15 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
-/* ::-webkit-scrollbar {
+
+<style scoped>
+::-webkit-scrollbar {
   width: 0px;
 }
 ::-webkit-scrollbar-track {
   display: none;
 }
-/deep/ .custom-calendar.vc-container {
+.custom-calendar.vc-container {
   --day-border: 1px solid #b8c2cc;
   --day-border-highlight: 1px solid #b8c2cc;
   --day-width: 90px;
@@ -241,41 +284,44 @@ export default {
   --weekday-border: 1px solid #eaeaea;
   border-radius: 0;
   width: 100%;
-  & .vc-header {
-    background-color: #f1f5f8;
-    padding: 10px 0;
-  }
-  & .vc-weeks {
-    padding: 0;
-  }
-  & .vc-weekday {
-    background-color: var(--weekday-bg);
-    border-bottom: var(--weekday-border);
-    border-top: var(--weekday-border);
-    padding: 5px 0;
-  }
-  & .vc-day {
-    padding: 0 5px 3px 5px;
-    text-align: left;
-    height: var(--day-height);
-    min-width: var(--day-width);
-    background-color: white;
-    &.weekday-1,
-    &.weekday-7 {
-      background-color: #eff8ff;
-    }
-    &:not(.on-bottom) {
-      border-bottom: var(--day-border);
-      &.weekday-1 {
-        border-bottom: var(--day-border-highlight);
-      }
-    }
-    &:not(.on-right) {
-      border-right: var(--day-border);
-    }
-  }
-  & .vc-day-dots {
-    margin-bottom: 5px;
-  }
-  } */
-  </style>
+}
+.custom-calendar.vc-header {
+  background-color: #f1f5f8;
+  padding: 10px 0;
+}
+.custom-calendar.vc-weeks {
+  padding: 0;
+}
+.custom-calendar.vc-weekday {
+  background-color: var(--weekday-bg);
+  border-bottom: var(--weekday-border);
+  border-top: var(--weekday-border);
+  padding: 5px 0;
+}
+.custom-calendar.vc-day {
+  padding: 0 5px 3px 5px;
+  text-align: left;
+  height: var(--day-height);
+  min-width: var(--day-width);
+  background-color: #ffeff8;
+}
+.custom-calendar.vc-day.weekday-1 .custom-calendar.vc-day.weekday-7 {
+  background-color: #eff8ff;
+}
+.custom-calendar:not(.on-bottom) {
+  border-bottom: var(--day-border);
+}
+.custom-calendar:not(.on-bottom).weekday-1 {
+  border-bottom: var(--day-border-highlight);
+}
+.custom-calendar:not(.on-right) {
+  border-right: var(--day-border);
+}
+.custom-calendar.vc-day-dots {
+  margin-bottom: 5px;
+}
+.brd {
+  border: 1px solid grey;
+}
+
+</style>
