@@ -135,7 +135,8 @@ export default {
             title: 'Range Take Noah to basketball practice',
             //  class: 'bg-blue-500 text-white',
           },
-          dates:{start: new Date(year, month, 1, 12, 2, 24),
+          dates:{
+            start: new Date(year, month, 1, 12, 2, 24),
             end: new Date(year, month, 1, 12, 2, 30)
           }
         },
@@ -202,6 +203,24 @@ export default {
     showDetail(e){
       console.log(e)
     }
+  },
+  watch:{
+    events(){
+      this.attributes = []
+      this.events.forEach((e) => {
+        console.log(e)
+        this.attributes.push(e)
+
+
+      });
+
+    }
+  },
+  computed: {
+    events:{
+      get () { return this.$store.state.events.events },
+      set (/*value*/) { /*this.updateTodo(value)*/ }
+    },
   }
 };
 </script>

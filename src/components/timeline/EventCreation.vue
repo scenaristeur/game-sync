@@ -161,10 +161,21 @@ export default {
     send(){
       console.log(this.range)
 
-      this.event.start = this.dateFormat(this.range.start)
-      this.event.end = this.dateFormat(this.range.end)
+      this.event.start = this.range.start
+      this.event.end = this.range.end
       console.log(this.event, this.publishTo)
-      let event = { "title": this.event.title, "startDate": this.event.start, "endDate": this.event.end }
+      let event = {
+        key: "url",
+        customData: {
+          title: this.event.title,
+          //  class: 'bg-blue-500 text-white',
+        },
+        dates:{
+          start: this.event.start,
+          end: this.event.end
+        }
+      }
+      //let event = { "title": this.event.title, "startDate": this.event.start, "endDate": this.event.end }
       this.$store.commit('events/addEvent', event)
     },
     addAnotherDestination(){
