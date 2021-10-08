@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import solid from './modules/solid'
 import gamesync from './modules/gamesync'
 import ipgs from './modules/ipgs'
+import events from './modules/events'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,6 @@ export default new Vuex.Store({
   },
   actions: {
   },
-  modules: { solid, gamesync, ipgs
+  modules: { solid, gamesync, ipgs, events
   }
 })

@@ -1,36 +1,46 @@
 <template>
   <b-container>
-    <vue-tags-input
-    v-if="showWikimedia"
-    v-model="tag"
-    :tags="tags"
-    :autocomplete-items="autocompleteItems"
-    @tags-changed="update"
-    />
-    <b-button @click="showWikimedia = !showWikimedia"
-    :variant="showWikimedia == true? 'primary' : 'outline-primary'" >
+    <b-button @click="mode = 'Wikimedia'"
+    :variant="mode == 'Wikimedia'? 'primary' : 'outline-primary'" >
     Wikimedia
   </b-button>
-  <b-button @click="showPod = !showPod"
-  :variant="showPod == true? 'primary' : 'outline-primary'">
-  Pod
+  <b-button @click="mode = 'libre'"
+  :variant="mode == 'libre'? 'primary' : 'outline-primary'" >
+  Free id or url
 </b-button>
-<b-button @click="showSemapps = !showSemapps" disabled
-:variant="showSemapps == true? 'primary' : 'outline-primary'">
-Semapps
-</b-button>
-<!-- <b-button @click="google" disabled
-:variant="showGoogle == true? 'primary' : 'outline-primary'"
->
-Google
-</b-button> -->
-<b-input-group prepend="id" class="mt-3">
+
+<vue-tags-input
+v-if="mode == 'Wikimedia'"
+v-model="tag"
+:tags="tags"
+:autocomplete-items="autocompleteItems"
+@tags-changed="update"
+/>
+
+<b-input-group  v-if="mode == 'libre'" prepend="url or id">
   <b-form-input v-model="itemIdentifiant" placeholder="url / identifiant"></b-form-input>
   <b-input-group-append>
     <b-button variant="outline-dark">Cancel</b-button>
     <b-button variant="success" @click="add">Add</b-button>
   </b-input-group-append>
 </b-input-group>
+
+
+
+<!-- <b-button @click="showPod = !showPod"
+:variant="showPod == true? 'primary' : 'outline-primary'">
+Pod
+</b-button>
+<b-button @click="showSemapps = !showSemapps" disabled
+:variant="showSemapps == true? 'primary' : 'outline-primary'">
+Semapps
+</b-button> -->
+<!-- <b-button @click="google" disabled
+:variant="showGoogle == true? 'primary' : 'outline-primary'"
+>
+Google
+</b-button> -->
+
 </b-container>
 </template>
 
@@ -51,10 +61,10 @@ export default {
       tags: [],
       autocompleteItems: [],
       debounce: null,
-      showWikimedia: false,
-      showPod: false,
-      showSemapps: false,
-      showGoogle: false,
+      mode: null,
+      // showPod: false,
+      // showSemapps: false,
+      // showGoogle: false,
     }
   },
   created() {

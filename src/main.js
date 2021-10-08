@@ -27,6 +27,18 @@ Vue.use(IconsPlugin)
 
 Vue.config.productionTip = false
 
+//FOR CALEANDAR
+//import the new composition api in order to make it work in Vue@2.x
+// import VueComp from '@vue/composition-api'
+// //use the vue-composition-api plugin
+// Vue.use(VueComp)
+
+import VCalendar from 'v-calendar';
+Vue.use(VCalendar, {
+//  componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
+//  ...,                // ...other defaults
+});
+
 new Vue({
   router,
   store,

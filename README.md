@@ -34,5 +34,13 @@ npm run build
 npm run lint
 ```
 
+### Autres calendars
+- https://antoniandre.github.io/vue-cal/
+- https://blog.w3cub.com/vue2-calendar/
+- https://tallent.us/vue-simple-calendar/
+- https://www.findbestopensource.com/product/boussadjra-vue-spring-calendar
+- https://vcalendar.io/layouts.html
+
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

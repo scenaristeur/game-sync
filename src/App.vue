@@ -6,7 +6,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.9 - navbar</i></small>
+    <small><i>0.0.10 - timeline</i></small>
   </div>
 </template>
 
