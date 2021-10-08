@@ -4,6 +4,7 @@
       <b-list-group-item v-for="item in items" :key="item.id" button>{{JSON.stringify(item)}}
 
         <b-button size="sm" @click="properties(item)">properties</b-button>
+        <a v-if="item.url != undefined" size="sm" :href="item.url" target="_blank">see</a>
       </b-list-group-item>
     </b-list-group>
   </b-container>
