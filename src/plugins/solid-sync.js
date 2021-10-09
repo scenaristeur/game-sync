@@ -103,6 +103,7 @@ const plugin = {
       // thing = addUrl(thing, RDF.type, AS.Note);
       thing = addStringNoLocale(thing, AS.name, name);
       thing = addStringNoLocale(thing, RDFS.comment, comment);
+      thing = addStringNoLocale(thing, IPGS.updates, JSON.stringify(chose.event))
       // thing = addStringNoLocale(thing, AS.content, n.text);
       //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
       store.state.solid.pod != null ? thing = addUrl(thing, AS.actor, store.state.solid.pod.webId ) : ""

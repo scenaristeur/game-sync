@@ -23,6 +23,7 @@ const actions = {
       }
       chose.url += "events/"
       chose.name = thing.event.customData.title || thing.event.key
+      chose.event = thing.event
       console.log(chose)
       let savedThing = Vue.prototype.$createEvent(chose)
       console.log("Event created", savedThing)
