@@ -1,4 +1,4 @@
-//import Vue from 'vue';
+import Vue from 'vue';
 const state = () => ({
   events: []
   // url : "",
@@ -9,12 +9,33 @@ const state = () => ({
 })
 
 const actions = {
-  // explore(context, url){
-  //   context.commit('setUrl', url)
-  //   console.log(url)
-  //   let path = {url: url, subscribe: true}
-  //   Vue.prototype.$explore(path)
-  // }
+  addEvent(context, thing){
+    context.commit('addEvent', thing.event)
+    console.log(thing)
+    let pod = context.rootState.solid.pod
+    thing.publishTo.forEach((pub) => {
+      let chose = {}
+      if ((pod != null) && (pub == 'public' || pub == 'private')){
+        chose.url = pod.storage+pub+'/'
+
+      }else{
+        chose.url=pub.url
+      }
+      chose.name = thing.event.customData.title || thing.event.key
+      console.log(chose)
+      let savedThing = Vue.prototype.$createEvent(chose)
+      console.log("Event created", savedThing)
+
+
+
+
+    });
+
+
+
+    // let path = {url: url, subscribe: true}
+    // Vue.prototype.$explore(path)
+  }
 }
 
 const mutations = {

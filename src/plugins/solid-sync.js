@@ -81,6 +81,52 @@ const plugin = {
     let sockets = []
     //    console.log(store)
 
+    Vue.prototype.$createEvent = async function(chose){
+      //  console.log("websocket",websocket)
+      //       {
+      //   "@context": "https://www.w3.org/ns/activitystreams",
+      //   "summary": "Martin created an image",
+      //   "type": "Create",
+      //   "actor": "http://www.test.example/martin",
+      //   "object": "http://example.org/foo.jpg"
+      // }
+      let date = new Date()
+      let name = encodeURI(chose.name) || Date.now();
+      let path = chose.url
+      let parent = chose.parent
+      let url = path+name+'.ttl'
+      let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+url
+      console.log("creating", url)
+      let ds = await createSolidDataset()
+      let thing = await createThing({name: name})
+      console.log("create", thing)
+      // thing = addUrl(thing, RDF.type, AS.Note);
+      thing = addStringNoLocale(thing, AS.name, name);
+      thing = addStringNoLocale(thing, RDFS.comment, comment);
+      // thing = addStringNoLocale(thing, AS.content, n.text);
+      //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
+      thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );
+      thing = addStringNoLocale(thing, AS.published, date.toISOString());
+      if (parent != undefined){
+        thing = addUrl(thing, OWL.sameAs, parent );
+        console.log("update de parent avec rdfs:seeAlso, https://www.w3.org/wiki/UsingSeeAlso", parent)
+        chose.seeAlso = path+name+'.ttl'
+        this.$addSeeAlso(chose)
+      }
+      let thingInDs = setThing(ds, thing);
+      let savedThing  = await saveSolidDatasetAt(path+name+'.ttl', thingInDs, { fetch: sc.fetch } );
+
+      //  console.log(savedThing)
+
+      let newthing = {url: path+name+'.ttl', subscribe: true}
+      console.log("read",newthing)
+      this.$readResource(newthing)
+      this.$store.commit('gamesync/setNetworkUrl', {url: path+name+'.ttl'})
+
+      return savedThing
+    },
+
+
     Vue.prototype.$create = async function(chose){
       //  console.log("websocket",websocket)
       //       {

@@ -18,9 +18,9 @@ v-model="tag"
 />
 
 <b-input-group  v-if="mode == 'libre'" >
-  <b-form-input v-model="itemIdentifiant" placeholder="url / identifiant"></b-form-input>
+  <b-form-input v-on:keyup.native.enter="add" v-model="itemIdentifiant" placeholder="url / identifiant"></b-form-input>
   <b-input-group-append>
-    <b-button variant="outline-dark">Cancel</b-button>
+    <!-- <b-button variant="outline-dark">Cancel</b-button> -->
     <b-button variant="success" @click="add">Add</b-button>
   </b-input-group-append>
 </b-input-group>
@@ -73,7 +73,8 @@ export default {
   },
   methods:{
     add(){
-      this.items.push({id:this.itemIdentifiant})
+      this.items.push({text:this.itemIdentifiant})
+      this.itemIdentifiant = ""
     },
     update(newTags) {
       this.autocompleteItems = [];
@@ -101,7 +102,7 @@ export default {
           // this.items = suggestions.search
           // console.log(this.items)
           this.autocompleteItems = suggestions.search.map(a => {
-            return { text: "wikidata: "+a.match.text+" ("+a.description+")", url: a.concepturi };
+            return { text: /*"wikidata: "+*/a.match.text+" ("+a.description+")", url: a.concepturi };
           });
         }catch(e){
           alert(e)

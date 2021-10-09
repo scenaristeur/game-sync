@@ -10,32 +10,33 @@
 
 
 
-  <v-calendar
-  class="custom-calendar max-w-full"
-  :masks="masks"
-  :attributes="attributes"
-  disable-page-swipe
-  is-expanded
-  >
-  <template v-slot:day-content="{ day, attributes }">
-    <div class="flex flex-col h-full z-10 overflow-hidden">
-      <span class="day-label text-sm text-gray-900" >{{ day.day }}</span>
-      <b-button @click="create(day)" variant="outline-primary" size="sm">+</b-button>
-      <div class="flex-grow overflow-y-auto overflow-x-auto">
-        <p
-        v-for="attr in attributes"
-        :key="attr.key"
-        class="brd text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
-        :class="attr.customData.class"
-        @click="showDetail(attr)"
+    <v-calendar
+    class="custom-calendar max-w-full"
+    :masks="masks"
+    :attributes="attributes"
+    disable-page-swipe
+    is-expanded
+    >
+    <template v-slot:day-content="{ day, attributes }">
+      <div class="flex flex-col h-full z-10 overflow-hidden">
+        <!-- <span class="day-label text-sm text-gray-900" >{{ day.day }}</span> -->
+        <b-button @click="create(day)" class="day-label text-sm text-gray-900"
+         variant="outline-primary" size="sm">{{ day.day }}</b-button>
+        <div class="flex-grow overflow-y-auto overflow-x-auto">
+          <p
+          v-for="attr in attributes"
+          :key="attr.key"
+          class="brd text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
+          :class="attr.customData.class"
+          @click="showDetail(attr)"
 
-        >
-        <!-- @mouseover="showDetail(attr)" -->
-        {{ attr.customData.title }}
-      </p>
+          >
+          <!-- @mouseover="showDetail(attr)" -->
+          {{ attr.customData.title }}
+        </p>
+      </div>
     </div>
-  </div>
-</template>
+  </template>
 </v-calendar>
 
 <v-calendar
@@ -49,13 +50,17 @@
   <span v-if="detail.customData.start != undefined">{{ detail.customData.start.toLocaleTimeString()}}</span> <br>
   end: {{ detail.customData.end.toLocaleDateString() }}
   <span v-if="detail.customData.end != undefined">{{detail.customData.end.toLocaleTimeString()}}</span><br><br>
-  <EventCreation :detail="detail" />
-  <p class="my-4">{{JSON.stringify(detail)}}</p>
+  <EventCreation :detail="detail" :debug="debug" />
+  <!-- <p class="my-4">{{JSON.stringify(detail)}}</p> -->
   <!-- {{JSON.stringify(detail.dates[0],undefined,2)}} -->
 </b-modal>
-
-    {{attributes}}
+<b-button @click="debug = !debug">debug</b-button>
+<div v-if="debug">  {{attributes}}</div>
 </div>
+
+
+
+
 </template>
 
 <script>
@@ -65,9 +70,11 @@ export default {
     'EventCreation': () => import('@/components/timeline/EventCreation'),
   },
   data() {
+
     const month = new Date().getMonth();
     const year = new Date().getFullYear();
     return {
+      debug: false,
       detail: {customData: {start:new Date(), end: new Date()}},
       masks: {
         weekdays: 'WWW',
