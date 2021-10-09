@@ -105,7 +105,7 @@ const plugin = {
       thing = addStringNoLocale(thing, RDFS.comment, comment);
       // thing = addStringNoLocale(thing, AS.content, n.text);
       //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
-      thing = addUrl(thing, AS.actor, store.state.solid.pod.webId );
+      store.state.solid.pod != null ? thing = addUrl(thing, AS.actor, store.state.solid.pod.webId ) : ""
       thing = addStringNoLocale(thing, AS.published, date.toISOString());
       if (parent != undefined){
         thing = addUrl(thing, OWL.sameAs, parent );
@@ -121,7 +121,7 @@ const plugin = {
       let newthing = {url: path+name+'.ttl', subscribe: true}
       console.log("read",newthing)
       this.$readResource(newthing)
-      this.$store.commit('gamesync/setNetworkUrl', {url: path+name+'.ttl'})
+  //    this.$store.commit('gamesync/setNetworkUrl', {url: path+name+'.ttl'})
 
       return savedThing
     },

@@ -21,6 +21,7 @@ const actions = {
       }else{
         chose.url=pub.url
       }
+      chose.url += "events/"
       chose.name = thing.event.customData.title || thing.event.key
       console.log(chose)
       let savedThing = Vue.prototype.$createEvent(chose)
