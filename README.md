@@ -44,3 +44,18 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Activitypub API server
+- http://pump.io/
+- https://github.com/pump-io/pump.io/wiki/Post-a-note
+
+### Event Vocabulary based on activitystreams
+https://www.w3.org/TR/activitystreams-vocabulary/#dfn-event
+https://www.w3.org/TR/activitystreams-vocabulary/#dfn-object
+
+https://activitystrea.ms/specs/json/schema/activity-schema.html#event
+https://activitystrea.ms/specs/json/replies/1.0/#stream
+https://activitystrea.ms/specs/json/schema/activity-schema.html#verbs
+
+https://github.com/hotsh/nelumba
+https://github.com/pump-io/pump.io/blob/master/API.md

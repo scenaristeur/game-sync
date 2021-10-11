@@ -31,7 +31,7 @@ import {
   getThing,
   getUrlAll,
   getUrl,
-  // //  addDatetime,
+    addDatetime,
 
   setUrl,
   setStringNoLocale,
@@ -82,14 +82,16 @@ const plugin = {
     //    console.log(store)
 
     Vue.prototype.$createEvent = async function(chose){
-      //  console.log("websocket",websocket)
-      //       {
+      //https://www.w3.org/TR/activitystreams-vocabulary/#dfn-event
+      //   {
       //   "@context": "https://www.w3.org/ns/activitystreams",
-      //   "summary": "Martin created an image",
-      //   "type": "Create",
-      //   "actor": "http://www.test.example/martin",
-      //   "object": "http://example.org/foo.jpg"
+      //   "type": "Event",
+      //   "name": "Going-Away Party for Jim",
+      //   "startTime": "2014-12-31T23:00:00-08:00",
+      //   "endTime": "2015-01-01T06:00:00-08:00"
       // }
+
+
       let date = new Date()
       let name = encodeURI(chose.name) || Date.now();
       let path = chose.url
@@ -101,8 +103,18 @@ const plugin = {
       let thing = await createThing({name: name})
       console.log("create", thing)
       // thing = addUrl(thing, RDF.type, AS.Note);
+      console.log(RDF.type, AS.Event)
       thing = addStringNoLocale(thing, AS.name, name);
+      thing = addUrl(thing, RDF.type, AS.Event);
+      thing = addDatetime(thing, AS.startTime, chose.event.customData.start);
+      thing = addDatetime(thing, AS.endTime, chose.event.customData.end);
+
+
+
+
       thing = addStringNoLocale(thing, RDFS.comment, comment);
+      // temporary all event info -> todo migrate all to activitystream Event properties
+      chose.event.customData.contexts.length > 0 ? thing = addStringNoLocale(thing, AS.context, JSON.stringify(chose.event.customData.contexts)) : ""
       thing = addStringNoLocale(thing, IPGS.updates, JSON.stringify(chose.event))
       // thing = addStringNoLocale(thing, AS.content, n.text);
       //  n.url != undefined ? thing = addUrl(thing, AS.url, n.url ) : ""
@@ -122,7 +134,7 @@ const plugin = {
       let newthing = {url: path+name+'.ttl', subscribe: true}
       console.log("read",newthing)
       this.$readResource(newthing)
-  //    this.$store.commit('gamesync/setNetworkUrl', {url: path+name+'.ttl'})
+      //    this.$store.commit('gamesync/setNetworkUrl', {url: path+name+'.ttl'})
 
       return savedThing
     },
