@@ -189,12 +189,12 @@ const plugin = {
         thingEvent = addUrl(thingEvent, AS.object, thingAction);
 
         dataset = setThing(dataset, thingAction);
-        dataset = setThing(dataset, thingEvent);
+
 
 
       }
 
-
+      dataset = setThing(dataset, thingEvent);
       let savedDS  = await saveSolidDatasetAt(path+name+'.ttl', dataset, { fetch: sc.fetch } );
       console.log("savedDS",savedDS)
     },
