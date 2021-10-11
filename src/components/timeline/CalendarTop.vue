@@ -275,81 +275,111 @@ export default {
     // }
   },
   watch:{
-    events(){
-      //  this.attributes = []
-      this.events.forEach((e) => {
-        console.log(e)
-        this.attributes.push(e)
+    async eventsBySource(evtsbs){
+      // if (evtsbs.events.length > 0){
+
+      for await (const s of evtsbs) {
+        console.log("IN WATCH",s)
+        if (s.events.length > 0){
+          for await (const e of s.events) {
+            console.log("event in watch", e, e.thing, e.thingAll)
+            console.log(e.event)
+            let attrib = {
+              dates:
+              {
+                start: e.event.start,
+                end: e.event.end
+              },
+              customData: {
+                title:e.event.name,
+                start: e.event.start,
+                end: e.event.end },
+              }
+              console.log("attrib",attrib)
+              this.attributes.push(attrib)
+
+            }
+          }
+
+        }
+
+        //  }
+      },
+      events(){
+        //  this.attributes = []
+        this.events.forEach((e) => {
+          console.log(e)
+          this.attributes.push(e)
 
 
-      });
+        });
 
-    }
-  },
-  computed: {
-    events:{
-      get () { return this.$store.state.events.events },
-      set (/*value*/) { /*this.updateTodo(value)*/ }
+      }
     },
+    computed: {
+      events:{
+        get () { return this.$store.state.events.events },
+        set (/*value*/) { /*this.updateTodo(value)*/ }
+      },
+    }
+  };
+  </script>
+
+
+  <style scoped>
+  ::-webkit-scrollbar {
+    width: 0px;
   }
-};
-</script>
+  ::-webkit-scrollbar-track {
+    display: none;
+  }
+  .custom-calendar.vc-container {
+    --day-border: 1px solid #b8c2cc;
+    --day-border-highlight: 1px solid #b8c2cc;
+    --day-width: 90px;
+    --day-height: 90px;
+    --weekday-bg: #f8fafc;
+    --weekday-border: 1px solid #eaeaea;
+    border-radius: 0;
+    width: 100%;
+  }
+  .custom-calendar.vc-header {
+    background-color: #f1f5f8;
+    padding: 10px 0;
+  }
+  .custom-calendar.vc-weeks {
+    padding: 0;
+  }
+  .custom-calendar.vc-weekday {
+    background-color: var(--weekday-bg);
+    border-bottom: var(--weekday-border);
+    border-top: var(--weekday-border);
+    padding: 5px 0;
+  }
+  .custom-calendar.vc-day {
+    padding: 0 5px 3px 5px;
+    text-align: left;
+    height: var(--day-height);
+    min-width: var(--day-width);
+    background-color: #ffeff8;
+  }
+  .custom-calendar.vc-day.weekday-1 .custom-calendar.vc-day.weekday-7 {
+    background-color: #eff8ff;
+  }
+  .custom-calendar:not(.on-bottom) {
+    border-bottom: var(--day-border);
+  }
+  .custom-calendar:not(.on-bottom).weekday-1 {
+    border-bottom: var(--day-border-highlight);
+  }
+  .custom-calendar:not(.on-right) {
+    border-right: var(--day-border);
+  }
+  .custom-calendar.vc-day-dots {
+    margin-bottom: 5px;
+  }
+  .brd {
+    border: 1px solid grey;
+  }
 
-
-<style scoped>
-::-webkit-scrollbar {
-  width: 0px;
-}
-::-webkit-scrollbar-track {
-  display: none;
-}
-.custom-calendar.vc-container {
-  --day-border: 1px solid #b8c2cc;
-  --day-border-highlight: 1px solid #b8c2cc;
-  --day-width: 90px;
-  --day-height: 90px;
-  --weekday-bg: #f8fafc;
-  --weekday-border: 1px solid #eaeaea;
-  border-radius: 0;
-  width: 100%;
-}
-.custom-calendar.vc-header {
-  background-color: #f1f5f8;
-  padding: 10px 0;
-}
-.custom-calendar.vc-weeks {
-  padding: 0;
-}
-.custom-calendar.vc-weekday {
-  background-color: var(--weekday-bg);
-  border-bottom: var(--weekday-border);
-  border-top: var(--weekday-border);
-  padding: 5px 0;
-}
-.custom-calendar.vc-day {
-  padding: 0 5px 3px 5px;
-  text-align: left;
-  height: var(--day-height);
-  min-width: var(--day-width);
-  background-color: #ffeff8;
-}
-.custom-calendar.vc-day.weekday-1 .custom-calendar.vc-day.weekday-7 {
-  background-color: #eff8ff;
-}
-.custom-calendar:not(.on-bottom) {
-  border-bottom: var(--day-border);
-}
-.custom-calendar:not(.on-bottom).weekday-1 {
-  border-bottom: var(--day-border-highlight);
-}
-.custom-calendar:not(.on-right) {
-  border-right: var(--day-border);
-}
-.custom-calendar.vc-day-dots {
-  margin-bottom: 5px;
-}
-.brd {
-  border: 1px solid grey;
-}
-
-</style>
+  </style>

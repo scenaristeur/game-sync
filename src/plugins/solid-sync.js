@@ -33,6 +33,7 @@ import {
   getUrlAll,
   getUrl,
   addDatetime,
+  getDatetime,
 
   setUrl,
   setStringNoLocale,
@@ -107,6 +108,7 @@ const plugin = {
 
       let thingEvent = createThing({ name: name });
       thingEvent = addUrl(thingEvent, RDF.type, AS.Event);
+      thingEvent = addStringNoLocale(thingEvent, AS.name, chose.name);
       thingEvent = addDatetime(thingEvent, AS.startTime, chose.event.customData.start);
       thingEvent = addDatetime(thingEvent, AS.endTime, chose.event.customData.end);
       thingEvent = addStringNoLocale(thingEvent, RDFS.comment, comment);
@@ -196,6 +198,49 @@ const plugin = {
       let savedDS  = await saveSolidDatasetAt(path+name+'.ttl', dataset, { fetch: sc.fetch } );
       console.log("savedDS",savedDS)
     },
+
+    Vue.prototype.$exploreEvents = async function(source){
+      let containerUrl = source.value.url+'events/'
+      const myDataset = await getSolidDataset( containerUrl, {fetch: sc.fetch});
+      console.log(myDataset)
+      //  let modulos = this
+      let eventsUrl  = await getContainedResourceUrlAll(myDataset,{fetch: sc.fetch} )
+      let events = []
+      for await (const u of eventsUrl){
+        events.push (await this.$readEvent(u))
+      }
+      //  let resources = await eventsUrl.map(async function(u) {return await modulos.$readEvent(u)})
+
+      console.log("Events", events)
+      let container = {source:  source, url: containerUrl, events: events}
+
+      console.log("container",container)
+      //  store.commit('gamesync/setGameContainer', container)
+      return container
+    },
+
+    Vue.prototype.$readEvent = async function(url){
+      let ds =  await getSolidDataset(url, {fetch: sc.fetch})
+      let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
+      console.log(mainThing)
+      let thing = ""
+      let thingsTemp = []
+      let event = {}
+      try{
+        thing= await getThing(ds,url+"#"+mainThing) //await getThingAll(ds)[0]
+        console.log()
+        event.url = url
+        event.name = await getStringNoLocale(thing, AS.name);
+        event.start = await getDatetime(thing, AS.startTime)
+        event.end = await getDatetime(thing, AS.endTime)
+        // console.log(start, end)
+        //  event.start = start
+        thingsTemp = await getThingAll(ds)
+      }catch(e){
+        console.log(e)
+      }
+      return {url: url, event: event, thing: thing, thingAll: thingsTemp}
+    }
 
 
     Vue.prototype.$createEvent2 = async function(chose){
@@ -456,41 +501,7 @@ const plugin = {
       };
     },
 
-    Vue.prototype.$exploreEvents = async function(source){
-      let containerUrl = source.value.url+'events/'
-      const myDataset = await getSolidDataset( containerUrl, {fetch: sc.fetch});
-      console.log(myDataset)
-    //  let modulos = this
-      let eventsUrl  = await getContainedResourceUrlAll(myDataset,{fetch: sc.fetch} )
-      let events = []
-      for await (const u of eventsUrl){
-        events.push (await this.$readEvent(u))
-      }
-    //  let resources = await eventsUrl.map(async function(u) {return await modulos.$readEvent(u)})
 
-      console.log("Events", events)
-      let container = {source:  source, url: containerUrl, events: events}
-
-      console.log("container",container)
-      //  store.commit('gamesync/setGameContainer', container)
-      return container
-    },
-
-    Vue.prototype.$readEvent = async function(url){
-      let ds =  await getSolidDataset(url, {fetch: sc.fetch})
-      let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
-      console.log(mainThing)
-      let thing = ""
-      let thingsTemp = []
-      try{
-        thing= await getThing(ds,url+"#"+mainThing) //await getThingAll(ds)[0]
-        //  let updates = await getStringNoLocaleAll(thing, AS.content);
-        thingsTemp = await getThingAll(ds)
-      }catch(e){
-        console.log(e)
-      }
-      return {url: url, thing: thing, thingAll: thingsTemp}
-    }
 
     Vue.prototype.$readContainer = async function(path){
       let containerUrl = path.url
