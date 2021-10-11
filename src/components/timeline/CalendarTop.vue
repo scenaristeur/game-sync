@@ -6,37 +6,38 @@
       Roll your own calendars using scoped slots
     </p>
 
-    Options : {{ options}}
+    <!-- <div v-if="eventsBySource.length> 0">
+    Events by source : {{ JSON.stringify(eventsBySource[0].resources[0])}}
+  </div> -->
 
 
+  <v-calendar
+  class="custom-calendar max-w-full"
+  :masks="masks"
+  :attributes="attributes"
+  disable-page-swipe
+  is-expanded
+  >
+  <template v-slot:day-content="{ day, attributes }">
+    <div class="flex flex-col h-full z-10 overflow-hidden">
+      <!-- <span class="day-label text-sm text-gray-900" >{{ day.day }}</span> -->
+      <b-button @click="create(day)" class="day-label text-sm text-gray-900"
+      variant="outline-primary" size="sm">{{ day.day }}</b-button>
+      <div class="flex-grow overflow-y-auto overflow-x-auto">
+        <p
+        v-for="attr in attributes"
+        :key="attr.key"
+        class="brd text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
+        :class="attr.customData.class"
+        @click="showDetail(attr)"
 
-    <v-calendar
-    class="custom-calendar max-w-full"
-    :masks="masks"
-    :attributes="attributes"
-    disable-page-swipe
-    is-expanded
-    >
-    <template v-slot:day-content="{ day, attributes }">
-      <div class="flex flex-col h-full z-10 overflow-hidden">
-        <!-- <span class="day-label text-sm text-gray-900" >{{ day.day }}</span> -->
-        <b-button @click="create(day)" class="day-label text-sm text-gray-900"
-        variant="outline-primary" size="sm">{{ day.day }}</b-button>
-        <div class="flex-grow overflow-y-auto overflow-x-auto">
-          <p
-          v-for="attr in attributes"
-          :key="attr.key"
-          class="brd text-xs leading-tight rounded-sm p-1 mt-0 mb-1"
-          :class="attr.customData.class"
-          @click="showDetail(attr)"
-
-          >
-          <!-- @mouseover="showDetail(attr)" -->
-          {{ attr.customData.title }}
-        </p>
-      </div>
+        >
+        <!-- @mouseover="showDetail(attr)" -->
+        {{ attr.customData.title }}
+      </p>
     </div>
-  </template>
+  </div>
+</template>
 </v-calendar>
 
 <v-calendar
@@ -70,10 +71,10 @@ export default {
     'EventCreation': () => import('@/components/timeline/EventCreation'),
   },
   data() {
-
     const month = new Date().getMonth();
     const year = new Date().getFullYear();
     return {
+      eventsBySource: [],
       debug: false,
       detail: {customData: {start:new Date(), end: new Date()}},
       masks: {
@@ -238,12 +239,16 @@ export default {
 
   },
   async created(){
+    this.eventsBySource = []
     for await (let o of this.options) {
-
-      o.eventResources = await this.$exploreEvents(o)
+      let source = await this.$exploreEvents(o)
+      console.log("source",source)
+      let events = source.events
+      console.log("events", events)
+      this.eventsBySource.push(source)
 
     }
-    console.log(this.options)
+    console.log("Events by source", this.eventsBySource)
 
   },
   methods: {
