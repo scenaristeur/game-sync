@@ -1,7 +1,7 @@
 <template>
   <div id="calendrier">
 
-    <v-calendar
+    <v-calendar class="container fluid"
     :attributes="attributes"
     @dayclick='dayClicked'
     >
@@ -153,9 +153,9 @@ export default {
 </script>
 
 <style>
-#calendrier {
+/* #calendrier {
   display: flex;
-}
+} */
 
 .selected-day {
   margin-left: 10px;
