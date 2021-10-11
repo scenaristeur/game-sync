@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "17649de72c07ca46ed4a",
+    "revision": "2612e1e390a893c1c013",
     "url": "/game-sync/css/app.5c9713c3.css"
   },
   {
@@ -24,12 +24,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/css/chunk-7b5b442e.4ac5b8f9.css"
   },
   {
-    "revision": "c4c9815cc4f466905706",
-    "url": "/game-sync/css/chunk-d303d44c.af4220d4.css"
-  },
-  {
     "revision": "befbdef75f5e7237d1f7",
     "url": "/game-sync/css/chunk-dc510af6.2fa51c44.css"
+  },
+  {
+    "revision": "7ad8146b5c5590d226a1",
+    "url": "/game-sync/css/chunk-f9dd6f98.779cd6d3.css"
   },
   {
     "revision": "ef5fd61f34149b9ff6ba",
@@ -88,7 +88,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/img/zoomExtends.5f78e86f.png"
   },
   {
-    "revision": "a24b06c4ae06eab3affdc56aa50fdc53",
+    "revision": "a0cb584c2c374129509e3a32544930f9",
     "url": "/game-sync/index.html"
   },
   {
@@ -96,8 +96,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/about.4c81f324.js"
   },
   {
-    "revision": "17649de72c07ca46ed4a",
-    "url": "/game-sync/js/app.3cafacfd.js"
+    "revision": "2612e1e390a893c1c013",
+    "url": "/game-sync/js/app.6e708213.js"
   },
   {
     "revision": "091999a6b0fc4279588b",
@@ -200,10 +200,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-998ad4d6.3596468d.js"
   },
   {
-    "revision": "c4c9815cc4f466905706",
-    "url": "/game-sync/js/chunk-d303d44c.d423efb4.js"
-  },
-  {
     "revision": "befbdef75f5e7237d1f7",
     "url": "/game-sync/js/chunk-dc510af6.7b0c0281.js"
   },
@@ -212,12 +208,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-e592f350.363c5d3d.js"
   },
   {
+    "revision": "7ad8146b5c5590d226a1",
+    "url": "/game-sync/js/chunk-f9dd6f98.0e26aac9.js"
+  },
+  {
     "revision": "ef5fd61f34149b9ff6ba",
     "url": "/game-sync/js/chunk-vendors.d7886c81.js"
   },
   {
-    "revision": "288e7dfda30f467aec2b",
-    "url": "/game-sync/js/event.36f02cb9.js"
+    "revision": "52843666533094b58657",
+    "url": "/game-sync/js/event.30d457c4.js"
   },
   {
     "revision": "f1b52204465be11449ca",
