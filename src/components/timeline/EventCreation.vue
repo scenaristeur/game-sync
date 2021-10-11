@@ -141,7 +141,7 @@
     <IdentifiantSelector categorie="Actors" active=active :items="event.actors"/>
     <IdentifiantSelector categorie="Actions" :items="event.actions"/>
     <IdentifiantSelector categorie="Objects" :items="event.objects"/>
-    <IdentifiantSelector categorie="Contexts" description="(optional) Contexts, Conditions, Contraintes" :items="event.contexts"/>
+    <IdentifiantSelector categorie="Contexts" description="(optional) Contexts, Conditions, Constraints" :items="event.contexts"/>
   </b-tabs>
 
 
