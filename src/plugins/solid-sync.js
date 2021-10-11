@@ -455,6 +455,18 @@ const plugin = {
         }
       };
     },
+
+    Vue.prototype.$exploreEvents = async function(source){
+      let containerUrl = source.value.url+'events/'
+      const myDataset = await getSolidDataset( containerUrl, {fetch: sc.fetch});
+      console.log(myDataset)
+      let resources = await getContainedResourceUrlAll(myDataset,{fetch: sc.fetch} )
+      console.log("Resources", resources)
+      let container = {source:  source, url: containerUrl, resources: resources}
+    //  store.commit('gamesync/setGameContainer', container)
+      return container
+    },
+
     Vue.prototype.$readContainer = async function(path){
       let containerUrl = path.url
       const myDataset = await getSolidDataset( containerUrl, {fetch: sc.fetch});
@@ -465,6 +477,8 @@ const plugin = {
       store.commit('gamesync/setGameContainer', container)
       return container
     },
+
+
 
     Vue.prototype.$readResource = async function(chose){
       console.log("$readResource", chose)

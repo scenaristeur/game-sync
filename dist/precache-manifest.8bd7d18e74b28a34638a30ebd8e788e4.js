@@ -1,11 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c4f26664f3e9bd123c20",
+    "revision": "17649de72c07ca46ed4a",
     "url": "/game-sync/css/app.5c9713c3.css"
-  },
-  {
-    "revision": "91015ffdeb0e629e8c7f",
-    "url": "/game-sync/css/chunk-0931cf24.524a2e5c.css"
   },
   {
     "revision": "091999a6b0fc4279588b",
@@ -26,6 +22,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "467cc2bcfb5b9a55346c",
     "url": "/game-sync/css/chunk-7b5b442e.4ac5b8f9.css"
+  },
+  {
+    "revision": "c4c9815cc4f466905706",
+    "url": "/game-sync/css/chunk-d303d44c.af4220d4.css"
   },
   {
     "revision": "befbdef75f5e7237d1f7",
@@ -88,7 +88,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/img/zoomExtends.5f78e86f.png"
   },
   {
-    "revision": "cdc211daad471d5fd7673916333ae58b",
+    "revision": "a24b06c4ae06eab3affdc56aa50fdc53",
     "url": "/game-sync/index.html"
   },
   {
@@ -96,12 +96,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/about.4c81f324.js"
   },
   {
-    "revision": "c4f26664f3e9bd123c20",
-    "url": "/game-sync/js/app.1bcab6f1.js"
-  },
-  {
-    "revision": "91015ffdeb0e629e8c7f",
-    "url": "/game-sync/js/chunk-0931cf24.abc7935e.js"
+    "revision": "17649de72c07ca46ed4a",
+    "url": "/game-sync/js/app.3cafacfd.js"
   },
   {
     "revision": "091999a6b0fc4279588b",
@@ -204,6 +200,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-998ad4d6.3596468d.js"
   },
   {
+    "revision": "c4c9815cc4f466905706",
+    "url": "/game-sync/js/chunk-d303d44c.d423efb4.js"
+  },
+  {
     "revision": "befbdef75f5e7237d1f7",
     "url": "/game-sync/js/chunk-dc510af6.7b0c0281.js"
   },
@@ -216,8 +216,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-vendors.d7886c81.js"
   },
   {
-    "revision": "e6178d18f2c5624fef9b",
-    "url": "/game-sync/js/event.1aebd0ca.js"
+    "revision": "288e7dfda30f467aec2b",
+    "url": "/game-sync/js/event.36f02cb9.js"
   },
   {
     "revision": "f1b52204465be11449ca",

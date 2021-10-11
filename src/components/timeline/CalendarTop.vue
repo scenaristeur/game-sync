@@ -6,7 +6,7 @@
       Roll your own calendars using scoped slots
     </p>
 
-
+    Options : {{ options}}
 
 
 
@@ -21,7 +21,7 @@
       <div class="flex flex-col h-full z-10 overflow-hidden">
         <!-- <span class="day-label text-sm text-gray-900" >{{ day.day }}</span> -->
         <b-button @click="create(day)" class="day-label text-sm text-gray-900"
-         variant="outline-primary" size="sm">{{ day.day }}</b-button>
+        variant="outline-primary" size="sm">{{ day.day }}</b-button>
         <div class="flex-grow overflow-y-auto overflow-x-auto">
           <p
           v-for="attr in attributes"
@@ -228,7 +228,23 @@ export default {
           dates: new Date(year, month, 25),
         },
       ],
+      options: [
+        // { text: 'Private', value: {name: 'private'} },
+        // { text: 'Public', value: {name:'public'} },
+        { text: 'Agora', value: {name: 'agora', url:"https://agora.solidcommunity.net/public/" }},
+        //  { text: 'Add Another destination', value: 'grape' }
+      ]
     };
+
+  },
+  async created(){
+    for await (let o of this.options) {
+
+      o.eventResources = await this.$exploreEvents(o)
+
+    }
+    console.log(this.options)
+
   },
   methods: {
     create(day){
