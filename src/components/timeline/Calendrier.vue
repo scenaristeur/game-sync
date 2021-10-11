@@ -10,15 +10,16 @@
   v-if='selectedDay'
   class='selected-day'>
   <h3>{{ selectedDay.date.toDateString() }}</h3>
-  <ul>
-    <li
-    v-for='attr in selectedDay.attributes'
-    :key='attr.key'>
+  <b-list-group>
+    <b-list-group-item v-for='attr in selectedDay.attributes'
+    :key='attr.key' button>
     {{ attr.customData.title }}<br>
     actors
     {{ attr.customData.actors }}
-  </li>
-</ul>
+  </b-list-group-item>
+</b-list-group>
+
+
 </div>
 <!-- {{JSON.stringify(selectedDay)}} -->
 </div>
@@ -154,7 +155,7 @@ export default {
 
 <style>
 /* #calendrier {
-  display: flex;
+display: flex;
 } */
 
 .selected-day {
