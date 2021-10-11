@@ -174,7 +174,7 @@
   >
   <b-form-checkbox value="private" :disabled="pod == null">Private</b-form-checkbox>
   <b-form-checkbox value="public" :disabled="pod == null">Public</b-form-checkbox>
-    <b-alert :show="pod == null" variant="warning">You must login to store event on your Pod</b-alert>
+  <b-alert :show="pod == null" variant="warning">You must login to store event on your Pod</b-alert>
 
   <b-button @click="addAnotherDestination" size="sm" variant="primary" disabled>Add another destination</b-button>
 </b-form-checkbox-group>
@@ -261,10 +261,12 @@ export default {
       this.range.start = new Date()
       this.range.end = new Date()
     },
-    createEvent(){
+    async createEvent(){
       this.event.start = this.range.start
       this.event.end = this.range.end
-      this.$eventAsToCal(this.event)
+      let cal_event = await this.$eventAsToCal(this.event)
+      let cal_as = await this.$eventCalToAs(this.event)
+      console.log(cal_event, cal_as)
     },
     send(){
       console.log(this.range)

@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4b97df273099aeedade0",
+    "revision": "778f41417fffbe78c31e",
     "url": "/game-sync/css/app.5c9713c3.css"
   },
   {
@@ -26,6 +26,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "062f276285058ffeddb4",
     "url": "/game-sync/css/chunk-7fd59247.a4017630.css"
+  },
+  {
+    "revision": "679a103a82bc1ad6aaf8",
+    "url": "/game-sync/css/chunk-9f50c5d2.89d1557c.css"
   },
   {
     "revision": "befbdef75f5e7237d1f7",
@@ -88,7 +92,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/img/zoomExtends.5f78e86f.png"
   },
   {
-    "revision": "e3d11b31219b3eb8331413bbc15c2831",
+    "revision": "ab04942417ba580217969fd2a13bc836",
     "url": "/game-sync/index.html"
   },
   {
@@ -96,8 +100,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/about.4c81f324.js"
   },
   {
-    "revision": "4b97df273099aeedade0",
-    "url": "/game-sync/js/app.6b4101ed.js"
+    "revision": "778f41417fffbe78c31e",
+    "url": "/game-sync/js/app.37e10bbe.js"
   },
   {
     "revision": "091999a6b0fc4279588b",
@@ -180,8 +184,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-59d28115.59ce7ade.js"
   },
   {
-    "revision": "2e43ec8d5cd557c8a1e1",
-    "url": "/game-sync/js/chunk-60ebc6d0.2e5d8f95.js"
+    "revision": "181b000dae8159e2721f",
+    "url": "/game-sync/js/chunk-60ebc6d0.cde50190.js"
   },
   {
     "revision": "1b16a0e8f10b84982d9b",
@@ -200,6 +204,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-998ad4d6.3596468d.js"
   },
   {
+    "revision": "679a103a82bc1ad6aaf8",
+    "url": "/game-sync/js/chunk-9f50c5d2.0f73d4dd.js"
+  },
+  {
     "revision": "befbdef75f5e7237d1f7",
     "url": "/game-sync/js/chunk-dc510af6.7b0c0281.js"
   },
@@ -212,8 +220,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-vendors.b2128192.js"
   },
   {
-    "revision": "e2a5b50873e6e3cd5393",
-    "url": "/game-sync/js/event.bc8ebbcb.js"
+    "revision": "a2cde3852e18363d3add",
+    "url": "/game-sync/js/event.5e7b0f8e.js"
   },
   {
     "revision": "f1b52204465be11449ca",
