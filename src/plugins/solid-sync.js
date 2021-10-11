@@ -25,13 +25,14 @@ import {
   createSolidDataset,
   createThing,
   addUrl,
+  buildThing,
 
   // overwriteFile,
   getStringNoLocale,
   getThing,
   getUrlAll,
   getUrl,
-    addDatetime,
+  addDatetime,
 
   setUrl,
   setStringNoLocale,
@@ -81,6 +82,8 @@ const plugin = {
     let sockets = []
     //    console.log(store)
 
+
+
     Vue.prototype.$createEvent = async function(chose){
       //https://www.w3.org/TR/activitystreams-vocabulary/#dfn-event
       //   {
@@ -90,6 +93,113 @@ const plugin = {
       //   "startTime": "2014-12-31T23:00:00-08:00",
       //   "endTime": "2015-01-01T06:00:00-08:00"
       // }
+      console.log(chose)
+      let date = new Date()
+      let name = encodeURI(chose.name) || Date.now();
+      let path = chose.url
+      let url = path+name+'.ttl'
+      let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+url
+
+
+      let dataset = createSolidDataset();
+
+
+
+      let thingEvent = createThing({ name: name });
+      thingEvent = addUrl(thingEvent, RDF.type, AS.Event);
+      thingEvent = addDatetime(thingEvent, AS.startTime, chose.event.customData.start);
+      thingEvent = addDatetime(thingEvent, AS.endTime, chose.event.customData.end);
+      thingEvent = addStringNoLocale(thingEvent, RDFS.comment, comment);
+      store.state.solid.pod != null ? thingEvent = addUrl(thingEvent, AS.actor, store.state.solid.pod.webId ) : ""
+      thingEvent = addStringNoLocale(thingEvent, AS.published, date.toISOString());
+
+
+      let ActorCollection = []
+      let ObjectCollection = []
+      let ContextCollection = []
+
+      for await (const actor of chose.event.customData.actors) {
+        let thingActor = createThing({ name: "thingActor"+Date.now() });
+        //thingActor = addUrl(thingActor, RDF.type, AS.Actor);
+        //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
+        thingActor = addStringNoLocale(thingActor, AS.name, actor.text);
+        actor.url != undefined ? thingActor = addUrl(thingActor, AS.Link, actor.url) : ""
+        actor.text.startsWith('http') ? thingActor = addUrl(thingActor, AS.Link, actor.text) : ""
+        //thingActor = addUrl(thingActor, AS.object, thingAction);
+
+        dataset = setThing(dataset, thingActor);
+        ActorCollection.push(thingActor)
+      }
+
+      for await (const object of chose.event.customData.objects) {
+        let thingObject = createThing({ name: "thingObject"+Date.now() });
+        //thingObject = addUrl(thingObject, RDF.type, AS.Object);
+        //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
+        thingObject = addStringNoLocale(thingObject, AS.name, object.text);
+        object.url != undefined ? thingObject = addUrl(thingObject, AS.Link, object.url) : ""
+        object.text.startsWith('http') ? thingObject = addUrl(thingObject, AS.Link, object.text) : ""
+        //thingActor = addUrl(thingActor, AS.object, thingAction);
+
+        dataset = setThing(dataset, thingObject);
+        ObjectCollection.push(thingObject)
+      }
+
+      for await (const context of chose.event.customData.contexts) {
+        let thingContext = createThing({ name: "thingContext"+Date.now() });
+        //thingObject = addUrl(thingObject, RDF.type, AS.Object);
+        //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
+        thingContext = addStringNoLocale(thingContext, AS.name, context.text);
+        context.url != undefined ? thingContext = addUrl(thingContext, AS.Link, context.url) : ""
+        context.text.startsWith('http') ? thingContext = addUrl(thingContext, AS.Link, context.text) : ""
+        //thingActor = addUrl(thingActor, AS.object, thingAction);
+
+        dataset = setThing(dataset, thingContext);
+        ContextCollection.push(thingContext)
+      }
+
+
+
+
+
+      for await (const a of chose.event.customData.actions) {
+        let thingAction = createThing({ name: "thingAction"+Date.now() });
+        thingAction = addUrl(thingAction, RDF.type, AS.Relationship);
+        a.url != undefined ? thingAction = addUrl(thingAction, RDF.type, a.url) : ""
+        a.url != undefined ? thingAction = addUrl(thingAction, AS.Link, a.url) : ""
+        thingAction = addStringNoLocale(thingAction, AS.name, a.text);
+
+
+        ActorCollection.forEach((actorThing) => {
+          thingAction = addUrl(thingAction, AS.subject, actorThing);
+        });
+
+        ObjectCollection.forEach((objectThing) => {
+          thingAction = addUrl(thingAction, AS.object, objectThing);
+        });
+
+        ContextCollection.forEach((contextThing) => {
+          thingAction = addUrl(thingAction, AS.context, contextThing);
+        });
+
+
+
+
+        thingEvent = addUrl(thingEvent, AS.object, thingAction);
+
+        dataset = setThing(dataset, thingAction);
+        dataset = setThing(dataset, thingEvent);
+
+
+      }
+
+
+      let savedDS  = await saveSolidDatasetAt(path+name+'.ttl', dataset, { fetch: sc.fetch } );
+      console.log("savedDS",savedDS)
+    },
+
+
+    Vue.prototype.$createEvent2 = async function(chose){
+
 
 
       let date = new Date()
@@ -102,15 +212,13 @@ const plugin = {
       let ds = await createSolidDataset()
       let thing = await createThing({name: name})
       console.log("create", thing)
-      // thing = addUrl(thing, RDF.type, AS.Note);
+
+
       console.log(RDF.type, AS.Event)
       thing = addStringNoLocale(thing, AS.name, name);
       thing = addUrl(thing, RDF.type, AS.Event);
       thing = addDatetime(thing, AS.startTime, chose.event.customData.start);
       thing = addDatetime(thing, AS.endTime, chose.event.customData.end);
-
-
-
 
       thing = addStringNoLocale(thing, RDFS.comment, comment);
       // temporary all event info -> todo migrate all to activitystream Event properties
@@ -126,10 +234,99 @@ const plugin = {
         chose.seeAlso = path+name+'.ttl'
         this.$addSeeAlso(chose)
       }
+
+
+      let meThing = await  buildThing(createThing({ name: "activity-test" }))
+      .addUrl(RDF.type, AS.Activity)
+      .addStringNoLocale(AS.name, "Activity test")
+      .build();
+
+      console.log("ME",meThing)
+      meThing = addStringNoLocale(meThing, AS.name, "Activity test 22222")
+
+      // let meThingInDs = setThing(ds, meThing);
+      thing = addUrl(thing, AS.object, meThing );
       let thingInDs = setThing(ds, thing);
       let savedThing  = await saveSolidDatasetAt(path+name+'.ttl', thingInDs, { fetch: sc.fetch } );
+      console.log("meThingsavedThing",savedThing)
 
-      //  console.log(savedThing)
+      console.log("meThing", meThing)
+      // let thingInDs = setThing(ds, thing);
+      // let savedThing  = await saveSolidDatasetAt(path+name+'.ttl', thingInDs, { fetch: sc.fetch } );
+
+      // let thingInDs = setThing(ds, thing);
+      // let savedThing  = await saveSolidDatasetAt(path+name+'.ttl', thingInDs, { fetch: sc.fetch } );
+
+      console.log(savedThing)
+
+
+      //      const meThing = buildThing(createThing({ name: "profile-vincent" }))
+      //        .addUrl(RDF.type, RDF.type, AS.Event)
+      //        .addStringNoLocale(AS.name, "Vincent")
+      //        .build();
+      //
+      // console.log("ME",meThing)
+
+      // ajout des actions
+
+      // for await (const a of chose.event.customData.actions) {
+      //   console.log(" commingaction",a)
+      //   // let actionName = /*encodeURI(a.text) ||*/ Date.now();
+      //    let action = await createThing() // a tester createThing({name: a.url})
+      //  console.log("2", action)
+      //   // let savedAction  = await saveSolidDatasetAt(path+name+'.ttl', action, { fetch: sc.fetch } );
+      //   // console.log("savedaction",savedAction)
+      //   // console.log("action", action)
+      //   // thing = addStringNoLocale(thing, AS.activity, action.url )
+      //   // if (a.url != undefined){
+      //   //
+      //   // }else{
+      //   //
+      //   // }
+      //
+      // }
+      //  let actions = []
+      //       for await (const a of chose.event.customData.actions) {
+      //         console.log(a)
+      //         let action = await createThing({name: a.text})
+      //         action = addUrl(action, RDF.type, AS.Activity);
+      //
+      //         if (a.url != undefined){
+      //           action = addUrl(action, RDF.type, a.url);
+      //         }else{
+      //           console.log("action n'a pas d'url")
+      //           action = addStringNoLocale(action, RDF.type, a.text);
+      //           //  let object = await createThing({name: name})
+      //         }
+      //         chose.event.customData.actors.length > 0 ? action = addStringNoLocale(action, AS.actor, JSON.stringify(chose.event.customData.actors)) : ""
+      //         chose.event.customData.objects.length > 0 ? action = addStringNoLocale(action, AS.object, JSON.stringify(chose.event.customData.objects)) : ""
+      //
+      //
+      // console.log("action",action)
+      //         let actionId = setThing(ds, action);
+      //         let savedAction  = await saveSolidDatasetAt(path+name+'.ttl', actionId, { fetch: sc.fetch } );
+      //         console.log("ACTIONID",savedAction)
+      //        thing = addUrl(thing, AS.activity, savedAction.url )
+      //       }
+
+
+
+      //
+      // const meThing = buildThing(createThing({ name: "profile-vincent" }))
+      //   .addUrl(RDF.type, RDF.type, AS.Event)
+      //   .addStringNoLocale(AS.name, "Vincent")
+      //   .build();
+
+      // console.log("ME",meThing)
+      //
+      // //let meThing = Thing(ds, me);
+      // let meSavedThing  = await saveSolidDatasetAt(path+name+'.ttl', meThing, { fetch: sc.fetch } );
+      // console.log("mesavedThing", meSavedThing)
+      //
+      //
+
+
+
 
       let newthing = {url: path+name+'.ttl', subscribe: true}
       console.log("read",newthing)

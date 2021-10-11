@@ -61,7 +61,7 @@ export default {
       tags: [],
       autocompleteItems: [],
       debounce: null,
-      mode: null,
+      mode: 'Wikimedia',
       // showPod: false,
       // showSemapps: false,
       // showGoogle: false,
