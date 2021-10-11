@@ -46,11 +46,11 @@
 <b-modal v-if="detail != null" id="detail" size="xl" :title="detail.customData.title">
 
   <!-- date : {{detail.dates[0].isDate}} or range : {{detail.dates[0].isRange}} or iscomplex : {{ detail.dates[0].isComplex}} -->
-  <hr>
+  <!-- <hr>
   start: {{detail.customData.start.toLocaleDateString() }}
   <span v-if="detail.customData.start != undefined">{{ detail.customData.start.toLocaleTimeString()}}</span> <br>
   end: {{ detail.customData.end.toLocaleDateString() }}
-  <span v-if="detail.customData.end != undefined">{{detail.customData.end.toLocaleTimeString()}}</span><br><br>
+  <span v-if="detail.customData.end != undefined">{{detail.customData.end.toLocaleTimeString()}}</span><br><br> -->
   <EventCreation :detail="detail" :debug="debug" />
   <!-- <p class="my-4">{{JSON.stringify(detail)}}</p> -->
   <!-- {{JSON.stringify(detail.dates[0],undefined,2)}} -->
@@ -282,8 +282,16 @@ export default {
         console.log("IN WATCH",s)
         if (s.events.length > 0){
           for await (const e of s.events) {
-            console.log("event in watch", e, e.thing, e.thingAll)
+            console.log("event in watch", e, e.thing, e.thingsAll)
             console.log(e.event)
+
+            // for await (const thing of e.thingsAll){
+            //   console.log("#",thing, thing.predicates)
+            //   for  (const p in thing.predicates){
+            //     console.log("-##", p, thing.predicates[p])
+            //   }
+            // }
+
             let attrib = {
               dates:
               {

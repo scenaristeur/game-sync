@@ -91,12 +91,7 @@
 <!-- </b-col>
 
 <b-col> -->
-<b-input-group size="sm" prepend="color" >
-  <b-form-input v-model="event.color" type="color"></b-form-input>
-</b-input-group>
-<b-input-group size="sm" prepend="certainty" >
-  <b-form-input v-model="event.certainty" type="range"></b-form-input>
-</b-input-group>
+
 <!-- </b-col>
 
 </b-row> -->
@@ -146,7 +141,7 @@
     <IdentifiantSelector categorie="Actors" active=active :items="event.actors"/>
     <IdentifiantSelector categorie="Actions" :items="event.actions"/>
     <IdentifiantSelector categorie="Objects" :items="event.objects"/>
-    <IdentifiantSelector categorie="Contexts" description="(optionnel) Contexts, Conditions, Contraintes" :items="event.contexts"/>
+    <IdentifiantSelector categorie="Contexts" description="(optional) Contexts, Conditions, Contraintes" :items="event.contexts"/>
   </b-tabs>
 
 
@@ -158,6 +153,13 @@
 </b-tabs> -->
 
 </div>
+<hr>
+<b-input-group size="sm">
+  <b-form-input v-model="event.color" type="color"></b-form-input>
+</b-input-group>
+<b-input-group size="sm" prepend="certainty" >
+  <b-form-input v-model="event.certainty" type="range"></b-form-input>
+</b-input-group>
 <hr>
 
 
@@ -177,6 +179,8 @@
   <b-button @click="addAnotherDestination" size="sm" variant="primary" disabled>Add another destination</b-button>
 </b-form-checkbox-group>
 </b-form-group>
+<b-button v-if="publishTo.length > 0" variant="primary" @click="createEvent">Create (test)</b-button>
+
 <b-button v-if="publishTo.length > 0" variant="primary" @click="send">Send</b-button>
 <b-alert v-else show variant="warning">You must at leat select one destination</b-alert>
 <br>
@@ -206,17 +210,6 @@ export default {
   },
   data(){
     return{
-      //date: new Date(),
-      text: `
-      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-      richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor
-      brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
-      tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
-      assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore
-      wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
-      vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic
-      synth nesciunt you probably haven't heard of them accusamus labore VHS.
-      `,
       range: {
         start: new Date(2020, 0, 6),
         end: new Date(2020, 0, 23),
@@ -229,11 +222,11 @@ export default {
         //  "when" : {},
         "start" : null,
         "end": null,
-        "recursion" : {},
-        "actors": [],
-        "actions": [],
-        "objects": [],
-        "contexts": []
+        // "recursion" : {},
+        // "actors": [],
+        // "actions": [],
+        // "objects": [],
+        // "contexts": [],
       },
       publishTo: [{name: 'agora', url:"https://agora.solidcommunity.net/public/" }], // Must be an array reference!
       options: [
@@ -252,8 +245,8 @@ export default {
       this.range.start = new Date(this.detail.customData.start)
       this.range.end = new Date(this.detail.customData.end)
       this.event.title = this.detail.customData.title
-      this.event.color = this.detail.customData.color
-      this.event.certainty = this.detail.customData.certainty
+      this.event.color = this.detail.customData.color || "#16C4F0"
+      this.event.certainty = this.detail.customData.certainty || "50"
       this.event.actors = this.detail.customData.actors || []
       this.event.actions = this.detail.customData.actions || []
       this.event.objects = this.detail.customData.objects || []
@@ -267,6 +260,11 @@ export default {
     now(){
       this.range.start = new Date()
       this.range.end = new Date()
+    },
+    createEvent(){
+      this.event.start = this.range.start
+      this.event.end = this.range.end
+      this.$eventAsToCal(this.event)
     },
     send(){
       console.log(this.range)

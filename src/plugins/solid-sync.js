@@ -85,6 +85,40 @@ const plugin = {
 
 
 
+    Vue.prototype.$eventFormToCal = async function(e_f){
+      console.log("e_f",e_f)
+      let e_c = {}
+      console.log("e_c",e_c)
+      return e_c
+    },
+
+    Vue.prototype.$eventCalToAs = async function(e_c){
+      console.log("e_c",e_c)
+      let e_a = {}
+      console.log("e_a",e_a)
+      return e_a
+    },
+
+    Vue.prototype.$eventAsToCal = async function(e_a){
+      console.log("e_a",e_a)
+      let e_c = {}
+      console.log("e_c",e_c)
+      return e_c
+    },
+
+    Vue.prototype.$eventCalToForm = async function(e_c){
+      console.log("e_c",e_c)
+      let e_f = {}
+      console.log("e_f",e_f)
+      return e_f
+    },
+
+
+
+
+
+
+
     Vue.prototype.$createEvent = async function(chose){
       //https://www.w3.org/TR/activitystreams-vocabulary/#dfn-event
       //   {
@@ -122,7 +156,7 @@ const plugin = {
 
       for await (const actor of chose.event.customData.actors) {
         let thingActor = createThing({ name: "thingActor"+Date.now() });
-        //thingActor = addUrl(thingActor, RDF.type, AS.Actor);
+        //  thingActor = addUrl(thingActor, RDF.type, AS.Actor);
         //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
         thingActor = addStringNoLocale(thingActor, AS.name, actor.text);
         actor.url != undefined ? thingActor = addUrl(thingActor, AS.Link, actor.url) : ""
@@ -148,7 +182,6 @@ const plugin = {
 
       for await (const context of chose.event.customData.contexts) {
         let thingContext = createThing({ name: "thingContext"+Date.now() });
-        //thingObject = addUrl(thingObject, RDF.type, AS.Object);
         //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
         thingContext = addStringNoLocale(thingContext, AS.name, context.text);
         context.url != undefined ? thingContext = addUrl(thingContext, AS.Link, context.url) : ""
@@ -166,6 +199,8 @@ const plugin = {
       for await (const a of chose.event.customData.actions) {
         let thingAction = createThing({ name: "thingAction"+Date.now() });
         thingAction = addUrl(thingAction, RDF.type, AS.Relationship);
+        thingAction = addUrl(thingAction, RDF.type, AS.Activity);
+        // thingAction = addUrl(thingAction, RDF.type, AS.Collection);
         a.url != undefined ? thingAction = addUrl(thingAction, RDF.type, a.url) : ""
         a.url != undefined ? thingAction = addUrl(thingAction, AS.Link, a.url) : ""
         thingAction = addStringNoLocale(thingAction, AS.name, a.text);
@@ -224,7 +259,7 @@ const plugin = {
       let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
       console.log(mainThing)
       let thing = ""
-      let thingsTemp = []
+      let thingsAll = []
       let event = {}
       try{
         thing= await getThing(ds,url+"#"+mainThing) //await getThingAll(ds)[0]
@@ -235,12 +270,23 @@ const plugin = {
         event.end = await getDatetime(thing, AS.endTime)
         // console.log(start, end)
         //  event.start = start
-        thingsTemp = await getThingAll(ds)
+        let thingsTemp = await getThingAll(ds)
+
+        for await (const t of thingsTemp){
+          thingsAll.push (await this.$readThing(t))
+        }
       }catch(e){
         console.log(e)
       }
-      return {url: url, event: event, thing: thing, thingAll: thingsTemp}
-    }
+      return {url: url, event: event, thing: thing, thingsAll: thingsAll}
+    },
+
+    Vue.prototype.$readThing = async function(t){
+      console.log("read", t)
+
+
+    },
+
 
 
     Vue.prototype.$createEvent2 = async function(chose){
