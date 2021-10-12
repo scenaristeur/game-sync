@@ -1,6 +1,6 @@
 <template>
   <div id="calendrier">
-
+    {{ JSON.stringify(calendars)}}
     <v-calendar class="container fluid"
     :attributes="attributes"
     @dayclick='dayClicked'
@@ -130,7 +130,16 @@ export default {
       // console.log(this.selectedDay.attributesMap)
     },
   },
+  watch:{
+    calendars(){
+      console.log("calendars ", this.calendars)
+    }
+  },
   computed: {
+    calendars:{
+      get () { return this.$store.state.events.calendars },
+      set (/*value*/) { /*this.updateTodo(value)*/ }
+    },
     attributes() {
       let attrs = this.todos.map(t => ({
         key: `todo.${t.id}`,

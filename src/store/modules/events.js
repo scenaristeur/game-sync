@@ -1,5 +1,11 @@
 import Vue from 'vue';
 const state = () => ({
+  calendars: {
+    "private" : {name: "private", url: "", active: true, color: "#17a2b8", permissions: "private"},
+    "public":{name: "public", url: "", active: true, color: "#20c997", permissions: "public"},
+    "agora": {name: "agora",
+     url: "https://agora.solidcommunity.net/public/events/", active: true, color: "#fd7e14", permissions: "public"}
+  },
   events: []
   // url : "",
   // // messages: [],
@@ -37,6 +43,10 @@ const actions = {
 
     // let path = {url: url, subscribe: true}
     // Vue.prototype.$explore(path)
+  },
+  updateCals(context, cals){
+    context.commit('setCals', cals)
+    console.log("update cals on pod : todo", cals)
   }
 }
 
@@ -44,6 +54,10 @@ const mutations = {
   addEvent(state, event){
     state.events.push(event)
     console.log(state.events)
+  },
+  setCals(state, cals){
+    state.cals = cals
+    console.log(state.cals)
   }
   // setUrl(state, url){
   //   console.log("url", url)

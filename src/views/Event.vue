@@ -1,15 +1,21 @@
 <template>
-  <div class="about">
-    <Calendrier />
-    <!-- <h1>This is an test page</h1>
+  <div>
+    <b-container class="row">
+
+      <CalendarList class="col-md-3 col-12 mb-2"/>
+      <Calendrier class="col-md-3 col-12"/>
+      <!-- <h1>This is an test page</h1>
 
 
-    <hr> -->
+      <hr> -->
+
+      <!-- <SimpleTimeline />
+      <hr>
+      <TimelineTest />
+      <hr> -->
+    </b-container>
+
     <CalendarTop />
-    <!-- <SimpleTimeline />
-    <hr>
-    <TimelineTest />
-    <hr> -->
   </div>
 </template>
 
@@ -18,7 +24,7 @@ export default {
   name: 'Test',
   components: {
     'Calendrier': () => import('@/components/timeline/Calendrier'),
-
+    'CalendarList': () => import('@/components/timeline/CalendarList'),
     // 'SimpleTimeline': () => import('@/components/timeline/SimpleTimeline'),
     'CalendarTop': () => import('@/components/timeline/CalendarTop'),
     // 'TimelineTest': () => import('@/components/timeline/TimelineTest'),
