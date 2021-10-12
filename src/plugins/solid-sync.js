@@ -1039,8 +1039,8 @@ const plugin = {
         let session = sc.getDefaultSession()
         console.log(params)
         await session.logout()
-        store.commit('solid/setSession',session)
-        store.commit('solid/setPod', {})
+        store.commit('solid/setSession',null)
+        store.commit('solid/setPod', null)
         //  store.commit('booklice/setPath', "")
       } catch(e){
         alert("$logout "+e)

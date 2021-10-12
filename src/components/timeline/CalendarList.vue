@@ -6,10 +6,12 @@
       v-for="calendar in calendars"
       :key="calendar.name"
       :active="calendar.active"
+      :disabled="calendar.disabled"
       :style="calendar.active? 'backgroundColor:'+calendar.color : ''"
       class="p-0"
       @click.self="clickCalendar(calendar)">{{calendar.name}}
-      <b-button size="sm" class="p-0 m-0" @click="calSettings(calendar)">
+      <span v-if="calendar.disabled == true"> (not logged)</span>
+      <b-button v-else size="sm" class="p-0 m-0" @click="calSettings(calendar)">
         <b-icon icon="gear-fill" aria-hidden="true" ></b-icon>
       </b-button>
     </b-list-group-item>
@@ -96,7 +98,7 @@ export default {
     }
   },
   created(){
-  //  this.updateWithPod()
+    //  this.updateWithPod()
   },
   methods:{
     addCalandar(){
@@ -119,10 +121,18 @@ export default {
     },
     updateWithPod(){
       console.log("pod", this.pod)
-      this.pod == null ? this.calendars.private.active = false : ""
-      this.pod == null ? this.calendars.public.active = false : ""
-      this.calendars.public.url = this.pod.storage+'public/events/'
-      this.calendars.private.url = this.pod.storage+'private/events/'
+      if (this.pod == null || this.pod == {}){
+        this.calendars.private.active = false
+        this.calendars.public.active = false
+        this.calendars.private.disabled = true
+        this.calendars.public.disabled = true
+      }else{
+        this.calendars.public.url = this.pod.storage+'public/events/'
+        this.calendars.private.url = this.pod.storage+'private/events/'
+        this.calendars.private.disabled = false
+        this.calendars.public.disabled = false
+      }
+
     }
   },
   watch:{

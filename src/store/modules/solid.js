@@ -1,7 +1,7 @@
 
 const state = () => ({
   session: null,
-  pod: null,
+  pod: {},
 })
 
 const actions = {
