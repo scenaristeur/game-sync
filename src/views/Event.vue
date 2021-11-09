@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: 'Test',
+  name: 'Event',
   components: {
     'Calendrier': () => import('@/components/timeline/Calendrier'),
     'CalendarList': () => import('@/components/timeline/CalendarList'),

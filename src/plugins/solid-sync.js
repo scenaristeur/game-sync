@@ -551,13 +551,17 @@ const plugin = {
 
     Vue.prototype.$readContainer = async function(path){
       let containerUrl = path.url
-      const myDataset = await getSolidDataset( containerUrl, {fetch: sc.fetch});
-      console.log(myDataset)
-      let resources = await getContainedResourceUrlAll(myDataset,{fetch: sc.fetch} )
-      console.log("Resources", resources)
-      let container = {url: containerUrl, resources: resources}
-      store.commit('gamesync/setGameContainer', container)
-      return container
+      try{
+        const myDataset = await getSolidDataset( containerUrl, {fetch: sc.fetch});
+        console.log(myDataset)
+        let resources = await getContainedResourceUrlAll(myDataset,{fetch: sc.fetch} )
+        console.log("Resources", resources)
+        let container = {url: containerUrl, resources: resources}
+        store.commit('gamesync/setGameContainer', container)
+        return container
+      }catch(e){
+        console.log(e)
+      }
     },
 
 
