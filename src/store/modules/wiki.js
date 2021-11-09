@@ -5,12 +5,16 @@ const state = () => ({
 
 const actions = {
   async getWikiContainer(context, url){
-
     console.log(url)
-      let path = {url: url, subscribe: true}
-      let container = await Vue.prototype.$readContainer(path)
-      console.log("container", container)
-  
+    let path = {url: url, subscribe: true}
+    let container = await Vue.prototype.$readContainer(path)
+    console.log("container", container)
+    context.commit('setWikiData', container)
+  },
+  async create(context, item){
+    console.log(item)
+    await Vue.prototype.$createWikiEntry(item)
+    await this.dispatch('wiki/getWikiContainer', item.path)
   }
 }
 

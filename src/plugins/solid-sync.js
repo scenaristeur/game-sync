@@ -114,9 +114,15 @@ const plugin = {
     },
 
 
+  Vue.prototype.$createWikiEntry = async function(chose){
+  let dataset = createSolidDataset();
+  let thingWikiEntry = createThing({ name: chose.label });
+  thingWikiEntry = addUrl(thingWikiEntry, RDF.type, AS.Event);
 
-
-
+  dataset = setThing(dataset, thingWikiEntry);
+  let savedDS  = await saveSolidDatasetAt(chose.url, dataset, { fetch: sc.fetch } );
+  console.log("savedDS",savedDS)
+}
 
 
     Vue.prototype.$createEvent = async function(chose){
