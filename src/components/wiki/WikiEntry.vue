@@ -1,9 +1,14 @@
 <template>
-  <div>
-    <!-- {{url}} -->
-    {{JSON.stringify(wikiEntry)}}
-    <hr>
-  </div>
+
+    <ul v-if="wikiEntry != null">
+      <li v-for="(t, id) in wikiEntry.things" :key="id">
+        {{t.name}}
+      </li>
+    </ul>
+    <!-- <small>
+      {{JSON.stringify(wikiEntry)}}
+    </small> -->
+
 </template>
 
 <script>

@@ -115,19 +115,19 @@ const plugin = {
 
 
     Vue.prototype.$createWikiEntry = async function(chose){
-            let date = new Date()
-            let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+chose.url
-
+      let date = new Date()
+      let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+chose.url
+      chose.url = chose.path+chose.id+'.ttl#'+chose.id
       let dataset = createSolidDataset();
-      let thingWikiEntry = createThing({ name: chose.label });
+      let thingWikiEntry = createThing({ name: chose.id });
       thingWikiEntry = addUrl(thingWikiEntry, RDF.type, AS.Note);
       thingWikiEntry = addStringNoLocale(thingWikiEntry, AS.name, chose.label);
       thingWikiEntry = addDatetime(thingWikiEntry, AS.startTime, chose.date);
       //thingWikiEntry = addDatetime(thingWikiEntry, AS.endTime, chose.event.customData.end);
-      thingWikiEntry = addStringNoLocale(thingWikiEntry, RDFS.comment, comment);
+
       store.state.solid.pod != null ? thingWikiEntry = addUrl(thingWikiEntry, AS.actor, store.state.solid.pod.webId ) : ""
       thingWikiEntry = addStringNoLocale(thingWikiEntry, AS.published, date.toISOString());
-
+      thingWikiEntry = addStringNoLocale(thingWikiEntry, RDFS.comment, comment);
 
       dataset = setThing(dataset, thingWikiEntry);
       let savedDS  = await saveSolidDatasetAt(chose.url, dataset, { fetch: sc.fetch } );
@@ -271,16 +271,28 @@ const plugin = {
     },
 
     Vue.prototype.$readWikiEntry = async function(url){
-      let wikiEntry = {url: url}
+      let wikiEntry = {url: url, things: []}
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})
       let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
       console.log(mainThing)
       try{
-        wikiEntry.things = await getThingAll(ds)
+        //  wikiEntry.things = await getThingAll(ds)
+        let thingsTemp = await getThingAll(ds)
+
+        for await (const t of thingsTemp){
+          let thing = {}
+          //console.log(t.url, t)
+          thing.name = await getStringNoLocale(t, AS.name);
+          thing.type = await getUrl(t, RDF.type);
+          thing.time = await getDatetime(t, AS.startTime);
+          thing.actor = await getUrl(t, AS.actor);
+          thing.published = await getStringNoLocale(t, AS.published);
+          wikiEntry.things.push(thing)
+        }
         // let thing_url = url+"#"+mainThing
         // let thing= await getThing(ds, thing_url)
-      //  console.log(thing_url, thing)
-      //  wikiEntry.name = await getStringNoLocale(thing, AS.name);
+        //  console.log(thing_url, thing)
+        //  wikiEntry.name = await getStringNoLocale(thing, AS.name);
 
       }catch(e){
         console.log(e)

@@ -55,7 +55,7 @@ export default {
         //   console.log('route',this.$route)
         //let path = this.$store.state.solid.storage+this.$store.state.table.privacy+'/table/workspaces/'
         this.item.path = this.path
-        this.item.url = this.path+uuidv4()+'.ttl'//#it'
+        this.item.id = uuidv4()//#it'
         console.log(this.item)
         this.$store.dispatch('wiki/create', this.item);
 

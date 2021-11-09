@@ -1,11 +1,17 @@
 <template>
   <div v-if="wikiData != null">
-    <ul>
+    <b-list-group>
+      <b-list-group-item button v-for="(url, id) in wikiData.resources" :key="id">
+        <WikiEntry :url="url"/>
+      </b-list-group-item>
+
+    </b-list-group>
+    <!-- <ul>
       <li v-for="(url, id) in wikiData.resources" :key="id">
         {{id}} : {{url}}
-        <WikiEntry :url="url"/>
+
       </li>
-    </ul>
+    </ul> -->
 
 
     <!-- {{JSON.stringify(wikiData, undefined, 2)}} -->
