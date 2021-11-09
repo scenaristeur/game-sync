@@ -114,15 +114,25 @@ const plugin = {
     },
 
 
-  Vue.prototype.$createWikiEntry = async function(chose){
-  let dataset = createSolidDataset();
-  let thingWikiEntry = createThing({ name: chose.label });
-  thingWikiEntry = addUrl(thingWikiEntry, RDF.type, AS.Event);
+    Vue.prototype.$createWikiEntry = async function(chose){
+            let date = new Date()
+            let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+chose.url
 
-  dataset = setThing(dataset, thingWikiEntry);
-  let savedDS  = await saveSolidDatasetAt(chose.url, dataset, { fetch: sc.fetch } );
-  console.log("savedDS",savedDS)
-}
+      let dataset = createSolidDataset();
+      let thingWikiEntry = createThing({ name: chose.label });
+      thingWikiEntry = addUrl(thingWikiEntry, RDF.type, AS.Note);
+      thingWikiEntry = addStringNoLocale(thingWikiEntry, AS.name, chose.label);
+      thingWikiEntry = addDatetime(thingWikiEntry, AS.startTime, chose.date);
+      //thingWikiEntry = addDatetime(thingWikiEntry, AS.endTime, chose.event.customData.end);
+      thingWikiEntry = addStringNoLocale(thingWikiEntry, RDFS.comment, comment);
+      store.state.solid.pod != null ? thingWikiEntry = addUrl(thingWikiEntry, AS.actor, store.state.solid.pod.webId ) : ""
+      thingWikiEntry = addStringNoLocale(thingWikiEntry, AS.published, date.toISOString());
+
+
+      dataset = setThing(dataset, thingWikiEntry);
+      let savedDS  = await saveSolidDatasetAt(chose.url, dataset, { fetch: sc.fetch } );
+      console.log("savedDS",savedDS)
+    }
 
 
     Vue.prototype.$createEvent = async function(chose){
@@ -260,6 +270,26 @@ const plugin = {
       return container
     },
 
+    Vue.prototype.$readWikiEntry = async function(url){
+      let wikiEntry = {url: url}
+      let ds =  await getSolidDataset(url, {fetch: sc.fetch})
+      let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
+      console.log(mainThing)
+      try{
+        wikiEntry.things = await getThingAll(ds)
+        // let thing_url = url+"#"+mainThing
+        // let thing= await getThing(ds, thing_url)
+      //  console.log(thing_url, thing)
+      //  wikiEntry.name = await getStringNoLocale(thing, AS.name);
+
+      }catch(e){
+        console.log(e)
+      }
+
+
+      return wikiEntry
+    },
+
     Vue.prototype.$readEvent = async function(url){
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})
       let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
@@ -269,7 +299,6 @@ const plugin = {
       let event = {}
       try{
         thing= await getThing(ds,url+"#"+mainThing) //await getThingAll(ds)[0]
-        console.log()
         event.url = url
         event.name = await getStringNoLocale(thing, AS.name);
         event.start = await getDatetime(thing, AS.startTime)

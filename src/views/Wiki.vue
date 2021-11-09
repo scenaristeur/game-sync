@@ -3,16 +3,18 @@
 
     Wiki
 
-    <NewItem :path="wikiStore"/>
-    wikistore : {{ wikiStore}}
-    <hr>
-    wikiData : {{ JSON.stringify(wikiData)}}
-    <hr>
+
+    <!-- <hr> -->
     <div v-if="pod == null">
       You must login to use wiki
     </div>
     <div v-else>
-      {{JSON.stringify(pod)}}
+      <NewItem :path="wikiStore"/>
+      <!-- wikistore : {{ wikiStore}}
+      <hr> -->
+
+      <WikiView />
+      <!-- {{JSON.stringify(pod)}} -->
     </div>
 
   </div>
@@ -29,6 +31,7 @@ export default {
   },
   components: {
     'NewItem': () => import('@/components/wiki/NewItem'),
+    'WikiView': () => import('@/components/wiki/WikiView'),
     // 'CalendarList': () => import('@/components/timeline/CalendarList'),
     // // 'SimpleTimeline': () => import('@/components/timeline/SimpleTimeline'),
     // 'CalendarTop': () => import('@/components/timeline/CalendarTop'),
