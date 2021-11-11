@@ -4,12 +4,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/404.html"
   },
   {
-    "revision": "726724fb46726ff7df2c",
-    "url": "/game-sync/css/app.5c9713c3.css"
+    "revision": "449effdd4d569438cd95",
+    "url": "/game-sync/css/app.09ffd799.css"
   },
   {
     "revision": "091999a6b0fc4279588b",
     "url": "/game-sync/css/chunk-180affe4.81679fc7.css"
+  },
+  {
+    "revision": "6312683b320783475ab8",
+    "url": "/game-sync/css/chunk-39233bb4.ae839b09.css"
   },
   {
     "revision": "1387aee58eb6c7c72045",
@@ -100,7 +104,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/img/zoomExtends.5f78e86f.png"
   },
   {
-    "revision": "689f02ca60cb46ee4cd06427daba2499",
+    "revision": "9e5ace624eb81ba45f72b43eb1b93f66",
     "url": "/game-sync/index.html"
   },
   {
@@ -108,8 +112,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/about.4c81f324.js"
   },
   {
-    "revision": "726724fb46726ff7df2c",
-    "url": "/game-sync/js/app.43db7b1d.js"
+    "revision": "449effdd4d569438cd95",
+    "url": "/game-sync/js/app.10983231.js"
   },
   {
     "revision": "091999a6b0fc4279588b",
@@ -120,8 +124,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/game-sync/js/chunk-2d0afa76.2d09e35e.js"
   },
   {
-    "revision": "c568a6e91b11a20a12b8",
-    "url": "/game-sync/js/chunk-2d0b5da3.8c0107ed.js"
+    "revision": "8cc04c12c8751fe8a048",
+    "url": "/game-sync/js/chunk-2d0b5da3.5e1c6953.js"
   },
   {
     "revision": "f815e3d37f4720e0f6ed",
@@ -146,10 +150,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "ec6891428ea379a9fb29",
     "url": "/game-sync/js/chunk-2d0e5731.fa1c6836.js"
-  },
-  {
-    "revision": "3169bd7b6ffae55e418d",
-    "url": "/game-sync/js/chunk-2d0f0dc3.335059b8.js"
   },
   {
     "revision": "3cd52424724c3cf7a8d0",
@@ -190,6 +190,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "0d79f1a1e2bce373f4b9",
     "url": "/game-sync/js/chunk-2d2306d1.034ee01e.js"
+  },
+  {
+    "revision": "6312683b320783475ab8",
+    "url": "/game-sync/js/chunk-39233bb4.71c002a4.js"
   },
   {
     "revision": "1387aee58eb6c7c72045",
