@@ -5,64 +5,74 @@
     {{searchQuery}} -->
     <!-- <div> -->
 
-      <b-card no-body>
-        <b-tabs pills card :vertical="vertical">
-          <b-button size="sm" variant="outline-primary" @click="toggleVertical">
-            <b-icon icon="align-start" v-if="vertical == true"></b-icon>
-            <b-icon icon="align-top" v-else></b-icon>
-          </b-button>
-          <!-- -->
-          <div v-for="(t, id) in wikiEntry.things" :key="id">
-            <b-tab v-if="t.show"
-            :title="t.name">
+    <b-card no-body>
+      <b-tabs pills card :vertical="vertical">
+        <b-button size="sm" variant="outline-primary" @click="toggleVertical" title="alignement">
+          <b-icon icon="align-start" v-if="vertical == true"></b-icon>
+          <b-icon icon="align-top" v-else></b-icon>
+        </b-button>
 
-            <b-card-text>
-              <!-- {{t.id}}
-              {{t.id == last}} -->
-              <h5>{{t.name}}</h5>
-              <!-- {{searchQuery}} -->
-              <!-- {{t.content}}
 
-              <blockquote contenteditable="true" v-html="t.content">
-              <p>Edit this content to add your own quote</p>
-            </blockquote>
 
-            <cite contenteditable="true">-- Write wikidata or semapps tags here, coma separated</cite> -->
+        <!-- -->
+        <div v-for="t in wikiEntry.things" :key="t.id">
+          <b-tab v-if="t.show"
+          :title="t.name">
+          <h5>{{t.name}}   <b-button size="sm" variant="outline-primary" @click="edit(t.id)"><b-icon-pen></b-icon-pen></b-button></h5>
 
-          </b-card-text>
-          <b-form-textarea
-          id="textarea"
-          v-model="t.content"
-          placeholder="Enter something..."
-          rows="3"
-          max-rows="6"
-          @change="contentChanged"
-          ></b-form-textarea>
-          <!-- {{JSON.stringify(t)}}
-          <hr> -->
-          <a :href="t.url" target="_blank">data</a>
-        </b-tab>
-      </div>
+          <!-- pre<br> -->
 
-      <b-tab title="+" >
-        <b-card-text>
-          <b-input v-model="newnote.name" placeholder="name" @change="addNote" />
+          <!-- <hr>
+          b-card-text<br>
+          <b-card-text v-html="t.content">
 
         </b-card-text>
-        <!-- <b-form-textarea
-        id="textarea"
-        v-model="newnote.content"
+        <hr> -->
+
+        <!-- <blockquote contenteditable="true" v-html="t.content">
+        <p>Edit this content to add your own quote</p>
+      </blockquote> -->
+      <div v-if="editing_id == t.id">
+        <b-button size="sm" variant="outline-primary" @click="mentionner" title="mentionner">@</b-button>
+        <b-form-textarea
+        :id="'textarea_'+t.id"
+        :ref="'textarea_'+t.id"
+        v-model="t.content"
         placeholder="Enter something..."
         rows="3"
         max-rows="6"
-        @change="newNotecontentChanged"
-        ></b-form-textarea> -->
-      </b-tab>
+        @change="contentChanged"
+        @blur="editing_id = null"
+        autofucus
+        ></b-form-textarea>
+      </div>
+      <pre v-html="t.content" @click="edit(t.id)"></pre>
+      <!-- {{JSON.stringify(t)}}
+      <hr> -->
+      <cite contenteditable="true">-- Write wikidata or semapps tags here, coma separated</cite>
+      <a :href="t.url" target="_blank">data</a>
+    </b-tab>
+  </div>
+
+  <b-tab title="+" >
+    <b-card-text>
+      <b-input v-model="newnote.name" placeholder="name" @change="addNote" />
+
+    </b-card-text>
+    <!-- <b-form-textarea
+    id="textarea"
+    v-model="newnote.content"
+    placeholder="Enter something..."
+    rows="3"
+    max-rows="6"
+    @change="newNotecontentChanged"
+    ></b-form-textarea> -->
+  </b-tab>
 
 
 
-    </b-tabs>
-  </b-card>
+</b-tabs>
+</b-card>
 <!-- </div> -->
 
 <!-- <div v-for="(t, id) in wikiEntry.things" :key="id">
@@ -103,7 +113,8 @@ export default {
       newnote: {},
       last: "",
       vertical: false,
-       numberShown : 0
+      numberShown : 0,
+      editing_id: ""
     }
 
   },
@@ -142,6 +153,7 @@ export default {
     contentChanged(){
       console.log(this.wikiEntry)
       this.$store.dispatch('wiki/update', this.wikiEntry);
+
     },
     toggleVertical(){
       this.vertical = !this.vertical
@@ -150,20 +162,29 @@ export default {
     updateShow(){
       this.numberShown = 0
 
-      for (const t of this.wikiEntry.things){
-        if( t.name.includes(this.searchQuery)){
-          t.show = true
-          this.numberShown++
-        }else{
-          t.show = false
+      if(this.wikiEntry != null && this.wikiEntry.things.length > 0) {
+        for (const t of this.wikiEntry.things){
+          if( t.name.includes(this.searchQuery)){
+            t.show = true
+            this.numberShown++
+          }else{
+            t.show = false
+          }
         }
       }
       if (this.searchQuery.length == 0) { this.numberShown = this.wikiEntry.things.length}
+    },
+    edit(id){
+      console.log(id)
+      this.editing_id = this.editing_id != id ? id : null
+      // let area = this.$refs['textarea_'+id]
+      // console.log(area)
+      // area.focus()
+
+    },
+    mentionner(){
+      console.log("mentionner")
     }
-    // show(t){
-    //   t.show =  this.searchQuery.length == 0 || t.name.includes(this.searchQuery)
-    //   return t.show
-    // },
 
   },
   watch:{

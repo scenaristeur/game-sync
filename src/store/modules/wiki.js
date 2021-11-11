@@ -38,12 +38,13 @@ const mutations = {
     for (const t of wikiEntry.things){
       //  console.log(t)
       let item = {name: t.name, url: t.url}
+      // console.log(item)
       // Object.assign(state.wikiIndex[t.url], item)
       var index = state.wikiIndex.findIndex(x => x.url==t.url);
-    //  console.log(index,item)
-       index === -1 ? state.wikiIndex.push(item) : Object.assign(state.wikiIndex[t.url], item)
+      //  console.log(index,item)
+      index === -1 ? state.wikiIndex.push(item) : Object.assign(state.wikiIndex[index], item)
     }
-  //  console.log(state.wikiIndex)
+    //  console.log(state.wikiIndex)
   },
   setSearchQuery(state, d){
     state.searchQuery = d

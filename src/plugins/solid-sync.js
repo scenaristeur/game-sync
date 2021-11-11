@@ -322,7 +322,7 @@ const plugin = {
       let path = url.substr(0, url.lastIndexOf("/"))+'/'
       let wikiEntry = {url: url, things: [], path: path}
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})
-      let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
+    //  let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
       //  console.log(mainThing)
       try{
         //  wikiEntry.things = await getThingAll(ds)
@@ -330,10 +330,10 @@ const plugin = {
 
         for await (const t of thingsTemp){
           let thing = {}
-          //console.log(t.url, t)
+          console.log(t.url, t)
           thing.thing = t
           thing.url = t.url
-          thing.id = mainThing
+          thing.id = t.url.split('.ttl#')[1]
           thing.path = path
           thing.name = await getStringNoLocale(t, AS.name);
           thing.type = await getUrl(t, RDF.type);
@@ -341,6 +341,7 @@ const plugin = {
           thing.actor = await getUrl(t, AS.actor);
           thing.content = await getStringNoLocale(t, AS.content);
           thing.published = await getStringNoLocale(t, AS.published);
+          console.log("read thing",thing)
           wikiEntry.things.push(thing)
         }
         // let thing_url = url+"#"+mainThing

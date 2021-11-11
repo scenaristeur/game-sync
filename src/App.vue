@@ -6,7 +6,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.13 - wiki filter</i></small>
+    <small><i>0.0.13 - wiki edit</i></small>
   </div>
 </template>
 
