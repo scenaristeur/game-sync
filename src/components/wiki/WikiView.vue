@@ -1,5 +1,6 @@
 <template>
   <div v-if="wikiData != null">
+
     <b-list-group>
       <b-list-group-item button v-for="(url, id) in wikiData.resources" :key="id">
         <WikiEntry :url="url"/>
@@ -13,7 +14,7 @@
       </li>
     </ul> -->
 
-
+  <DragDrop />
     <!-- {{JSON.stringify(wikiData, undefined, 2)}} -->
   </div>
 </template>
@@ -24,6 +25,7 @@ export default {
   props:['data'],
   components: {
     'WikiEntry': () => import('@/components/wiki/WikiEntry'),
+    'DragDrop': () => import('@/components/wiki/DragDrop'),
   },
   computed:{
     pod:{
