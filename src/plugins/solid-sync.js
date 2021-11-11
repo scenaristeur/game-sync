@@ -115,25 +115,25 @@ const plugin = {
 
     Vue.prototype.$updateWikiEntry = async function(chose){
       let date = new Date()
-      console.log(chose.url)
+    //  console.log(chose.url)
       let ds = await getSolidDataset(chose.url, {fetch: sc.fetch})
-      console.log("ds",ds)
+    //  console.log("ds",ds)
       //let mainThing = chose.url.substring(chose.url.lastIndexOf('/') + 1).split('.ttl')[0]
-      let thingsTemp = await getThingAll(ds)
-      console.log(thingsTemp)
+    //  let thingsTemp = await getThingAll(ds)
+    //  console.log(thingsTemp)
       //  try{
       for await (const t of chose.things){
-        console.log("update",t)
+      //  console.log("update",t)
         let thingInDataset= await getThing(ds,t.thing.url)
-        console.log(thingInDataset)
+      //  console.log(thingInDataset)
         thingInDataset = setStringNoLocale(thingInDataset, AS.name, t.name);
         store.state.solid.pod != null ? thingInDataset = addUrl(thingInDataset, AS.actor, store.state.solid.pod.webId ) : ""
         thingInDataset = addStringNoLocale(thingInDataset, AS.updated, date.toISOString());
         thingInDataset = setStringNoLocale(thingInDataset, AS.content, t.content);
         ds = setThing(ds, thingInDataset);
-        console.log(thingInDataset)
+      //  console.log(thingInDataset)
       }
-      console.log(ds)
+    //  console.log(ds)
       // }catch(e){
       //   console.log(e)
       // }
@@ -141,6 +141,25 @@ const plugin = {
       console.log("savedDS",savedDS)
     },
 
+    Vue.prototype.$addWikiEntry = async function(chose){
+      console.log(chose)
+      let date = new Date()
+      let dataset = await getSolidDataset(chose.url, {fetch: sc.fetch})
+      let thingWikiEntry = createThing({ name: chose.id });
+      thingWikiEntry = addUrl(thingWikiEntry, RDF.type, AS.Note);
+      thingWikiEntry = addStringNoLocale(thingWikiEntry, AS.name, chose.name);
+      //thingWikiEntry = addDatetime(thingWikiEntry, AS.startTime, date);
+      //thingWikiEntry = addDatetime(thingWikiEntry, AS.endTime, chose.event.customData.end);
+
+      store.state.solid.pod != null ? thingWikiEntry = addUrl(thingWikiEntry, AS.actor, store.state.solid.pod.webId ) : ""
+      thingWikiEntry = addStringNoLocale(thingWikiEntry, AS.published, date.toISOString());
+      dataset = setThing(dataset, thingWikiEntry);
+      let savedDS  = await saveSolidDatasetAt(chose.url, dataset, { fetch: sc.fetch } );
+      console.log("savedDS",savedDS)
+      //let date = new Date()
+      //  chose.url = chose.path+chose.id+'.ttl#'+chose.id
+
+    },
 
     Vue.prototype.$createWikiEntry = async function(chose){
       let date = new Date()

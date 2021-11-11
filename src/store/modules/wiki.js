@@ -20,6 +20,11 @@ const actions = {
     console.log(item)
     await Vue.prototype.$updateWikiEntry(item)
     await this.dispatch('wiki/getWikiContainer', item.path)
+  },
+  async add(context, item){
+    console.log(item)
+    await Vue.prototype.$addWikiEntry(item)
+    await this.dispatch('wiki/getWikiContainer', item.path)
   }
 }
 
