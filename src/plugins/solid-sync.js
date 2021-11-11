@@ -318,7 +318,7 @@ const plugin = {
     },
 
     Vue.prototype.$readWikiEntry = async function(url){
-      console.log(url)
+      //console.log(url)
       let path = url.substr(0, url.lastIndexOf("/"))+'/'
       let wikiEntry = {url: url, things: [], path: path}
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})

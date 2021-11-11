@@ -1,6 +1,8 @@
 import Vue from 'vue'
 const state = () => ({
-  wikiData: null
+  wikiData: null,
+  wikiIndex: [],
+  searchQuery : ""
 })
 
 const actions = {
@@ -31,7 +33,22 @@ const actions = {
 const mutations = {
   setWikiData(state, d){
     state.wikiData = d || null
-  }
+  },
+  updateIndex(state, wikiEntry){
+    for (const t of wikiEntry.things){
+      //  console.log(t)
+      let item = {name: t.name, url: t.url}
+      // Object.assign(state.wikiIndex[t.url], item)
+      var index = state.wikiIndex.findIndex(x => x.url==t.url);
+    //  console.log(index,item)
+       index === -1 ? state.wikiIndex.push(item) : Object.assign(state.wikiIndex[t.url], item)
+    }
+  //  console.log(state.wikiIndex)
+  },
+  setSearchQuery(state, d){
+    state.searchQuery = d
+  },
+
   // setPod(state,p){
   //   state.pod = p
   // },

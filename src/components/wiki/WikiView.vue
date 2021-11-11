@@ -1,22 +1,19 @@
 <template>
   <div v-if="wikiData != null">
-
+    <Search />
     <b-list-group>
-      <b-list-group-item button v-for="(url, id) in wikiData.resources" :key="id">
-        <WikiEntry :url="url"/>
-      </b-list-group-item>
-
-    </b-list-group>
+        <WikiEntry v-for="(url, id) in wikiData.resources" :key="id" :url="url"/>
+        </b-list-group>
     <!-- <ul>
-      <li v-for="(url, id) in wikiData.resources" :key="id">
-        {{id}} : {{url}}
+    <li v-for="(url, id) in wikiData.resources" :key="id">
+    {{id}} : {{url}}
 
-      </li>
-    </ul> -->
+  </li>
+</ul> -->
 
-  <DragDrop />
-    <!-- {{JSON.stringify(wikiData, undefined, 2)}} -->
-  </div>
+<DragDrop />
+<!-- {{JSON.stringify(wikiData, undefined, 2)}} -->
+</div>
 </template>
 
 <script>
@@ -26,6 +23,7 @@ export default {
   components: {
     'WikiEntry': () => import('@/components/wiki/WikiEntry'),
     'DragDrop': () => import('@/components/wiki/DragDrop'),
+    'Search': () => import('@/components/wiki/Search'),
   },
   computed:{
     pod:{

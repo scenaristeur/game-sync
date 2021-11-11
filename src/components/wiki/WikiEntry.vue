@@ -1,23 +1,26 @@
 <template>
-  <div>
-    <div v-if="wikiEntry != null">
-      <!-- {{last}} -->
-      <div>
 
-        <b-card no-body>
-          <b-tabs pills card :vertical="vertical">
-            <b-button size="sm" variant="outline-primary" @click="toggleVertical">
-              <b-icon icon="align-start" v-if="vertical == true"></b-icon>
-              <b-icon icon="align-top" v-else></b-icon>
-            </b-button>
-            <!-- -->
-            <b-tab v-for="(t, id) in wikiEntry.things" :key="id"
+  <b-list-group-item v-if="wikiEntry != null && numberShown > 0">
+    <!-- {{ numberShown}}
+    {{searchQuery}} -->
+    <!-- <div> -->
+
+      <b-card no-body>
+        <b-tabs pills card :vertical="vertical">
+          <b-button size="sm" variant="outline-primary" @click="toggleVertical">
+            <b-icon icon="align-start" v-if="vertical == true"></b-icon>
+            <b-icon icon="align-top" v-else></b-icon>
+          </b-button>
+          <!-- -->
+          <div v-for="(t, id) in wikiEntry.things" :key="id">
+            <b-tab v-if="t.show"
             :title="t.name">
 
             <b-card-text>
               <!-- {{t.id}}
               {{t.id == last}} -->
               <h5>{{t.name}}</h5>
+              <!-- {{searchQuery}} -->
               <!-- {{t.content}}
 
               <blockquote contenteditable="true" v-html="t.content">
@@ -35,40 +38,45 @@
           max-rows="6"
           @change="contentChanged"
           ></b-form-textarea>
+          <!-- {{JSON.stringify(t)}}
+          <hr> -->
+          <a :href="t.url" target="_blank">data</a>
         </b-tab>
+      </div>
 
-        <b-tab title="+" >
-          <b-card-text>
-            <b-input v-model="newnote.name" placeholder="name" @change="addNote" />
+      <b-tab title="+" >
+        <b-card-text>
+          <b-input v-model="newnote.name" placeholder="name" @change="addNote" />
 
-          </b-card-text>
-          <!-- <b-form-textarea
-          id="textarea"
-          v-model="newnote.content"
-          placeholder="Enter something..."
-          rows="3"
-          max-rows="6"
-          @change="newNotecontentChanged"
-          ></b-form-textarea> -->
-        </b-tab>
-
-
-      </b-tabs>
-    </b-card>
-  </div>
-
-  <!-- <div v-for="(t, id) in wikiEntry.things" :key="id">
-  <b-button v-b-toggle :href="'#_'+id" @click.prevent>{{t.name}}</b-button>
+        </b-card-text>
+        <!-- <b-form-textarea
+        id="textarea"
+        v-model="newnote.content"
+        placeholder="Enter something..."
+        rows="3"
+        max-rows="6"
+        @change="newNotecontentChanged"
+        ></b-form-textarea> -->
+      </b-tab>
 
 
-  <b-collapse :id="'#_'+id">
-  <b-card title="Collapsible card">
-  Hello world!Hello world! {{id}}
+
+    </b-tabs>
+  </b-card>
+<!-- </div> -->
+
+<!-- <div v-for="(t, id) in wikiEntry.things" :key="id">
+<b-button v-b-toggle :href="'#_'+id" @click.prevent>{{t.name}}</b-button>
+
+
+<b-collapse :id="'#_'+id">
+<b-card title="Collapsible card">
+Hello world!Hello world! {{id}}
 </b-card>
 </b-collapse>
 </div> -->
 
-</div>
+</b-list-group-item>
 
 <!-- <ul v-if="wikiEntry != null">
 <li v-for="(t, id) in wikiEntry.things" :key="id">
@@ -76,7 +84,7 @@
 
 </li>
 </ul> -->
-</div>
+
 <!-- <small>
 {{JSON.stringify(wikiEntry)}}
 </small> -->
@@ -94,7 +102,8 @@ export default {
       wikiEntry : null,
       newnote: {},
       last: "",
-      vertical: false
+      vertical: false,
+       numberShown : 0
     }
 
   },
@@ -121,6 +130,14 @@ export default {
       //  console.log(this.url)
       this.wikiEntry = await this.$readWikiEntry(this.url)
 
+      if(this.wikiEntry != null && this.wikiEntry.things.length > 0) {
+        this.updateShow()
+        this.$store.commit('wiki/updateIndex', this.wikiEntry);
+      }
+      //this.numberShown = 0
+      //  console.log(this.wikiEntry)
+
+
     },
     contentChanged(){
       console.log(this.wikiEntry)
@@ -129,13 +146,58 @@ export default {
     toggleVertical(){
       this.vertical = !this.vertical
       console.log("vertical", this.vertical)
+    },
+    updateShow(){
+      this.numberShown = 0
+
+      for (const t of this.wikiEntry.things){
+        if( t.name.includes(this.searchQuery)){
+          t.show = true
+          this.numberShown++
+        }else{
+          t.show = false
+        }
+      }
+      if (this.searchQuery.length == 0) { this.numberShown = this.wikiEntry.things.length}
     }
+    // show(t){
+    //   t.show =  this.searchQuery.length == 0 || t.name.includes(this.searchQuery)
+    //   return t.show
+    // },
+
   },
   watch:{
     async url(){
       this.init()
+    },
+    searchQuery(){
+      this.updateShow()
     }
   },
+  computed:{
+    // pod:{
+    //   get () { return this.$store.state.solid.pod },
+    //   set (/*value*/) { /*this.updateTodo(value)*/ }
+    // },
+    searchQuery:{
+      get () { return this.$store.state.wiki.searchQuery },
+      set (/*value*/) { /*this.updateTodo(value)*/ }
+    },
+    // showing:{
+    //   get (){
+    //     let show = true
+    //     if(this.wikiEntry != null && this.wikiEntry.things.length > 0) {
+    //       for (const t of this.wikiEntry.things){
+    //         console.log(await t.show == true)
+    //       }
+    //     }else{
+    //       show = false
+    //     }
+    //
+    //     return show
+    //   }
+    //}
+  }
 }
 </script>
 
