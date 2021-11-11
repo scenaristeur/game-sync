@@ -11,16 +11,23 @@
 
             <b-card-text>
               {{t.name}}
-              {{t.text}}
+              {{t.content}}
 
-              <blockquote contenteditable="true" v-html="t.text">
+              <blockquote contenteditable="true" v-html="t.content">
                 <p>Edit this content to add your own quote</p>
               </blockquote>
 
               <cite contenteditable="true">-- Write wikidata or semapps tags here, coma separated</cite>
 
             </b-card-text>
-
+            <b-form-textarea
+            id="textarea"
+            v-model="t.content"
+            placeholder="Enter something..."
+            rows="3"
+            max-rows="6"
+            @change="contentChanged"
+            ></b-form-textarea>
           </b-tab>
 
           <b-tab title="other thing" ><b-card-text>other entry in this wiki page</b-card-text></b-tab>
@@ -73,9 +80,13 @@ export default {
   },
   methods: {
     async init(){
-      console.log(this.url)
+    //  console.log(this.url)
       this.wikiEntry = await this.$readWikiEntry(this.url)
 
+    },
+    contentChanged(){
+      console.log(this.wikiEntry)
+      this.$store.dispatch('wiki/update', this.wikiEntry);
     }
   },
   watch:{
@@ -88,33 +99,33 @@ export default {
 
 <style>
 .output {
-    font: 1rem 'Fira Sans', sans-serif;
+  font: 1rem 'Fira Sans', sans-serif;
 }
 
 blockquote {
-    background: #eee;
-    border-radius: 5px;
-    margin: 16px 0;
+  background: #eee;
+  border-radius: 5px;
+  margin: 16px 0;
 }
 
 blockquote p {
-    padding: 15px;
+  padding: 15px;
 }
 
 cite {
-    margin: 16px 32px;
+  margin: 16px 32px;
 }
 
 blockquote p::before {
-    content: '\201C';
+  content: '\201C';
 }
 
 blockquote p::after {
-    content: '\201D';
+  content: '\201D';
 }
 
 [contenteditable='true'] {
-    caret-color: red;
+  caret-color: red;
 }
 
 </style>

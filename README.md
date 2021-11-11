@@ -14,6 +14,9 @@
 - webId #1 : https://pod.inrupt.com/spoggy/profile/card#me
 - webid #2 : https://pod.inrupt.com/games/profile/card#me
 
+# activitystreams
+https://activitystrea.ms/specs/json/1.0/
+
 ## Project setup
 ```
 npm install

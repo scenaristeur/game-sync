@@ -40,8 +40,8 @@ import {
   setDecimal,
   setInteger,
   //  getDecimal,
-  getInteger
-  //setDatetime
+  getInteger,
+  // setDatetime
 } from "@inrupt/solid-client";
 import { FOAF, /*LDP,*/ VCARD, RDF, AS, RDFS, OWL  } from "@inrupt/vocab-common-rdf";
 import { WS } from "@inrupt/vocab-solid-common";
@@ -113,11 +113,39 @@ const plugin = {
       return e_f
     },
 
+    Vue.prototype.$updateWikiEntry = async function(chose){
+      let date = new Date()
+      console.log(chose.url)
+      let ds = await getSolidDataset(chose.url, {fetch: sc.fetch})
+      console.log("ds",ds)
+      //let mainThing = chose.url.substring(chose.url.lastIndexOf('/') + 1).split('.ttl')[0]
+      let thingsTemp = await getThingAll(ds)
+      console.log(thingsTemp)
+      //  try{
+      for await (const t of chose.things){
+        console.log("update",t)
+        let thingInDataset= await getThing(ds,t.thing.url)
+        console.log(thingInDataset)
+        thingInDataset = setStringNoLocale(thingInDataset, AS.name, t.name);
+        store.state.solid.pod != null ? thingInDataset = addUrl(thingInDataset, AS.actor, store.state.solid.pod.webId ) : ""
+        thingInDataset = addStringNoLocale(thingInDataset, AS.updated, date.toISOString());
+        thingInDataset = setStringNoLocale(thingInDataset, AS.content, t.content);
+        ds = setThing(ds, thingInDataset);
+        console.log(thingInDataset)
+      }
+      console.log(ds)
+      // }catch(e){
+      //   console.log(e)
+      // }
+      let savedDS  = await saveSolidDatasetAt(chose.url, ds, { fetch: sc.fetch } );
+      console.log("savedDS",savedDS)
+    },
+
 
     Vue.prototype.$createWikiEntry = async function(chose){
       let date = new Date()
-      let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+chose.url
       chose.url = chose.path+chose.id+'.ttl#'+chose.id
+      let comment = "Open this file with https://scenaristeur.github.io/game-sync?url="+chose.url
       let dataset = createSolidDataset();
       let thingWikiEntry = createThing({ name: chose.id });
       thingWikiEntry = addUrl(thingWikiEntry, RDF.type, AS.Note);
@@ -271,10 +299,12 @@ const plugin = {
     },
 
     Vue.prototype.$readWikiEntry = async function(url){
-      let wikiEntry = {url: url, things: []}
+      console.log(url)
+      let path = url.substr(0, url.lastIndexOf("/"))+'/'
+      let wikiEntry = {url: url, things: [], path: path}
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})
       let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
-      console.log(mainThing)
+      //  console.log(mainThing)
       try{
         //  wikiEntry.things = await getThingAll(ds)
         let thingsTemp = await getThingAll(ds)
@@ -282,10 +312,15 @@ const plugin = {
         for await (const t of thingsTemp){
           let thing = {}
           //console.log(t.url, t)
+          thing.thing = t
+          thing.url = t.url
+          thing.id = mainThing
+          thing.path = path
           thing.name = await getStringNoLocale(t, AS.name);
           thing.type = await getUrl(t, RDF.type);
           thing.time = await getDatetime(t, AS.startTime);
           thing.actor = await getUrl(t, AS.actor);
+          thing.content = await getStringNoLocale(t, AS.content);
           thing.published = await getStringNoLocale(t, AS.published);
           wikiEntry.things.push(thing)
         }

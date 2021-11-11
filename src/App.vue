@@ -6,7 +6,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.12 - wiki & 404</i></small>
+    <small><i>0.0.13 - wiki content</i></small>
   </div>
 </template>
 
