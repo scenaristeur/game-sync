@@ -2,7 +2,8 @@ import Vue from 'vue'
 const state = () => ({
   wikiData: null,
   wikiIndex: [],
-  searchQuery : ""
+  searchQuery : "",
+  mentionTarget: {}
 })
 
 const actions = {
@@ -48,6 +49,9 @@ const mutations = {
   },
   setSearchQuery(state, d){
     state.searchQuery = d
+  },
+  setMentionTarget(state, t){
+    state.mentionTarget = t
   },
 
   // setPod(state,p){

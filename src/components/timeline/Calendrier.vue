@@ -1,6 +1,6 @@
 <template>
   <div id="calendrier">
-    {{ JSON.stringify(calendars)}}
+    <!-- {{ JSON.stringify(calendars)}} -->
     <v-calendar class="container fluid"
     :attributes="attributes"
     @dayclick='dayClicked'

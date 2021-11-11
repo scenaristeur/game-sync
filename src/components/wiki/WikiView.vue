@@ -2,15 +2,15 @@
   <div v-if="wikiData != null">
     <Search />
     <b-list-group>
-        <WikiEntry v-for="(url, id) in wikiData.resources" :key="id" :url="url"/>
-        </b-list-group>
+      <WikiEntry v-for="(url, id) in wikiData.resources" :key="id" :url="url"/>
+    </b-list-group>
     <!-- <ul>
     <li v-for="(url, id) in wikiData.resources" :key="id">
     {{id}} : {{url}}
 
   </li>
 </ul> -->
-
+<MentionSelector />
 <DragDrop />
 <!-- {{JSON.stringify(wikiData, undefined, 2)}} -->
 </div>
@@ -24,6 +24,7 @@ export default {
     'WikiEntry': () => import('@/components/wiki/WikiEntry'),
     'DragDrop': () => import('@/components/wiki/DragDrop'),
     'Search': () => import('@/components/wiki/Search'),
+    'MentionSelector': () => import('@/components/layout/MentionSelector'),
   },
   computed:{
     pod:{

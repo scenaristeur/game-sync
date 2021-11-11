@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <div>
     <b-button @click="mode = 'Wikimedia'"
     :variant="mode == 'Wikimedia'? 'primary' : 'outline-primary'" >
     Wikimedia
@@ -41,7 +41,7 @@ Semapps
 Google
 </b-button> -->
 
-</b-container>
+</div>
 </template>
 
 <script>

@@ -185,8 +185,9 @@
 <b-alert v-else show variant="warning">You must at leat select one destination</b-alert>
 <br>
 
-pod {{ JSON.stringify(pod)}}
+
 <div v-if="debug == true">
+  pod {{ JSON.stringify(pod)}}
   debug : {{ debug}}
   detail :  {{ JSON.stringify(detail)}}<br><br>
   event:     {{ JSON.stringify(event)}}

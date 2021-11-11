@@ -33,7 +33,8 @@
         <p>Edit this content to add your own quote</p>
       </blockquote> -->
       <div v-if="editing_id == t.id">
-        <b-button size="sm" variant="outline-primary" @click="mentionner" title="mentionner">@</b-button>
+        <b-button size="sm" variant="outline-primary" @click="mentionner(t)" title="mentionner">@</b-button>
+
         <b-form-textarea
         :id="'textarea_'+t.id"
         :ref="'textarea_'+t.id"
@@ -98,6 +99,8 @@ Hello world!Hello world! {{id}}
 <!-- <small>
 {{JSON.stringify(wikiEntry)}}
 </small> -->
+
+
 
 </template>
 
@@ -182,8 +185,14 @@ export default {
       // area.focus()
 
     },
-    mentionner(){
+    mentionner(t){
       console.log("mentionner")
+      t.actors == undefined ? t.actors =  [] : ""
+      t.actions == undefined ? t.actions = [] : ""
+      t.objects == undefined ? t.objects = [] : ""
+      t.contexts == undefined ? t.contexts = [] : ""
+      this.$store.commit('wiki/setMentionTarget', t)
+      this.$bvModal.show('modal-mention-selector')
     }
 
   },
