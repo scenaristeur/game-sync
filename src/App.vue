@@ -6,7 +6,7 @@
     <!-- <Login /> -->
     <!-- <ResourcesList /> -->
     <!-- <Game /> -->
-    <small><i>0.0.13 - wiki content</i></small>
+    <small><i>0.0.13 - wiki pod storage</i></small>
   </div>
 </template>
 

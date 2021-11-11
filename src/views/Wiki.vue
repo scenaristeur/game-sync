@@ -29,6 +29,10 @@ export default {
       //wikiData : null
     }
   },
+  created(){
+    this.pod = this.$store.state.solid.pod
+    this.init()
+  },
   components: {
     'NewItem': () => import('@/components/wiki/NewItem'),
     'WikiView': () => import('@/components/wiki/WikiView'),
@@ -38,9 +42,14 @@ export default {
     // // 'TimelineTest': () => import('@/components/timeline/TimelineTest'),
 
   },
+  methods:{
+    init(){
+      this.wikiStore = this.pod.storage == null ? null : this.pod.storage+"wikiStore/"
+    }
+  },
   watch:{
     pod(){
-      this.wikiStore = this.pod == null ? null : this.pod.storage+"wikiStore/"
+      this.init()
     },
     async wikiStore(){
       if (this.wikiStore == null){

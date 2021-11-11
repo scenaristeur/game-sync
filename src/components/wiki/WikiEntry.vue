@@ -33,7 +33,6 @@
           placeholder="Enter something..."
           rows="3"
           max-rows="6"
-          autofocus
           @change="contentChanged"
           ></b-form-textarea>
         </b-tab>
