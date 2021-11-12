@@ -44,7 +44,7 @@ export default {
   },
   methods:{
     init(){
-      this.wikiStore = this.pod.storage == null ? null : this.pod.storage+"wikiStore/"
+      this.wikiStore = this.pod == null || this.pod.storage == null ? null : this.pod.storage+"wikiStore/"
     }
   },
   watch:{

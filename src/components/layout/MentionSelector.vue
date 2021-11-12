@@ -2,6 +2,8 @@
   <b-modal id="modal-mention-selector" :title="mentionTarget.name" @ok="update">
     <!-- <p class="my-4">Hello from modal!</p> -->
     <i> should separate this part in  two : ading props/adding links</i>
+<b>For the moment, you MUST edit the content of the note to update these mentions !</b>
+
     <div>
       <b-tabs content-class="mt-3">
         <IdentifiantSelector categorie="Actors" active=active :items="mentionTarget.actors"/>

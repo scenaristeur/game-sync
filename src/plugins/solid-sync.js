@@ -113,27 +113,32 @@ const plugin = {
       return e_f
     },
 
+
+
     Vue.prototype.$updateWikiEntry = async function(chose){
       let date = new Date()
-    //  console.log(chose.url)
+      //  console.log(chose.url)
       let ds = await getSolidDataset(chose.url, {fetch: sc.fetch})
-    //  console.log("ds",ds)
+      //  console.log("ds",ds)
       //let mainThing = chose.url.substring(chose.url.lastIndexOf('/') + 1).split('.ttl')[0]
-    //  let thingsTemp = await getThingAll(ds)
-    //  console.log(thingsTemp)
+      //  let thingsTemp = await getThingAll(ds)
+      //  console.log(thingsTemp)
       //  try{
       for await (const t of chose.things){
-      //  console.log("update",t)
+        //  console.log("update",t)
         let thingInDataset= await getThing(ds,t.thing.url)
-      //  console.log(thingInDataset)
+        //  console.log(thingInDataset)
         thingInDataset = setStringNoLocale(thingInDataset, AS.name, t.name);
         store.state.solid.pod != null ? thingInDataset = addUrl(thingInDataset, AS.actor, store.state.solid.pod.webId ) : ""
         thingInDataset = addStringNoLocale(thingInDataset, AS.updated, date.toISOString());
         thingInDataset = setStringNoLocale(thingInDataset, AS.content, t.content);
-        ds = setThing(ds, thingInDataset);
-      //  console.log(thingInDataset)
+
+        ds = await addMentions(t, ds, thingInDataset)
+
+        //  ds = setThing(ds, thingInDataset);
+        //  console.log(thingInDataset)
       }
-    //  console.log(ds)
+      //  console.log(ds)
       // }catch(e){
       //   console.log(e)
       // }
@@ -212,87 +217,8 @@ const plugin = {
       store.state.solid.pod != null ? thingEvent = addUrl(thingEvent, AS.actor, store.state.solid.pod.webId ) : ""
       thingEvent = addStringNoLocale(thingEvent, AS.published, date.toISOString());
 
+      dataset = await addMentions(chose.event.customData, dataset, thingEvent)
 
-      let ActorCollection = []
-      let ObjectCollection = []
-      let ContextCollection = []
-
-      for await (const actor of chose.event.customData.actors) {
-        let thingActor = createThing({ name: "thingActor"+Date.now() });
-        //  thingActor = addUrl(thingActor, RDF.type, AS.Actor);
-        //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
-        thingActor = addStringNoLocale(thingActor, AS.name, actor.text);
-        actor.url != undefined ? thingActor = addUrl(thingActor, AS.Link, actor.url) : ""
-        actor.text.startsWith('http') ? thingActor = addUrl(thingActor, AS.Link, actor.text) : ""
-        //thingActor = addUrl(thingActor, AS.object, thingAction);
-
-        dataset = setThing(dataset, thingActor);
-        ActorCollection.push(thingActor)
-      }
-
-      for await (const object of chose.event.customData.objects) {
-        let thingObject = createThing({ name: "thingObject"+Date.now() });
-        //thingObject = addUrl(thingObject, RDF.type, AS.Object);
-        //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
-        thingObject = addStringNoLocale(thingObject, AS.name, object.text);
-        object.url != undefined ? thingObject = addUrl(thingObject, AS.Link, object.url) : ""
-        object.text.startsWith('http') ? thingObject = addUrl(thingObject, AS.Link, object.text) : ""
-        //thingActor = addUrl(thingActor, AS.object, thingAction);
-
-        dataset = setThing(dataset, thingObject);
-        ObjectCollection.push(thingObject)
-      }
-
-      for await (const context of chose.event.customData.contexts) {
-        let thingContext = createThing({ name: "thingContext"+Date.now() });
-        //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
-        thingContext = addStringNoLocale(thingContext, AS.name, context.text);
-        context.url != undefined ? thingContext = addUrl(thingContext, AS.Link, context.url) : ""
-        context.text.startsWith('http') ? thingContext = addUrl(thingContext, AS.Link, context.text) : ""
-        //thingActor = addUrl(thingActor, AS.object, thingAction);
-
-        dataset = setThing(dataset, thingContext);
-        ContextCollection.push(thingContext)
-      }
-
-
-
-
-
-      for await (const a of chose.event.customData.actions) {
-        let thingAction = createThing({ name: "thingAction"+Date.now() });
-        thingAction = addUrl(thingAction, RDF.type, AS.Relationship);
-        thingAction = addUrl(thingAction, RDF.type, AS.Activity);
-        // thingAction = addUrl(thingAction, RDF.type, AS.Collection);
-        a.url != undefined ? thingAction = addUrl(thingAction, RDF.type, a.url) : ""
-        a.url != undefined ? thingAction = addUrl(thingAction, AS.Link, a.url) : ""
-        thingAction = addStringNoLocale(thingAction, AS.name, a.text);
-
-
-        ActorCollection.forEach((actorThing) => {
-          thingAction = addUrl(thingAction, AS.subject, actorThing);
-        });
-
-        ObjectCollection.forEach((objectThing) => {
-          thingAction = addUrl(thingAction, AS.object, objectThing);
-        });
-
-        ContextCollection.forEach((contextThing) => {
-          thingAction = addUrl(thingAction, AS.context, contextThing);
-        });
-
-
-
-
-        thingEvent = addUrl(thingEvent, AS.object, thingAction);
-
-        dataset = setThing(dataset, thingAction);
-
-
-
-      }
-
-      dataset = setThing(dataset, thingEvent);
       let savedDS  = await saveSolidDatasetAt(path+name+'.ttl', dataset, { fetch: sc.fetch } );
       console.log("savedDS",savedDS)
     },
@@ -322,7 +248,7 @@ const plugin = {
       let path = url.substr(0, url.lastIndexOf("/"))+'/'
       let wikiEntry = {url: url, things: [], path: path}
       let ds =  await getSolidDataset(url, {fetch: sc.fetch})
-    //  let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
+      //  let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
       //  console.log(mainThing)
       try{
         //  wikiEntry.things = await getThingAll(ds)
@@ -341,7 +267,8 @@ const plugin = {
           thing.actor = await getUrl(t, AS.actor);
           thing.content = await getStringNoLocale(t, AS.content);
           thing.published = await getStringNoLocale(t, AS.published);
-          console.log("read thing",thing)
+          thing.relations = await getUrlAll(t, AS.object)
+          console.log("wiki Entry",thing)
           wikiEntry.things.push(thing)
         }
         // let thing_url = url+"#"+mainThing
@@ -385,16 +312,9 @@ const plugin = {
 
     Vue.prototype.$readThing = async function(t){
       console.log("read", t)
-
-
     },
 
-
-
     Vue.prototype.$createEvent2 = async function(chose){
-
-
-
       let date = new Date()
       let name = encodeURI(chose.name) || Date.now();
       let path = chose.url
@@ -1220,6 +1140,40 @@ const plugin = {
       }
     }
 
+    Vue.prototype.$getRelation = async function(url){
+      let [file,id] = url.split('#')
+      let r = {url: url, file: file, id: id}
+      console.log(r)
+
+      let ds =  await getSolidDataset(file, {fetch: sc.fetch})
+      // let mainThing = url.substring(url.lastIndexOf('/') + 1).split('.ttl')[0]
+      // console.log(mainThing)
+      try{
+        let t = await getThing(ds,file+"#"+id)
+
+      //  r.thing = t
+        r.name = getStringNoLocale(t, AS.name)
+        r.types = await getUrlAll(t, RDF.type);
+        r.links = await getUrlAll(t, AS.Link);
+        r.subjects = await getUrlAll(t, AS.subject);
+        r.objects = await getUrlAll(t, AS.object);
+        r.contexts = await getUrlAll(t, AS.context);
+        console.log(t)
+        //  wikiEntry.things = await getThingAll(ds)
+        // let thingsTemp = await getThingAll(ds)
+        //
+        // for await (const t of thingsTemp){
+        //   //let thing = {}
+        //   console.log(t.url, t)
+        // }
+      }
+      catch(e){
+        console.log(e)
+      }
+
+
+      return r
+    },
     Vue.prototype.logAccessInfo = function(agent, access, resource){
       if (access === null) {
         console.log("Could not load access details for this Resource.");
@@ -1233,8 +1187,80 @@ const plugin = {
       }
     }
   }
+}
+async function addMentions(chose, dataset, thingInDataset){
+  //  console.log("mentions",chose)
+  let ActorCollection = []
+  let ObjectCollection = []
+  let ContextCollection = []
+  if (chose.actors != undefined){
+    for await (const actor of chose.actors) {
+      let thingActor = createThing({ name: "thingActor"+Date.now() });
+      //  thingActor = addUrl(thingActor, RDF.type, AS.Actor);
+      //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
+      thingActor = addStringNoLocale(thingActor, AS.name, actor.text);
+      actor.url != undefined ? thingActor = addUrl(thingActor, AS.Link, actor.url) : ""
+      actor.text.startsWith('http') ? thingActor = addUrl(thingActor, AS.Link, actor.text) : ""
+      //thingActor = addUrl(thingActor, AS.object, thingAction);
 
+      dataset = setThing(dataset, thingActor);
+      ActorCollection.push(thingActor)
+    }
+  }
 
+  if (chose.objects != undefined){
+    for await (const object of chose.objects) {
+      let thingObject = createThing({ name: "thingObject"+Date.now() });
+      //thingObject = addUrl(thingObject, RDF.type, AS.Object);
+      //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
+      thingObject = addStringNoLocale(thingObject, AS.name, object.text);
+      object.url != undefined ? thingObject = addUrl(thingObject, AS.Link, object.url) : ""
+      object.text.startsWith('http') ? thingObject = addUrl(thingObject, AS.Link, object.text) : ""
+      //thingActor = addUrl(thingActor, AS.object, thingAction);
+
+      dataset = setThing(dataset, thingObject);
+      ObjectCollection.push(thingObject)
+    }
+  }
+
+  if (chose.contexts != undefined){
+    for await (const context of chose.contexts) {
+      let thingContext = createThing({ name: "thingContext"+Date.now() });
+      //a.url != undefined ? thingActor = addUrl(thingActor, RDF.type, a.url) : ""
+      thingContext = addStringNoLocale(thingContext, AS.name, context.text);
+      context.url != undefined ? thingContext = addUrl(thingContext, AS.Link, context.url) : ""
+      context.text.startsWith('http') ? thingContext = addUrl(thingContext, AS.Link, context.text) : ""
+      //thingActor = addUrl(thingActor, AS.object, thingAction);
+
+      dataset = setThing(dataset, thingContext);
+      ContextCollection.push(thingContext)
+    }
+  }
+  if (chose.actions != undefined){
+    for await (const a of chose.actions) {
+      let thingAction = createThing({ name: "thingAction"+Date.now() });
+      thingAction = addUrl(thingAction, RDF.type, AS.Relationship);
+      thingAction = addUrl(thingAction, RDF.type, AS.Activity);
+      // thingAction = addUrl(thingAction, RDF.type, AS.Collection);
+      a.url != undefined ? thingAction = addUrl(thingAction, RDF.type, a.url) : ""
+      a.url != undefined ? thingAction = addUrl(thingAction, AS.Link, a.url) : ""
+      thingAction = addStringNoLocale(thingAction, AS.name, a.text);
+      ActorCollection.forEach((actorThing) => {
+        thingAction = addUrl(thingAction, AS.subject, actorThing);
+      });
+      ObjectCollection.forEach((objectThing) => {
+        thingAction = addUrl(thingAction, AS.object, objectThing);
+      });
+      ContextCollection.forEach((contextThing) => {
+        thingAction = addUrl(thingAction, AS.context, contextThing);
+      });
+      thingInDataset = addUrl(thingInDataset, AS.object, thingAction);
+      dataset = setThing(dataset, thingAction);
+    }
+  }
+
+  dataset = setThing(dataset, thingInDataset);
+  return dataset
 }
 
 // Auto-install

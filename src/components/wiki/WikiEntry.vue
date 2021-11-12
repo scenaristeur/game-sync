@@ -16,7 +16,7 @@
 
         <!-- -->
         <div v-for="t in wikiEntry.things" :key="t.id">
-          <b-tab v-if="t.show"
+          <b-tab v-if="t.show && t.type=='https://www.w3.org/ns/activitystreams#Note'"
           :title="t.name">
           <h5>{{t.name}}   <b-button size="sm" variant="outline-primary" @click="edit(t.id)"><b-icon-pen></b-icon-pen></b-button></h5>
 
@@ -33,7 +33,7 @@
         <p>Edit this content to add your own quote</p>
       </blockquote> -->
       <div v-if="editing_id == t.id">
-        <b-button size="sm" variant="outline-primary" @click="mentionner(t)" title="mentionner">@</b-button>
+
 
         <b-form-textarea
         :id="'textarea_'+t.id"
@@ -50,7 +50,9 @@
       <pre v-html="t.content" @click="edit(t.id)"></pre>
       <!-- {{JSON.stringify(t)}}
       <hr> -->
-      <cite contenteditable="true">-- Write wikidata or semapps tags here, coma separated</cite>
+      <!-- <cite contenteditable="true">-- Write wikidata or semapps tags here, coma separated</cite> -->
+      <b-button size="sm" variant="outline-primary" @click="mentionner(t)" title="mentionner">@</b-button>
+      <Relations :relations="t.relations" />
       <a :href="t.url" target="_blank">data</a>
     </b-tab>
   </div>
@@ -110,6 +112,9 @@ import { v4 as uuidv4 } from 'uuid';
 export default {
   name: "WikiEntry",
   props: ['url'],
+  components: {
+    'Relations': () => import('@/components/layout/Relations'),
+  },
   data(){
     return {
       wikiEntry : null,
