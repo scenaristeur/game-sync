@@ -132,6 +132,7 @@ const plugin = {
         store.state.solid.pod != null ? thingInDataset = addUrl(thingInDataset, AS.actor, store.state.solid.pod.webId ) : ""
         thingInDataset = addStringNoLocale(thingInDataset, AS.updated, date.toISOString());
         thingInDataset = setStringNoLocale(thingInDataset, AS.content, t.content);
+        t.deleted != undefined ? thingInDataset = setStringNoLocale(thingInDataset, AS.deleted, t.deleted) : ""
 
         ds = await addMentions(t, ds, thingInDataset)
 
@@ -267,6 +268,7 @@ const plugin = {
           thing.actor = await getUrl(t, AS.actor);
           thing.content = await getStringNoLocale(t, AS.content);
           thing.published = await getStringNoLocale(t, AS.published);
+          thing.deleted = await getStringNoLocale(t, AS.deleted);
           thing.relations = await getUrlAll(t, AS.object)
           console.log("wiki Entry",thing)
           wikiEntry.things.push(thing)

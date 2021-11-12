@@ -16,10 +16,12 @@
 
         <!-- -->
         <div v-for="t in wikiEntry.things" :key="t.id">
-          <b-tab v-if="t.show && t.type=='https://www.w3.org/ns/activitystreams#Note'"
+          <b-tab v-if="t.show && t.type=='https://www.w3.org/ns/activitystreams#Note' && t.deleted == null"
           :title="t.name">
-          <h5>{{t.name}}   <b-button size="sm" variant="outline-primary" @click="edit(t.id)"><b-icon-pen></b-icon-pen></b-button></h5>
-
+          <h5>{{t.name}}
+            <b-button size="sm" variant="outline-primary" @click="edit(t.id)"><b-icon-pen></b-icon-pen></b-button>
+            <b-button size="sm" variant="outline-danger" @click="addDelete(t)"><b-icon-trash></b-icon-trash></b-button>
+          </h5>
           <!-- pre<br> -->
 
           <!-- <hr>
@@ -75,6 +77,7 @@
 
 
 </b-tabs>
+<a :href="wikiEntry.url" target="_blank">data</a>
 </b-card>
 <!-- </div> -->
 
@@ -172,7 +175,7 @@ export default {
 
       if(this.wikiEntry != null && this.wikiEntry.things.length > 0) {
         for (const t of this.wikiEntry.things){
-          if( t.name.includes(this.searchQuery)){
+          if( t.name.includes(this.searchQuery) && t.deleted == null){
             t.show = true
             this.numberShown++
           }else{
@@ -189,6 +192,15 @@ export default {
       // console.log(area)
       // area.focus()
 
+    },
+    addDelete(t){
+      let response = confirm("Are you sure you want to mark the note named '"+ t.name+"' as deleted ? You could restore it, or definitely delete on your POD ");
+      console.log(response)
+      if (response == true){
+        let d = new Date()
+        t.deleted = d.toISOString()
+        this.$store.dispatch('wiki/update', this.wikiEntry);
+      }
     },
     mentionner(t){
       console.log("mentionner")
